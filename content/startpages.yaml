@@ -1,449 +1,788 @@
 - name: Home
   columns:
     - categories:
-        - name: Search
+        - name: Tools
           rows:
             - !Link
               ico: <i class="fa-solid fa-robot"></i>
               lbl: ChatGPT
               url: https://chat.openai.com/
-            - !Link
-              ico: <i class="fa-solid fa-magnifying-glass"></i>
-              lbl: DuckDuckGo
-              url: https://duckduckgo.com/
-            - !Link
-              ico: <i class="fa-solid fa-magnifying-glass"></i>
-              lbl: Google Search
-              url: https://www.google.com/
-        - name: Tools
-          rows:
+
+            - !Separator
             - !Link
               ico: <i class="fa-solid fa-envelope"></i>
-              lbl: Mail
-              url: https://gmail.com
+              lbl: Gmail
+              url: https://mail.google.com/mail/u/0/#inbox
             - !Link
               ico: <i class="fa-solid fa-envelope"></i>
               lbl: ProtonMail
-              url: https://proton.me/
+              url: https://mail.protonmail.com/inbox/
             - !Link
               ico: <i class="fa-solid fa-calendar-days"></i>
               lbl: Calendar
               url: https://calendar.google.com/calendar/r/week
             - !Link
+              ico: <i class="fa-brands fa-whatsapp"></i>
+              lbl: WhatsApp
+              url: https://web.whatsapp.com/
+
+            - !Separator
+            - !Link
+              ico: <i class="fa-brands fa-wikipedia-w"></i>
+              lbl: Wikipedia
+              url: https://www.wikipedia.org/
+            - !Link
+              ico: <i class="fa-solid fa-spell-check"></i>
+              lbl: Wortbedeutung
+              url: https://www.wortbedeutung.info/
+            - !Link
               ico: <i class="fa-solid fa-language"></i>
               lbl: Translate
               url: https://translate.google.com/
+
+            - !Separator
             - !Link
-              ico: <i class="fa-solid fa-map-location-dot"></i>
+              ico: <i class="fa-solid fa-mountain"></i>
+              lbl: Outdoor Active
+              url: https://www.outdooractive.com/de/
+            - !Link
+              ico: <i class="fa-solid fa-map-marker"></i>
               lbl: Maps
               url: https://www.google.com/maps
             - !Link
               ico: <i class="fa-brands fa-google-drive"></i>
               lbl: Drive
               url: https://drive.google.com/drive/u/0/my-drive
+
             - !Separator
             - !Link
-              ico: <i class="fa-solid fa-sun"></i>
-              lbl: Weather
-              url: https://wttr.in/
+              ico: <i class="fa-brands fa-ebay"></i>
+              lbl: Kleinanzeige
+              url: https://www.ebay-kleinanzeigen.de/stadt/muenchen/
             - !Link
-              ico: <i class="fa-solid fa-person-hiking"></i>
-              lbl: AllTrails
-              url: https://www.alltrails.com/
-            - !Link
-              ico: <i class="fa-solid fa-person-hiking"></i>
-              lbl: Outdoor Active
-              url: https://www.outdooractive.com/en/
+              ico: <i class="fa-brands fa-trello"></i>
+              lbl: Trello
+              url: https://trello.com/b/eX8WNzjw/kanban
+
     - categories:
-        - name: Knowledge
+        - name: Administration
           rows:
             - !Link
-              ico: <i class="fa-brands fa-wikipedia-w"></i>
-              lbl: Wikipedia
-              url: https://en.wikipedia.org/wiki/Main_Page
+              ico: <i class="fa-solid fa-piggy-bank"></i>
+              lbl: Stadtsparkasse
+              url: https://www.sskm.de/de/home.html
             - !Link
-              ico: <i class="fa-brands fa-quora"></i>
-              lbl: Quora
-              url: https://www.quora.com
+              ico: <i class="fa-brands fa-paypal"></i>
+              lbl: Paypal
+              url: https://www.paypal.com/signin?country.x=DE&locale.x=de_DE
             - !Link
-              ico: <i class="fa-brands fa-stack-exchange"></i>
-              lbl: Stack Exchange
-              url: https://stackexchange.com/
-        - name: News
-          rows:
+              ico: <i class="fa-solid fa-coins"></i>
+              lbl: Elster
+              url: https://www.elster.de/
             - !Link
-              ico: <i class="fa-solid fa-newspaper"></i>
-              lbl: The New York Times
-              url: https://www.nytimes.com/
-            - !Link
-              ico: <i class="fa-solid fa-newspaper"></i>
-              lbl: NBC News
-              url: https://www.nbcnews.com/
-            - !Link
-              ico: <i class="fa-solid fa-newspaper"></i>
-              lbl: NPR
-              url: https://www.npr.org/
-            - !Link
-              ico: <i class="fa-solid fa-newspaper"></i>
-              lbl: Bloomberg
-              url: https://www.bloomberg.com
+              ico: <i class="fa-solid fa-bolt"></i>
+              lbl: SWM
+              url: https://meine.swm.de/iss/ui/#/acc/login
+
             - !Separator
             - !Link
-              ico: <i class="fa-solid fa-newspaper"></i>
-              lbl: Deutsche Welle
-              url: https://www.dw.com
+              ico: <i class="fa-solid fa-network-wired"></i>
+              lbl: FRITZ!Box
+              url: http://192.168.178.1/
+
+            - !Separator
             - !Link
-              ico: <i class="fa-solid fa-newspaper"></i>
-              lbl: France24
-              url: https://www.france24.com
+              ico: <i class="fa-solid fa-medkit"></i>
+              lbl: Technische Krankenkasse
+              url: https://www.tk.de/techniker/meine-tk-2000008
             - !Link
-              ico: <i class="fa-solid fa-newspaper"></i>
-              lbl: BBC
-              url: https://www.bbc.com/
+              ico: <i class="fa-solid fa-donate"></i>
+              lbl: Generali.sk
+              url: https://www.generali.sk/kz/login.jsp
             - !Link
-              ico: <i class="fa-solid fa-newspaper"></i>
-              lbl: CNN
-              url: https://edition.cnn.com/
+              ico: <i class="fa-solid fa-chess-rook"></i>
+              lbl: Generalny konzulat
+              url: https://www.mzv.sk/web/gkmnichov
+
+            - !Separator
             - !Link
-              ico: <i class="fa-solid fa-newspaper"></i>
-              lbl: CGTN
-              url: https://www.cgtn.com/
+              ico: <i class="fa-solid fa-film"></i>
+              lbl: Cinema Munich
+              url: https://www.cinema-muenchen.com/
+            - !Link
+              ico: <i class="fa-solid fa-tint"></i>
+              lbl: Benzinpreis
+              url: https://www.benzinpreis-aktuell.de/#here
+            - !Link
+              ico: <i class="fa-solid fa-subway"></i>
+              lbl: MVV Schnellbahnnetz
+              url: https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Netzplaene/2018_MVVnetz_Final_S_U_R_T_screen.pdf
+            - !Link
+              ico: <i class="fa-solid fa-subway"></i>
+              lbl: MVV Tarifplan Innenraum
+              url: https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Tarifplaene/TARIFPLAN_Innenraum_2018.PDF
+            - !Link
+              ico: <i class="fa-solid fa-subway"></i>
+              lbl: MVV Tarifplan Gesamtnetz
+              url: https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Tarifplaene/TARIFPLAN_Gesamtnetz_2018.PDF
+
     - categories:
-        - name: Aggregators
+        - name: Magazine
           rows:
             - !Link
-              ico: <i class="fa-brands fa-hacker-news"></i>
-              lbl: Hacker News
-              url: https://news.ycombinator.com/
+              ico: <i class="fa-brands fa-octopus-deploy"></i>
+              lbl: PrimaMateria
+              url: https://primamateria.github.io/blog/
             - !Link
-              ico: <i class="fa-brands fa-reddit-alien"></i>
+              ico: <i class="fa-solid fa-gamepad"></i>
+              lbl: No Mutants Allowed
+              url: http://www.nma-fallout.com/
+            - !Link
+              ico: <i class="fa-solid fa-female"></i>
+              lbl: FitG
+              url: http://fitgirl-repacks.site/
+            - !Link
+              ico: <i class="fa-solid fa-glasses"></i>
+              lbl: Xe
+              url: https://xeiaso.net/blog
+            - !Link
+              ico: <i class="fa-solid fa-glasses"></i>
+              lbl: This Week in Neovim
+              url: https://this-week-in-neovim.org/
+            - !Link
+              ico: <i class="fa-solid fa-glasses"></i>
+              lbl: Determinate Systems
+              url: https://determinate.systems/posts
+            - !Link
+              ico: <i class="fa-solid fa-glasses"></i>
+              lbl: Jessie Duffield
+              url: https://jesseduffield.com/
+            - !Link
+              ico: <i class="fa-solid fa-glasses"></i>
+              lbl: Kyle Shevlin
+              url: https://kyleshevlin.com
+            - !Link
+              ico: <i class="fa-solid fa-glasses"></i>
+              lbl: Emuaton
+              url: https://emauton.org/
+            - !Link
+              ico: <i class="fa-solid fa-glasses"></i>
+              lbl: Sulami
+              url: https://blog.sulami.xyz/
+            - !Link
+              ico: <i class="fa-solid fa-glasses"></i>
+              lbl: Solene
+              url: https://dataswamp.org/~solene/index.html
+            - !Link
+              ico: <i class="fa-solid fa-glasses"></i>
+              lbl: Jakub Kozlowski
+              url: https://blog.kubukoz.com/
+            - !Link
+              ico: <i class="fa-solid fa-glasses"></i>
+              lbl: Sekun
+              url: https://blog.sekun.net/
+            - !Link
+              ico: <i class="fa-solid fa-glasses"></i>
+              lbl: Zimbatm
+              url: https://zimbatm.com/
+
+    - categories:
+        - name: Digest
+          rows:
+            - !Link
+              ico: <i class="fa-solid fa-grin-squint-tears"></i>
+              lbl: zomri
+              url: https://www.zomri.online/
+            - !Link
+              ico: <i class="fa-solid fa-grin-squint-tears"></i>
+              lbl: Coding Love
+              url: https://thecodinglove.com/
+            - !Link
+              ico: <i class="fa-solid fa-play"></i>
+              lbl: Spravy RTVS
+              url: https://www.rtvs.sk/televizia/archiv/13982
+            - !Link
+              ico: <i class="fa-solid fa-play"></i>
+              lbl: :24 live
+              url: https://www.rtvs.sk/televizia/live-24
+            - !Link
+              ico: <i class="fa-solid fa-newspaper"></i>
+              lbl: DW
+              url: https://www.dw.com/
+            - !Link
+              ico: <i class="fa-solid fa-poop"></i>
+              lbl: Lotto
+              url: https://www.lotto.de/login
+            - !Link
+              ico: <i class="fa-solid fa-book"></i>
+              lbl: SK Ebooks
+              url: http://xtrance.info/new/?
+            - !Link
+              ico: <i class="fa-solid fa-image"></i>
+              lbl: wallhaven
+              url: https://wallhaven.cc/search?categories=100&purity=100&atleast=2560x1440&topRange=1M&sorting=toplist&order=desc&page=2
+
+            - !Separator
+            - !Link
+              ico: <i class="fa-brands fa-steam"></i>
+              lbl: ProtonDB
+              url: https://www.protondb.com/explore
+            - !Link
+              ico: <i class="fa-brands fa-fort-awesome"></i>
+              lbl: Humble Bundle
+              url: https://www.humblebundle.com/
+
+            - !Separator
+            - !Link
+              ico: <i class="fa-brands fa-youtube"></i>
+              lbl: YouTube
+              url: http://youtube.com
+            - !Link
+              ico: <i class="fa-brands fa-youtube"></i>
+              lbl: YouTube Ambients
+              url: https://www.youtube.com/playlist?list=PLjDqZb1FVlst1XPXongf5UD02yU9Md-ot
+            - !Link
+              ico: <i class="fa-brands fa-reddit"></i>
               lbl: Reddit
-              url: https://www.reddit.com/
-        - name: Music
-          rows:
-            - !Link
-              ico: <i class="fa-brands fa-spotify"></i>
-              lbl: Spotify
-              url: https://open.spotify.com/?
+              url: http://reddit.com
             - !Link
               ico: <i class="fa-brands fa-mixcloud"></i>
               lbl: Mixcloud
               url: https://www.mixcloud.com/
             - !Link
-              ico: <i class="fa-brands fa-soundcloud"></i>
-              lbl: Soundcloud
-              url: https://soundcloud.com/
-        - name: Reading
-          rows:
-            - !Link
-              ico: <i class="fa-brands fa-medium"></i>
-              lbl: Medium
-              url: https://medium.com/
-            - !Link
               ico: <i class="fa-brands fa-goodreads-g"></i>
               lbl: Goodreads
-              url: https://www.goodreads.com/
-    - categories:
-        - name: Social
-          rows:
+              url: https://www.goodreads.com/review/list/50681851
             - !Link
-              ico: <i class="fa-brands fa-mastodon"></i>
-              lbl: Mastodon
-              url: https://joinmastodon.org/
-            - !Link
-              ico: <i class="fa-brands fa-twitter"></i>
-              lbl: Twitter
-              url: https://twitter.com/
-            - !Link
-              ico: <i class="fa-brands fa-linkedin"></i>
-              lbl: Linkedin
-              url: https://www.linkedin.com
-            - !Link
-              ico: <i class="fa-brands fa-facebook"></i>
-              lbl: Facebook
-              url: https://www.facebook.com/
-        - name: Media
-          rows:
-            - !Link
-              ico: <i class="fa-brands fa-youtube"></i>
-              lbl: YouTube
-              url: https://www.youtube.com/
-            - !Link
-              ico: <i class="fa-brands fa-twitch"></i>
-              lbl: Twitch
-              url: https://www.twitch.tv/
-            - !Link
-              ico: <i class="fa-brands fa-tiktok"></i>
-              lbl: TikTok
-              url: https://www.tiktok.com/
-            - !Link
-              ico: <i class="fa-brands fa-instagram"></i>
-              lbl: Instagram
-              url: https://www.instagram.com/
-        - name: Gaming
-          rows:
-            - !Link
-              ico: <i class="fa-brands fa-steam"></i>
-              lbl: Steam
-              url: https://store.steampowered.com/
-            - !Link
-              ico: <i class="fa-solid fa-key"></i>
-              lbl: Key For Steam
-              url: https://www.keyforsteam.de/
-            - !Link
-              ico: <i class="fa-solid fa-gamepad"></i>
-              lbl: Humble Bundle
-              url: https://www.humblebundle.com/
-            - !Link
-              ico: <i class="fa-solid fa-gamepad"></i>
-              lbl: Good Old Games
-              url: https://www.gog.com/
-            - !Link
-              ico: <i class="fa-solid fa-gamepad"></i>
+              ico: <i class="fa-solid fa-dragon"></i>
               lbl: RAWG
-              url: https://rawg.io/
+              url: https://rawg.io/collections/finished-31
+            - !Link
+              ico: <i class="fa-brands fa-linkedin-in"></i>
+              lbl: Linkedin
+              url: https://www.linkedin.com/feed/
+
 - name: Development
   columns:
     - categories:
         - name: Repos
           rows:
             - !Link
-              ico: <i class="fab fa-github"></i>
+              ico: <i class="fa-brands fa-github"></i>
               lbl: Github
-              url: https://github.com/
+              url: https://github.com/PrimaMateria
             - !Link
-              ico: <i class="fab fa-bitbucket"></i>
+              ico: <i class="fa-brands fa-gitlab"></i>
+              lbl: Gitlab
+              url: https://gitlab.com
+            - !Link
+              ico: <i class="fa-brands fa-bitbucket"></i>
               lbl: Bitbucket
-              url: https://bitbucket.org/
+              url: https://bitbucket.org/Prima_Materia/
             - !Link
-              ico: <i class="fab fa-gitlab"></i>
-              lbl: GitLab
-              url: https://gitlab.com/
-            - !Link
-              ico: <i class="fas fa-industry"></i>
-              lbl: NPM JS
+              ico: <i class="fa-solid fa-industry"></i>
+              lbl: npm
               url: https://www.npmjs.com/
+
         - name: Tools
           rows:
             - !Link
-              ico: <i class="fas fa-apple-whole"></i>
+              ico: <i class="fa-solid fa-apple-whole"></i>
               lbl: Pomodoro
               url: https://pomofocus.io/
             - !Link
-              ico: <i class="fas fa-wrench"></i>
-              lbl: URL Encoder/Decoder
+              ico: <i class="fa-solid fa-wrench"></i>
+              lbl: URL Decoder/Encoder
               url: https://meyerweb.com/eric/tools/dencoder/
             - !Link
-              ico: <i class="fas fa-edit"></i>
+              ico: <i class="fa-solid fa-edit"></i>
               lbl: JS Beautifier
-              url: http://jsbeautifier.org
+              url: http://jsbeautifier.org/
             - !Link
-              ico: <i class="fas fa-edit"></i>
+              ico: <i class="fa-solid fa-edit"></i>
               lbl: XML Formatter
               url: http://www.webtoolkitonline.com/xml-formatter.html
+
         - name: Generators
           rows:
             - !Link
-              ico: <i class="fas fa-eyedropper"></i>
-              lbl: Color Generator
+              ico: <i class="fa-solid fa-eyedropper"></i>
+              lbl: Color generator
               url: https://fffuel.co/pppalette/
             - !Link
-              ico: <i class="fas fa-swatchbook"></i>
+              ico: <i class="fa-solid fa-swatchbook"></i>
               lbl: hue.tools
               url: https://hue.tools/modify
             - !Link
-              ico: <i class="fas fa-wrench"></i>
+              ico: <i class="fa-solid fa-wrench"></i>
               lbl: UUID Generator
               url: https://www.uuidgenerator.net/
             - !Link
-              ico: <i class="fas fa-money-check-alt"></i>
+              ico: <i class="fa-solid fa-money-check-alt"></i>
               lbl: IBAN Generator
               url: http://randomiban.com/?country=Germany
+
         - name: Editors
           rows:
             - !Link
-              ico: <i class="fas fa-edit"></i>
+              ico: <i class="fa-solid fa-edit"></i>
               lbl: Code Sandbox
               url: https://codesandbox.io/
             - !Link
-              ico: <i class="fas fa-edit"></i>
-              lbl: Regex Editor
+              ico: <i class="fa-solid fa-wrench"></i>
+              lbl: Regex editor
               url: https://regexr.com/
             - !Link
-              ico: <i class="fas fa-edit"></i>
+              ico: <i class="fa-solid fa-edit"></i>
               lbl: Swagger Editor
               url: https://editor.swagger.io/
             - !Link
-              ico: <i class="fas fa-edit"></i>
+              ico: <i class="fa-solid fa-edit"></i>
               lbl: AST Editor
               url: https://astexplorer.net/
             - !Link
-              ico: <i class="fas fa-edit"></i>
+              ico: <i class="fa-solid fa-edit"></i>
               lbl: PlantUML Editor
               url: https://plantuml-editor.kkeisuke.com/
+
     - categories:
         - name: Linux
           rows:
             - !Link
-              ico: <i class="fab fa-linux"></i>
+              ico: <i class="fa-brands fa-linux"></i>
               lbl: Arch Wiki
               url: https://wiki.archlinux.org/
             - !Link
-              ico: <i class="fas fa-th-large"></i>
+              ico: <i class="fa-solid fa-th-large"></i>
               lbl: i3 User guide
               url: https://i3wm.org/docs/userguide.html
             - !Link
-              ico: <i class="fas fa-th-large"></i>
+              ico: <i class="fa-solid fa-th-large"></i>
               lbl: i3 Blocks
               url: https://vivien.github.io/i3blocks/
             - !Link
-              ico: <i class="fas fa-snowflake"></i>
+              ico: <i class="fa-solid fa-snowflake"></i>
               lbl: NixOS Search
               url: https://search.nixos.org/packages
             - !Link
-              ico: <i class="fas fa-snowflake"></i>
+              ico: <i class="fa-solid fa-snowflake"></i>
               lbl: NixOS Wiki
               url: https://nixos.wiki/wiki/Main_Page
             - !Link
-              ico: <i class="fas fa-snowflake"></i>
-              lbl: Home Manager Search
+              ico: <i class="fa-solid fa-snowflake"></i>
+              lbl: Home Manager
               url: https://mipmip.github.io/home-manager-option-search/
+
     - categories:
         - name: Frameworks
           rows:
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: Material UI
               url: https://material-ui.com/components/grid/
             - !Link
-              ico: <i class="fas fa-book"></i>
-              lbl: Typescript
+              ico: <i class="fa-solid fa-book"></i>
+              lbl: TypeScript
               url: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: Storybook
               url: https://storybook.js.org/docs/react/get-started/introduction
             - !Link
-              ico: <i class="fas fa-book"></i>
-              lbl: Playwright
-              url: https://www.typescriptlang.org/docs/handbook/2/everyday-types.html
+              ico: <i class="fa-solid fa-book"></i>
+              lbl: Direflow
+              url: https://direflow.io/get-started
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
+              lbl: Playwright
+              url: https://playwright.dev/docs/test-assertions
+            - !Link
+              ico: <i class="fa-solid fa-book"></i>
               lbl: Jest
               url: https://jestjs.io/docs/en/getting-started
+            - !Link
+              ico: <i class="fa-solid fa-book"></i>
+              lbl: Selenium Jupiter
+              url: https://bonigarcia.github.io/selenium-jupiter/#quick-reference
+
         - name: React
           rows:
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: React
               url: https://reactjs.org/docs/getting-started.html
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: Create React App
               url: https://create-react-app.dev/
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: React Hook Form
               url: https://react-hook-form.com/get-started/#Quickstart
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: React Testing Library
               url: https://testing-library.com/docs/react-testing-library/cheatsheet
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: React Testing Library - user-events
               url: https://github.com/testing-library/user-event
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: React Query
               url: https://react-query.tanstack.com/quick-start
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: React Router DOM
               url: https://reactrouterdotcom.fly.dev/docs/en/v6/getting-started/overview
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: React I18next
               url: https://react.i18next.com/
+
     - categories:
         - name: Libs
           rows:
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: Zod
               url: https://zod.dev/
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: I18next
               url: https://www.i18next.com/overview/configuration-options
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: Jest-dom
               url: https://github.com/testing-library/jest-dom
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: ts-jest
               url: https://kulshekhar.github.io/ts-jest/user/test-helpers
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: date-fns
               url: https://date-fns.org/v2.22.1/docs/Getting-Started
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: dayjs
               url: https://day.js.org/docs/en/installation/installation
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: Material UI pickers
               url: https://material-ui-pickers.dev/demo/datepicker
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-brands fa-github"></i>
               lbl: Zustand
               url: https://github.com/pmndrs/zustand
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: Openapi TS Codegen
               url: https://github.com/ferdikoomen/openapi-typescript-codegen
+
     - categories:
         - name: Practice
           rows:
             - !Link
-              ico: <i class="fas fa-keyboard"></i>
+              ico: <i class="fa-solid fa-keyboard"></i>
               lbl: TypeLit.io
               url: https://www.typelit.io
             - !Link
-              ico: <i class="fab fa-hackerrank"></i>
+              ico: <i class="fa-brands fa-hackerrank"></i>
               lbl: Hackerrank
               url: https://www.hackerrank.com/dashboard
+
         - name: Docs
           rows:
             - !Link
-              ico: <i class="fas fa-question"></i>
+              ico: <i class="fa-solid fa-question"></i>
               lbl: Flexbox cheatsheet
               url: https://flexboxsheet.com/
             - !Link
-              ico: <i class="fas fa-question"></i>
+              ico: <i class="fa-solid fa-question"></i>
               lbl: Grid cheatsheet
               url: https://grid.malven.co/
             - !Separator
             - !Link
-              ico: <i class="fas fa-wand-magic-sparkles"></i>
+              ico: <i class="fa-solid fa-wand-magic-sparkles"></i>
               lbl: Can I use
               url: https://caniuse.com/
             - !Link
-              ico: <i class="fas fa-code"></i>
+              ico: <i class="fa-solid fa-code"></i>
               lbl: DevDocs
               url: https://devdocs.io/
             - !Separator
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: Docker
               url: https://docs.docker.com/reference/
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: Jenkinspipeline
               url: https://www.jenkins.io/doc/book/pipeline/syntax/
             - !Link
-              ico: <i class="fas fa-book"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: PlantUML
               url: https://plantuml.com/
+
+- name: Work
+  columns:
+    - categories:
+        - name: Internal
+          rows:
+            - !Link
+              ico: <i class="fa-solid fa-envelope"></i>
+              lbl: Outlook
+              url: https://outlook.office365.com/mail/inbox/id/AAQkAGNiMTNkOTYxLTViZjktNGM3OS1hOTUzLWM1YzMwZTJhYjgwZQAQANab7fsw2kl7gLf2nU%2F%2B0O4%3D
+            - !Link
+              ico: <i class="fa-brands fa-slack"></i>
+              lbl: Slack
+              url: https://app.slack.com/client/TC2CR89V0/CC2CR8PHQ
+            - !Separator
+            - !Link
+              ico: <i class="fa-brands fa-confluence"></i>
+              lbl: Confluence
+              url: https://finapi.jira.com/wiki/spaces/~5f75a51595fe8e00695bb5c3/overview
+            - !Link
+              ico: <i class="fa-solid fa-user"></i>
+              lbl: Personio
+              url: https://finapi-gmbh.personio.de/attendance/employee/13548279
+            - !Link
+              ico: <i class="fa-brands fa-jira"></i>
+              lbl: FE Scrum
+              url: https://finapi.jira.com/jira/people/5f75a51595fe8e00695bb5c3/boards/145
+            - !Link
+              ico: <i class="fa-solid fa-table"></i>
+              lbl: DI Releases
+              url: https://teaminvest1.sharepoint.com/:x:/r/sites/produkte/_layouts/15/Doc.aspx?sourcedoc=%7B8B1E9E6F-7A06-4D2F-978D-176899EE9430%7D&file=Di-Releases.xlsx&action=default&mobileredirect=true
+            - !Link
+              ico: <i class="fa-brands fa-jira"></i>
+              lbl: DI Scrum
+              url: https://finapi.jira.com/jira/software/c/projects/DATAINT/boards/134?selectedIssue=DATAINT-2265&assignee=5f75a51595fe8e00695bb5c3
+            - !Link
+              ico: <i class="fa-solid fa-calendar"></i>
+              lbl: Timesheet
+              url: https://teaminvest.jira.com/plugins/servlet/ac/io.tempo.jira/tempo-app#!/reports/logged-time?columns=WORKED_COLUMN&dateDisplayType=days&from=2020-10-01&groupBy=epic&groupBy=issue&order=ASCENDING&periodType=CURRENT_PERIOD&showCharts=true&sortBy=TITLE_COLUMN&subPeriodType=MONTH&to=2020-10-31&viewType=TIMESHEET&workerId=5f75a51595fe8e00695bb5c3
+            - !Link
+              ico: <i class="fa-solid fa-person-walking-luggage"></i>
+              lbl: Vacation list
+              url: https://finapi.jira.com/wiki/spaces/DI/pages/976060429/Absence+2020+2021+2022
+            - !Separator
+            - !Link
+              ico: <i class="fa-solid fa-hand-point-right"></i>
+              lbl: OneLogin
+              url: https://finapi.onelogin.com/portal/
+            - !Link
+              ico: <i class="fa-solid fa-broadcast-tower"></i>
+              lbl: Sonar
+              url: https://sonarcloud.io/organizations/finapi/projects
+            - !Link
+              ico: <i class="fa-brands fa-jenkins"></i>
+              lbl: Jenkins
+              url: https://jenkins.dev.finapi.net/
+            - !Link
+              ico: <i class="fa-solid fa-gears"></i>
+              lbl: Grafana
+              url: https://grafana.itops.finapi.net
+            - !Link
+              ico: <i class="fa-solid fa-archive"></i>
+              lbl: Artifactory
+              url: https://repo.finapi.io/ui/repos/tree/General/webform-releases
+            - !Link
+              ico: <i class="fa-brands fa-jenkins"></i>
+              lbl: Deploy job
+              url: https://jenkins.itops.finapi.net/job/deploy_staging/build?delay=0sec
+
+    - categories:
+        - name: Access
+          rows:
+            - !Link
+              ico: <i class="fa-solid fa-rocket"></i>
+              lbl: Access | Release Staging
+              url: https://release-staging.finapi.io/#overview
+            - !Link
+              ico: <i class="fa-solid fa-satellite"></i>
+              lbl: Access | Test
+              url: https://test.finapi.io
+        - name: WF2
+          rows:
+            - !Link
+              ico: <i class="fa-brands fa-jira"></i>
+              lbl: WF2 | Jira
+              url: https://finapi.jira.com/secure/RapidBoard.jspa?rapidView=136
+            - !Link
+              ico: <i class="fa-brands fa-confluence"></i>
+              lbl: WF2 | Confluence
+              url: https://teaminvest.jira.com/wiki/spaces/FWF/overview?homepageId=1487503628
+            - !Link
+              ico: <i class="fa-brands fa-bitbucket"></i>
+              lbl: WF2 | BitBucket
+              url: https://bitbucket.org/teaminvest/web-form/pull-requests/
+            - !Link
+              ico: <i class="fa-brands fa-jenkins"></i>
+              lbl: WF2 | Jenkins
+              url: https://jenkins.dev.finapi.net/job/WebForm%202/
+            - !Link
+              ico: <i class="fa-solid fa-gears"></i>
+              lbl: WF2 | Environments
+              url: https://finapi.jira.com/wiki/spaces/FWF/pages/1487601910/Environments
+            - !Separator
+            - !Link
+              ico: <i class="fa-brands fa-bitbucket"></i>
+              lbl: WF2 Loader | Bitbucket
+              url: https://bitbucket.org/teaminvest/web-form-loader/pull-requests/
+            - !Link
+              ico: <i class="fa-brands fa-jenkins"></i>
+              lbl: WF2 Loader | Jenkins
+              url: https://jenkins.dev.finapi.net/job/WebForm2_Loader/
+            - !Link
+              ico: <i class="fa-solid fa-book"></i>
+              lbl: WF2 Loader | Typedocs
+              url: https://webform-dist.finapi.io/latest/docs/index.html
+            - !Separator
+            - !Link
+              ico: <i class="fa-solid fa-plane"></i>
+              lbl: WF2 | Staging
+              url: https://webform-staging.finapi.io/
+            - !Link
+              ico: <i class="fa-solid fa-plane"></i>
+              lbl: WF2 | Staging Customer Demo
+              url: https://webform-staging.finapi.io/f2406563-6c0d-4b84-90e4-be43304d6e42
+            - !Link
+              ico: <i class="fa-solid fa-rocket"></i>
+              lbl: WF2 | Release Staging
+              url: https://webform-release-staging.finapi.io/
+            - !Link
+              ico: <i class="fa-solid fa-rocket"></i>
+              lbl: WF2 | Release Staging Customer Demo
+              url: https://webform-release-staging.finapi.io/f2406563-6c0d-4b84-90e4-be43304d6e42
+
+    - categories:
+        - name: FDS
+          rows:
+            - !Link
+              ico: <i class="fa-brands fa-bitbucket"></i>
+              lbl: FDS | Bitbucket
+              url: https://bitbucket.org/teaminvest/finapi-design-system/pull-requests/
+            - !Link
+              ico: <i class="fa-brands fa-jenkins"></i>
+              lbl: FDS | Jenkins
+              url: https://jenkins.dev.finapi.net/job/finapi-design-system/
+            - !Link
+              ico: <i class="fa-solid fa-rocket"></i>
+              lbl: FDS | Release Staging
+              url: https://design-system.finapi-general-release-staging.finapi.net/
+        - name: FWL
+          rows:
+            - !Link
+              ico: <i class="fa-brands fa-bitbucket"></i>
+              lbl: FWL | Bitbucket
+              url: https://bitbucket.org/teaminvest/finapi-widget-library/pull-requests/
+            - !Link
+              ico: <i class="fa-brands fa-jenkins"></i>
+              lbl: FWL | Jenkins
+              url: https://jenkins.dev.finapi.net/job/finapi-widget-library/
+            - !Link
+              ico: <i class="fa-solid fa-plane"></i>
+              lbl: FWL | Staging
+              url: https://widget-library.finapi-general-staging.finapi.net/docs/index.html?path=/story/girocheck-examples--interactive&globals=clientId:f0907acc-2987-48a1-9e1b-fb0a4e538e37;clientSecret:d9366968-3610-4f78-a162-0f8eccff9b6e
+        - name: FJSL
+          rows:
+            - !Link
+              ico: <i class="fa-brands fa-bitbucket"></i>
+              lbl: FJSL | Bitbucket
+              url: https://bitbucket.org/teaminvest/finapi-js-loader/pull-requests/
+            - !Link
+              ico: <i class="fa-brands fa-jenkins"></i>
+              lbl: FJSL | Jenkins
+              url: https://jenkins.dev.finapi.net/job/finapi-js-loader/
+        - name: FJSSR
+          rows:
+            - !Link
+              ico: <i class="fa-brands fa-bitbucket"></i>
+              lbl: FJSSR | Bitbucket
+              url: https://bitbucket.org/teaminvest/finapi-js-static-resources/pull-requests/
+            - !Link
+              ico: <i class="fa-brands fa-jenkins"></i>
+              lbl: FJSSR | Jenkins
+              url: https://jenkins.dev.finapi.net/job/finapi-js-static-resources/
+            - !Link
+              ico: <i class="fa-solid fa-plane"></i>
+              lbl: FJSSR | Staging
+              url: https://js-static-resources-finapi-general-staging.finapi.io/
+
+    - categories:
+        - name: FHP
+          rows:
+            - !Link
+              ico: <i class="fa-brands fa-bitbucket"></i>
+              lbl: FHP | Bitbucket
+              url: https://bitbucket.org/teaminvest/finapi-hostpages/pull-requests/
+            - !Link
+              ico: <i class="fa-brands fa-jenkins"></i>
+              lbl: FHP | Jenkins
+              url: https://jenkins.dev.finapi.net/job/finapi-hostpages/
+            - !Link
+              ico: <i class="fa-solid fa-plane"></i>
+              lbl: FHP | Staging
+              url: https://di-processctl-finapi-general-staging.finapi.io/api/v1/processes/3155a272-695e-4464-8f6f-51f1a653b4ee/link
+            - !Link
+              ico: <i class="fa-solid fa-plane"></i>
+              lbl: FHP | Staging VRH
+              url: https://di-processctl-finapi-general-staging.finapi.io/api/v1/processes/bb8e675d-ee9d-4704-9241-d4826c20573c/link
+            - !Link
+              ico: <i class="fa-solid fa-rocket"></i>
+              lbl: FHP | Release Staging
+              url: https://di-processctl-finapi-general-release-staging.finapi.io/api/v1/processes/3155a272-695e-4464-8f6f-51f1a653b4ee/link
+            - !Link
+              ico: <i class="fa-solid fa-rocket"></i>
+              lbl: FHP | Release Staging VRH
+              url: https://di-processctl-finapi-general-release-staging.finapi.io/api/v1/processes/bb8e675d-ee9d-4704-9241-d4826c20573c/link
+            - !Link
+              ico: <i class="fa-solid fa-satellite"></i>
+              lbl: FHP | Sandbox
+              url: https://di-processctl-finapi-general-sandbox.finapi.io/api/v1/processes/441cdae9-deb3-44a2-8e64-01a0ecd8f902/link
+            - !Link
+              ico: <i class="fa-solid fa-star"></i>
+              lbl: FHP | Live
+              url: https://di-processctl-finapi-general-live.finapi.io/api/v1/processes/0ee84947-cc5d-11ea-88bf-06bdc5a6b3da/link
+        - name: FCMS
+          rows:
+            - !Link
+              ico: <i class="fa-brands fa-bitbucket"></i>
+              lbl: FCMS | Bitbucket
+              url: https://bitbucket.org/teaminvest/finapi-cms/pull-requests/
+            - !Link
+              ico: <i class="fa-brands fa-jenkins"></i>
+              lbl: FCMS | Jenkins
+              url: https://jenkins.dev.finapi.net/job/finapi-UI-CMS/
+            - !Link
+              ico: <i class="fa-solid fa-plane"></i>
+              lbl: FCMS | Staging
+              url: https://cms.finapi-general-staging.finapi.net/admin/
+            - !Link
+              ico: <i class="fa-solid fa-rocket"></i>
+              lbl: FCMS | Release Staging
+              url: https://cms.finapi-general-release-staging.finapi.net/admin/
+            - !Link
+              ico: <i class="fa-solid fa-satellite"></i>
+              lbl: FCMS | Sandbox
+              url: https://cms-finapi-general-sandbox.finapi.io/admin/
+            - !Link
+              ico: <i class="fa-solid fa-star"></i>
+              lbl: FCMS | Live
+              url: https://cms-finapi-general-live.finapi.io/admin
+        - name: Processctl
+          rows:
+            - !Link
+              ico: <i class="fa-brands fa-bitbucket"></i>
+              lbl: Processctl | Bitbucket
+              url: https://bitbucket.org/teaminvest/finapi-process-ctrl/pull-requests/
+            - !Link
+              ico: <i class="fa-brands fa-jenkins"></i>
+              lbl: Processctl | Jenkins
+              url: https://jenkins.dev.finapi.net/job/finapi-process-ctrl/
+            - !Link
+              ico: <i class="fa-solid fa-plane"></i>
+              lbl: Processctl | Staging
+              url: https://di-processctl.finapi-general-staging.finapi.net/api-docs/index.html

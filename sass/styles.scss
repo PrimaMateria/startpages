@@ -19,7 +19,7 @@
 // @import "colorschemes/base16-cupcake.scss";
 // @import "colorschemes/base16-darktooth.scss";
 // @import "colorschemes/base16-default-dark.scss";
-@import "colorschemes/base16-default-light.scss";
+// @import "colorschemes/base16-default-light.scss";
 // @import "colorschemes/base16-dracula.scss";
 // @import "colorschemes/base16-eighties.scss";
 // @import "colorschemes/base16-embers.scss";
@@ -30,7 +30,7 @@
 // @import "colorschemes/base16-grayscale-dark.scss";
 // @import "colorschemes/base16-grayscale-light.scss";
 // @import "colorschemes/base16-green-screen.scss";
-// @import "colorschemes/base16-gruvbox-dark-hard.scss";
+@import "colorschemes/base16-gruvbox-dark-hard.scss";
 // @import "colorschemes/base16-gruvbox-dark-medium.scss";
 // @import "colorschemes/base16-gruvbox-dark-pale.scss";
 // @import "colorschemes/base16-gruvbox-dark-soft.scss";
@@ -89,7 +89,7 @@ a {
 }
 
 h2 {
-  color: $base0D;
+  color: $base0A;
 }
 
 .page {
