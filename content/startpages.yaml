@@ -63,6 +63,10 @@
               ico: <i class="fa-brands fa-trello"></i>
               lbl: Trello
               url: https://trello.com/b/eX8WNzjw/kanban
+            - !Link
+              ico: <i class="fa-solid fa-cloud"></i>
+              lbl: Weather
+              url: https://www.windy.com
 
     - categories:
         - name: Administration
