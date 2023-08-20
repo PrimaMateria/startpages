@@ -131,68 +131,14 @@
               url: https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Tarifplaene/TARIFPLAN_Gesamtnetz_2018.PDF
 
     - categories:
-        - name: Magazine
+        - name: Digest
           rows:
             - !Link
               ico: <i class="fa-brands fa-octopus-deploy"></i>
               lbl: PrimaMateria
               url: https://primamateria.github.io/blog/
-            - !Link
-              ico: <i class="fa-solid fa-gamepad"></i>
-              lbl: No Mutants Allowed
-              url: http://www.nma-fallout.com/
-            - !Link
-              ico: <i class="fa-solid fa-female"></i>
-              lbl: FitG
-              url: http://fitgirl-repacks.site/
-            - !Link
-              ico: <i class="fa-solid fa-glasses"></i>
-              lbl: Xe
-              url: https://xeiaso.net/blog
-            - !Link
-              ico: <i class="fa-solid fa-glasses"></i>
-              lbl: This Week in Neovim
-              url: https://this-week-in-neovim.org/
-            - !Link
-              ico: <i class="fa-solid fa-glasses"></i>
-              lbl: Determinate Systems
-              url: https://determinate.systems/posts
-            - !Link
-              ico: <i class="fa-solid fa-glasses"></i>
-              lbl: Jessie Duffield
-              url: https://jesseduffield.com/
-            - !Link
-              ico: <i class="fa-solid fa-glasses"></i>
-              lbl: Kyle Shevlin
-              url: https://kyleshevlin.com
-            - !Link
-              ico: <i class="fa-solid fa-glasses"></i>
-              lbl: Emuaton
-              url: https://emauton.org/
-            - !Link
-              ico: <i class="fa-solid fa-glasses"></i>
-              lbl: Sulami
-              url: https://blog.sulami.xyz/
-            - !Link
-              ico: <i class="fa-solid fa-glasses"></i>
-              lbl: Solene
-              url: https://dataswamp.org/~solene/index.html
-            - !Link
-              ico: <i class="fa-solid fa-glasses"></i>
-              lbl: Jakub Kozlowski
-              url: https://blog.kubukoz.com/
-            - !Link
-              ico: <i class="fa-solid fa-glasses"></i>
-              lbl: Sekun
-              url: https://blog.sekun.net/
-            - !Link
-              ico: <i class="fa-solid fa-glasses"></i>
-              lbl: Zimbatm
-              url: https://zimbatm.com/
+            - !Separator
 
-    - categories:
-        - name: Digest
-          rows:
             - !Link
               ico: <i class="fa-solid fa-grin-squint-tears"></i>
               lbl: zomri
@@ -228,6 +174,10 @@
 
             - !Separator
             - !Link
+              ico: <i class="fa-solid fa-female"></i>
+              lbl: FitG
+              url: http://fitgirl-repacks.site/
+            - !Link
               ico: <i class="fa-brands fa-steam"></i>
               lbl: ProtonDB
               url: https://www.protondb.com/explore
@@ -236,7 +186,9 @@
               lbl: Humble Bundle
               url: https://www.humblebundle.com/
 
-            - !Separator
+    - categories:
+        - name: Digest
+          rows:
             - !Link
               ico: <i class="fa-brands fa-youtube"></i>
               lbl: YouTube
