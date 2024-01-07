@@ -7,6 +7,10 @@
               ico: <i class="fa-solid fa-robot"></i>
               lbl: ChatGPT
               url: https://chat.openai.com/
+            - !Link
+              ico: <i class="fa-solid fa-robot"></i>
+              lbl: Perplexity
+              url: https://www.perplexity.ai
 
             - !Separator
             - !Link
@@ -53,6 +57,10 @@
               ico: <i class="fa-brands fa-google-drive"></i>
               lbl: Drive
               url: https://drive.google.com/drive/u/0/my-drive
+            - !Link
+              ico: <i class="fa-solid fa-water"></i>
+              lbl: European Atlas of Seas
+              url: https://ec.europa.eu/maritimeaffairs/atlas/maritime_atlas/#lang=EN;p=w;bkgd=6;theme=11:0.06,10:1.00;c=1944850.649774897,5943205.279900633;z=8
 
             - !Separator
             - !Link
@@ -277,6 +285,10 @@
               ico: <i class="fa-solid fa-money-check-alt"></i>
               lbl: IBAN Generator
               url: http://randomiban.com/?country=Germany
+            - !Link
+              ico: <i class="fa-brands fa-wikipedia-w"></i>
+              lbl: Webfont Generator
+              url: http://randomiban.com/?country=Germany
 
         - name: Editors
           rows:
@@ -291,7 +303,7 @@
             - !Link
               ico: <i class="fa-solid fa-edit"></i>
               lbl: Swagger Editor
-              url: https://editor.swagger.io/
+              url: https://editor-next.swagger.io/
             - !Link
               ico: <i class="fa-solid fa-edit"></i>
               lbl: AST Editor
@@ -381,6 +393,10 @@
               url: https://testing-library.com/docs/react-testing-library/cheatsheet
             - !Link
               ico: <i class="fa-solid fa-book"></i>
+              lbl: React Hooks Testing Library
+              url: https://react-hooks-testing-library.com/
+            - !Link
+              ico: <i class="fa-solid fa-book"></i>
               lbl: React Testing Library - user-events
               url: https://github.com/testing-library/user-event
             - !Link
@@ -435,6 +451,10 @@
               ico: <i class="fa-solid fa-book"></i>
               lbl: Openapi TS Codegen
               url: https://github.com/ferdikoomen/openapi-typescript-codegen
+            - !Link
+              ico: <i class="fa-solid fa-book"></i>
+              lbl: CASL
+              url: https://casl.js.org/v6/en/guide/intro
 
     - categories:
         - name: Practice
