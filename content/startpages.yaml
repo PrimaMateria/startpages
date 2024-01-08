@@ -672,6 +672,10 @@
               ico: <i class="fa-brands fa-jenkins"></i>
               lbl: FJSL | Jenkins
               url: https://jenkins.dev.finapi.net/job/finapi-js-loader/
+            - !Link
+              ico: <i class="fa-solid fa-book"></i>
+              lbl: FJSL | Typedocs
+              url: https://js-loader-finapi-general-staging.finapi.io/docs/
         - name: FJSSR
           rows:
             - !Link
