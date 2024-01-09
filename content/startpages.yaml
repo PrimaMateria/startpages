@@ -164,10 +164,6 @@
               lbl: :24 live
               url: https://www.rtvs.sk/televizia/live-24
             - !Link
-              ico: <i class="fa-solid fa-newspaper"></i>
-              lbl: DW
-              url: https://www.dw.com/
-            - !Link
               ico: <i class="fa-solid fa-poop"></i>
               lbl: Lotto
               url: https://www.lotto.de/login
@@ -179,6 +175,11 @@
               ico: <i class="fa-solid fa-image"></i>
               lbl: wallhaven
               url: https://wallhaven.cc/search?categories=100&purity=100&atleast=2560x1440&topRange=1M&sorting=toplist&order=desc&page=2
+            - !Link
+              ico: <i class="fa-solid fa-square-rss"></i>
+              lbl: FreshRss
+              url: https://feeds.flossboxin.org.in/p/i/?a=global&rid=659d0ab946504
+
 
             - !Separator
             - !Link
