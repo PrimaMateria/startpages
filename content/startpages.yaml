@@ -539,7 +539,7 @@
             - !Link
               ico: <i class="fa-solid fa-calendar"></i>
               lbl: Timesheet
-              url: https://teaminvest.jira.com/plugins/servlet/ac/io.tempo.jira/tempo-app#!/reports/logged-time?columns=WORKED_COLUMN&dateDisplayType=days&from=2020-10-01&groupBy=epic&groupBy=issue&order=ASCENDING&periodType=CURRENT_PERIOD&showCharts=true&sortBy=TITLE_COLUMN&subPeriodType=MONTH&to=2020-10-31&viewType=TIMESHEET&workerId=5f75a51595fe8e00695bb5c3
+              url: https://finapi.jira.com/plugins/servlet/ac/io.tempo.jira/tempo-app#!/reports
             - !Link
               ico: <i class="fa-solid fa-person-walking-luggage"></i>
               lbl: Vacation list
