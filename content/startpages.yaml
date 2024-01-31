@@ -341,6 +341,10 @@
               ico: <i class="fa-solid fa-snowflake"></i>
               lbl: Home Manager
               url: https://mipmip.github.io/home-manager-option-search/
+            - !Link
+              ico: <i class="fa-solid fa-snowflake"></i>
+              lbl: Noogle
+              url: https://noogle.dev
 
     - categories:
         - name: Frameworks
