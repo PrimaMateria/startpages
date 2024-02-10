@@ -271,6 +271,10 @@
               ico: <i class="fa-solid fa-gauge"></i>
               lbl: Page Speed
               url: https://pagespeed.web.dev/
+            - !Link
+              ico: <i class="fa-solid fa-gauge"></i>
+              lbl: Web Page Test
+              url: https://www.webpagetest.org/
 
         - name: Generators
           rows:
