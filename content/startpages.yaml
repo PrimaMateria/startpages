@@ -267,6 +267,10 @@
               ico: <i class="fa-solid fa-edit"></i>
               lbl: XML Formatter
               url: http://www.webtoolkitonline.com/xml-formatter.html
+            - !Link
+              ico: <i class="fa-solid fa-icons"></i>
+              lbl: MUI icons
+              url: https://mui.com/material-ui/material-icons/
 
         - name: Generators
           rows:
@@ -377,6 +381,11 @@
               ico: <i class="fa-solid fa-book"></i>
               lbl: Selenium Jupiter
               url: https://bonigarcia.github.io/selenium-jupiter/#quick-reference
+            - !Link
+              ico: <i class="fa-solid fa-v"></i>
+              lbl: Vite
+              url: https://vitejs.dev/guide/
+
 
         - name: React
           rows:
@@ -460,6 +469,10 @@
               ico: <i class="fa-solid fa-book"></i>
               lbl: CASL
               url: https://casl.js.org/v6/en/guide/intro
+            - !Link
+              ico: <i class="fa-solid fa-book"></i>
+              lbl: Nivo
+              url: https://nivo.rocks/components/
 
     - categories:
         - name: Practice
@@ -637,6 +650,29 @@
               ico: <i class="fa-solid fa-rocket"></i>
               lbl: WF2 | Release Staging Customer Demo
               url: https://webform-release-staging.finapi.io/f2406563-6c0d-4b84-90e4-be43304d6e42
+
+    - categories:
+        - name: Customer Dashboard UI
+          rows:
+            - !Link
+              ico: <i class="fa-solid fa-book"></i>
+              lbl: Technical Design
+              url: https://finapi.jira.com/wiki/spaces/~5f75a51595fe8e00695bb5c3/pages/3601367110/App+Customer+Dashboard
+            - !Link
+              ico: <i class="fa-brands fa-bitbucket"></i>
+              lbl: CD UI | Bitbucket
+              url: https://bitbucket.org/teaminvest/finapi-customer-dashboard-service/pull-requests/
+        - name: Customer Dashboard Service
+          rows:
+            - !Link
+              ico: <i class="fa-brands fa-bitbucket"></i>
+              lbl: CD Service | Bitbucket
+              url: https://bitbucket.org/teaminvest/finapi-customer-dashboard-ui/src/main/
+            - !Link
+              ico: <i class="fa-solid fa-satellite"></i>
+              lbl: CD Service | Staging
+              url: https://customerdashboard-finapi-general-staging.finapi.io/
+
 
     - categories:
         - name: FDS
