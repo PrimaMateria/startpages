@@ -660,7 +660,7 @@
               url: https://webform-release-staging.finapi.io/f2406563-6c0d-4b84-90e4-be43304d6e42
 
     - categories:
-        - name: Customer Dashboard UI
+        - name: CD UI
           rows:
             - !Link
               ico: <i class="fa-solid fa-book"></i>
@@ -670,7 +670,7 @@
               ico: <i class="fa-brands fa-bitbucket"></i>
               lbl: CD UI | Bitbucket
               url: https://bitbucket.org/teaminvest/finapi-customer-dashboard-service/pull-requests/
-        - name: Customer Dashboard Service
+        - name: CD Service
           rows:
             - !Link
               ico: <i class="fa-brands fa-bitbucket"></i>
