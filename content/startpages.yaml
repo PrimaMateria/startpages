@@ -390,7 +390,7 @@
               lbl: Selenium Jupiter
               url: https://bonigarcia.github.io/selenium-jupiter/#quick-reference
             - !Link
-              ico: <i class="fa-solid fa-v"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: Vite
               url: https://vitejs.dev/guide/
 
@@ -466,7 +466,7 @@
               lbl: Material UI pickers
               url: https://material-ui-pickers.dev/demo/datepicker
             - !Link
-              ico: <i class="fa-brands fa-github"></i>
+              ico: <i class="fa-solid fa-book"></i>
               lbl: Zustand
               url: https://github.com/pmndrs/zustand
             - !Link
@@ -677,7 +677,7 @@
               lbl: CD Service | Bitbucket
               url: https://bitbucket.org/teaminvest/finapi-customer-dashboard-ui/src/main/
             - !Link
-              ico: <i class="fa-solid fa-satellite"></i>
+              ico: <i class="fa-solid fa-plane"></i>
               lbl: CD Service | Staging
               url: https://customerdashboard-finapi-general-staging.finapi.io/
 
