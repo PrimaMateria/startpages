@@ -675,7 +675,7 @@
             - !Link
               ico: <i class="fa-brands fa-bitbucket"></i>
               lbl: CD Service | Bitbucket
-              url: https://bitbucket.org/teaminvest/finapi-customer-dashboard-ui/src/main/
+              url: https://bitbucket.org/teaminvest/finapi-customer-dashboard-service/src/main/
             - !Link
               ico: <i class="fa-solid fa-plane"></i>
               lbl: CD Service | Staging
