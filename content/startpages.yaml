@@ -669,7 +669,7 @@
             - !Link
               ico: <i class="fa-brands fa-bitbucket"></i>
               lbl: CD UI | Bitbucket
-              url: https://bitbucket.org/teaminvest/finapi-customer-dashboard-service/pull-requests/
+              url: https://bitbucket.org/teaminvest/finapi-customer-dashboard-ui/src/main/
         - name: CD Service
           rows:
             - !Link
