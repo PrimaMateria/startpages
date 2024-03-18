@@ -660,27 +660,37 @@
               url: https://webform-release-staging.finapi.io/f2406563-6c0d-4b84-90e4-be43304d6e42
 
     - categories:
-        - name: CD UI
+        - name: CUDA
           rows:
             - !Link
-              ico: <i class="fa-solid fa-book"></i>
-              lbl: Technical Design
-              url: https://finapi.jira.com/wiki/spaces/~5f75a51595fe8e00695bb5c3/pages/3601367110/App+Customer+Dashboard
-            - !Link
               ico: <i class="fa-brands fa-bitbucket"></i>
-              lbl: CD UI | Bitbucket
+              lbl: UI | Bitbucket
               url: https://bitbucket.org/teaminvest/finapi-customer-dashboard-ui/src/main/
-        - name: CD Service
-          rows:
             - !Link
               ico: <i class="fa-brands fa-bitbucket"></i>
-              lbl: CD Service | Bitbucket
+              lbl: UI | Bitbucket
+              url: https://bitbucket.org/teaminvest/finapi-customer-dashboard-ui/src/main/
+            - !Link
+              ico: <i class="fa-brands fa-jenkins"></i>
+              lbl: UI | Jenkins
+              url: https://jenkins.dev.finapi.net/job/finapi-customerdashboard-ui/
+            - !Link
+              ico: <i class="fa-solid fa-plane"></i>
+              lbl: UI | Staging
+              url: https://customerdashboard-ui-finapi-general-staging.finapi.io/
+            - !Link
+              ico: <i class="fa-solid fa-rocket"></i>
+              lbl: UI | Release Staging
+              url: https://customerdashboard-ui-finapi-general-release-staging.finapi.io/
+            - !Separator
+            - !Link
+              ico: <i class="fa-brands fa-bitbucket"></i>
+              lbl: Service | Bitbucket
               url: https://bitbucket.org/teaminvest/finapi-customer-dashboard-service/src/main/
             - !Link
               ico: <i class="fa-solid fa-plane"></i>
-              lbl: CD Service | Staging
+              lbl: Service | Staging
               url: https://customerdashboard-finapi-general-staging.finapi.io/
-
 
     - categories:
         - name: FDS
