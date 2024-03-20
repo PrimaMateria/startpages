@@ -665,11 +665,7 @@
             - !Link
               ico: <i class="fa-brands fa-bitbucket"></i>
               lbl: UI | Bitbucket
-              url: https://bitbucket.org/teaminvest/finapi-customer-dashboard-ui/src/main/
-            - !Link
-              ico: <i class="fa-brands fa-bitbucket"></i>
-              lbl: UI | Bitbucket
-              url: https://bitbucket.org/teaminvest/finapi-customer-dashboard-ui/src/main/
+              url: https://bitbucket.org/teaminvest/finapi-customer-dashboard-ui/pull-requests/
             - !Link
               ico: <i class="fa-brands fa-jenkins"></i>
               lbl: UI | Jenkins
