@@ -660,8 +660,13 @@
               url: https://webform-release-staging.finapi.io/f2406563-6c0d-4b84-90e4-be43304d6e42
 
     - categories:
-        - name: CUDA
+        - name: CD
           rows:
+            - !Link
+              ico: <i class="fa-brands fa-confluence"></i>
+              lbl: Confluence
+              url: https://finapi.jira.com/wiki/spaces/CD/overview?homepageId=3750265570
+            ~ !Separator
             - !Link
               ico: <i class="fa-brands fa-bitbucket"></i>
               lbl: UI | Bitbucket
