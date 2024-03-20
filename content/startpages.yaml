@@ -423,8 +423,12 @@
               url: https://github.com/testing-library/user-event
             - !Link
               ico: <i class="fa-solid fa-book"></i>
-              lbl: React Query
-              url: https://react-query.tanstack.com/quick-start
+              lbl: Tanstack Query
+              url: https://tanstack.com/query/latest/docs/framework/react/overview
+            - !Link
+              ico: <i class="fa-solid fa-book"></i>
+              lbl: Tanstack Router
+              url: https://tanstack.com/router/latest/docs/framework/react/overview
             - !Link
               ico: <i class="fa-solid fa-book"></i>
               lbl: React Router DOM
