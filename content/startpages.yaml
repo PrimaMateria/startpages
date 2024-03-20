@@ -670,7 +670,7 @@
               ico: <i class="fa-brands fa-confluence"></i>
               lbl: Confluence
               url: https://finapi.jira.com/wiki/spaces/CD/overview?homepageId=3750265570
-            ~ !Separator
+            - !Separator
             - !Link
               ico: <i class="fa-brands fa-bitbucket"></i>
               lbl: UI | Bitbucket
