@@ -350,6 +350,14 @@
               lbl: NixOS Wiki
               url: https://nixos.wiki/wiki/Main_Page
             - !Link
+              ico: <i class="fa-solid fa-book"></i>
+              lbl: Nix
+              url: https://nixos.org/manual/nix/stable/language/
+            - !Link
+              ico: <i class="fa-solid fa-book"></i>
+              lbl: NixpKgs
+              url: https://nixos.org/manual/nixpkgs/stable/
+            - !Link
               ico: <i class="fa-solid fa-snowflake"></i>
               lbl: Home Manager
               url: https://mipmip.github.io/home-manager-option-search/
