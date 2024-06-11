@@ -547,15 +547,15 @@
             - !Separator
             - !Link
               ico: <i class="fa-brands fa-confluence"></i>
-              lbl: Confluence
-              url: https://finapi.jira.com/wiki/spaces/~5f75a51595fe8e00695bb5c3/overview
+              lbl: Confluence Frontend
+              url: https://finapi.jira.com/wiki/spaces/Frontend/overview?homepageId=3858399955
             - !Link
               ico: <i class="fa-solid fa-user"></i>
               lbl: Personio
               url: https://finapi-gmbh.personio.de/attendance/employee/13548279
             - !Link
               ico: <i class="fa-brands fa-jira"></i>
-              lbl: FE Scrum
+              lbl: FE Board
               url: https://finapi.jira.com/jira/people/5f75a51595fe8e00695bb5c3/boards/145
             - !Link
               ico: <i class="fa-solid fa-table"></i>
@@ -563,7 +563,7 @@
               url: https://teaminvest1.sharepoint.com/:x:/r/sites/produkte/_layouts/15/Doc.aspx?sourcedoc=%7B8B1E9E6F-7A06-4D2F-978D-176899EE9430%7D&file=Di-Releases.xlsx&action=default&mobileredirect=true
             - !Link
               ico: <i class="fa-brands fa-jira"></i>
-              lbl: DI Scrum
+              lbl: DI Board
               url: https://finapi.jira.com/jira/software/c/projects/DATAINT/boards/134?selectedIssue=DATAINT-2265&assignee=5f75a51595fe8e00695bb5c3
             - !Link
               ico: <i class="fa-solid fa-calendar"></i>
