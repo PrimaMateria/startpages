@@ -550,7 +550,7 @@
             - !Separator
             - !Link
               ico: <i class="fa-brands fa-confluence"></i>
-              lbl: Confluence Frontend
+              lbl: FE Confluence 
               url: https://finapi.jira.com/wiki/spaces/Frontend/overview?homepageId=3858399955
             - !Link
               ico: <i class="fa-solid fa-user"></i>
