@@ -148,6 +148,10 @@
             - !Separator
 
             - !Link
+              ico: <i class="fa-solid fa-rss"></i>
+              lbl: RSS
+              url: https://primamateria.ddns.net/freshrss
+            - !Link
               ico: <i class="fa-solid fa-grin-squint-tears"></i>
               lbl: zomri
               url: https://www.zomri.online/
