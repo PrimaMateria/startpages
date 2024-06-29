@@ -122,6 +122,10 @@
               lbl: Cinema Munich
               url: https://www.cinema-muenchen.com/
             - !Link
+              ico: <i class="fa-solid fa-masks-theater"></i>
+              lbl: Schauburg
+              url: https://www.schauburg.net/de/spielplan
+            - !Link
               ico: <i class="fa-solid fa-tint"></i>
               lbl: Benzinpreis
               url: https://www.benzinpreis-aktuell.de/#here
