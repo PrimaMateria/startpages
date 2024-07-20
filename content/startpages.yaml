@@ -229,6 +229,10 @@
               ico: <i class="fa-brands fa-linkedin-in"></i>
               lbl: Linkedin
               url: https://www.linkedin.com/feed/
+            - !Link
+              ico: <i class="fa-solid fa-graduation-cap"></i> 
+              lbl: Duolingo
+              url: https://www.duolingo.com/learn
 
 - name: Development
   columns:
