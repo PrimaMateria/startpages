@@ -233,6 +233,10 @@
               ico: <i class="fa-solid fa-graduation-cap"></i> 
               lbl: Duolingo
               url: https://www.duolingo.com/learn
+            - !Link
+              ico: <b>学</b>
+              lbl: Hanzicraft
+              url: https://hanzicraft.com/
 
 - name: Development
   columns:
