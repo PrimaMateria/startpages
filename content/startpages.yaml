@@ -316,7 +316,7 @@
             - !Link
               ico: <i class="fa-brands fa-wikipedia-w"></i>
               lbl: Webfont Generator
-              url: http://randomiban.com/?country=Germany
+              url: https://transfonter.org
 
         - name: Editors
           rows:
