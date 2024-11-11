@@ -386,8 +386,16 @@
           rows:
             - !Link
               ico: <i class="fa-solid fa-book"></i>
-              lbl: Material UI
-              url: https://material-ui.com/components/grid/
+              lbl: Material UI 4
+              url: https://v4.mui.com/getting-started/installation/
+            - !Link
+              ico: <i class="fa-solid fa-book"></i>
+              lbl: Material UI 5
+              url: https://v5.mui.com/material-ui/getting-started/installation/
+            - !Link
+              ico: <i class="fa-solid fa-book"></i>
+              lbl: Material UI 6
+              url: https://mui.com/material-ui/getting-started/
             - !Link
               ico: <i class="fa-solid fa-book"></i>
               lbl: TypeScript
