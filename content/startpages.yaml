@@ -877,7 +877,7 @@
             - !Link
               ico: <i class="fa-brands fa-figma"></i>
               lbl: Figma
-              url: https://www.figmahttps://ui.shadcn.com/.com/files/team/1293911850733170472/drafts?fuid=1293911848815955820
+              url: https://www.figma.com/files/team/1293911850733170472/drafts?fuid=1293911848815955820
             - !Link
               ico: <i class="fa-solid fa-cube"></i>
               lbl: Shadcn
