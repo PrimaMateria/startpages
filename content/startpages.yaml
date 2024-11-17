@@ -886,5 +886,13 @@
               ico: <i class="fa-solid fa-cube"></i>
               lbl: Shadcn
               url: https://ui.shadcn.com/
+            - !Link
+              icon: <i class="fa-solid fa-icons"></i>
+              lbl: Material Design Icons
+              url: https://fonts.google.com/icons
+            - !Link
+              icon: <i class="fa-solid fa-font"></i>
+              lbl: Google Fonts
+              url: https://fonts.google.com/
 
               
