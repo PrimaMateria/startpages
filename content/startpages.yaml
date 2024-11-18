@@ -861,10 +861,10 @@
               ico: <i class="fa-solid fa-plane"></i>
               lbl: Processctl | Staging
               url: https://di-processctl.finapi-general-staging.finapi.net/api-docs/index.html
-- name: PrimaMateria
+- name: Webdesign
   columns:
     - categories:
-        - name: Tools
+        - name: Design
           rows:
             - !Link
               ico: <i class="fa-brands fa-pagelines"></i>
@@ -883,10 +883,6 @@
               lbl: Penpot
               url: https://design.penpot.app
             - !Link
-              ico: <i class="fa-solid fa-cube"></i>
-              lbl: Shadcn
-              url: https://ui.shadcn.com/
-            - !Link
               ico: <i class="fa-solid fa-icons"></i>
               lbl: Material Design Icons
               url: https://fonts.google.com/icons
@@ -894,3 +890,11 @@
               ico: <i class="fa-solid fa-font"></i>
               lbl: Google Fonts
               url: https://fonts.google.com/
+
+    - categories:
+        - name: Code
+          rows:
+            - !Link
+              ico: <i class="fa-solid fa-cube"></i>
+              lbl: Shadcn
+              url: https://ui.shadcn.com/
