@@ -861,7 +861,7 @@
               ico: <i class="fa-solid fa-plane"></i>
               lbl: Processctl | Staging
               url: https://di-processctl.finapi-general-staging.finapi.net/api-docs/index.html
-- name: Webdesign
+- name: Webdev
   columns:
     - categories:
         - name: Design
@@ -870,14 +870,6 @@
               ico: <i class="fa-brands fa-pagelines"></i>
               lbl: Dribble
               url: https://dribbble.com/shots/popular/web-design
-            - !Link
-              ico: <i class="fa-solid fa-user-tie"></i>
-              lbl: Fiverr
-              url: https://www.fiverr.com/users/prima_materia/seller_dashboard
-            - !Link
-              ico: <i class="fa-brands fa-figma"></i>
-              lbl: Figma
-              url: https://www.figma.com/files/team/1293911850733170472/drafts?fuid=1293911848815955820
             - !Link
               ico: <i class="fa-solid fa-pencil"></i>
               lbl: Penpot
@@ -890,7 +882,17 @@
               ico: <i class="fa-solid fa-font"></i>
               lbl: Google Fonts
               url: https://fonts.google.com/
-
+    - categories:
+        - name: Management
+          rows:
+            - !Link
+              ico: <i class="fa-solid fa-user-tie"></i>
+              lbl: Fiverr
+              url: https://www.fiverr.com/users/prima_materia/seller_dashboard
+            - !Link
+              ico: <i class="fa-solid fa-font"></i>
+              lbl: Google Fonts
+              url: https://app.worklenz.com/worklenz/home            
     - categories:
         - name: Code
           rows:
@@ -898,3 +900,11 @@
               ico: <i class="fa-solid fa-cube"></i>
               lbl: Shadcn
               url: https://ui.shadcn.com/
+            - !Link
+              ico: <i class="fa-solid fa-cube"></i>
+              lbl: Vite
+              url: https://vite.dev/guide/
+            - !Link
+              ico: <i class="fa-solid fa-cube"></i>
+              lbl: eslint plugin prettier
+              url: https://github.com/prettier/eslint-plugin-prettier
