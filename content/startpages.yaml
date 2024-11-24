@@ -890,8 +890,8 @@
               lbl: Fiverr
               url: https://www.fiverr.com/users/prima_materia/seller_dashboard
             - !Link
-              ico: <i class="fa-solid fa-font"></i>
-              lbl: Google Fonts
+              ico: <i class="fa-solid fa-list-check"></i>
+              lbl: Worklenz
               url: https://app.worklenz.com/worklenz/home            
     - categories:
         - name: Code
