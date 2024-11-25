@@ -424,7 +424,10 @@
               ico: <i class="fa-solid fa-book"></i>
               lbl: Vite
               url: https://vitejs.dev/guide/
-
+            - !Link
+              ico: <i class="fa-solid fa-book"></i>
+              lbl: Slidev
+              url: https://sli.dev/
 
         - name: React
           rows:
