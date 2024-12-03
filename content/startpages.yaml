@@ -669,6 +669,15 @@
             - !Separator
             - !Link
               ico: <i class="fa-brands fa-bitbucket"></i>
+              lbl: WF2 UI | Bitbucket
+              url: https://bitbucket.org/teaminvest/web-form-ui/pull-requests/
+            - !Link
+              ico: <i class="fa-brands fa-jenkins"></i>
+              lbl: WF2 UI | Jenkins
+              url: https://jenkins.dev.finapi.net/job/web-form-ui/
+            - !Separator
+            - !Link
+              ico: <i class="fa-brands fa-bitbucket"></i>
               lbl: WF2 Loader | Bitbucket
               url: https://bitbucket.org/teaminvest/web-form-loader/pull-requests/
             - !Link
