@@ -105,6 +105,10 @@
               ico: <i class="fa-solid fa-chart-bar"></i>
               lbl: Blog Analytics
               url: https://analytics.google.com/analytics/web/?authuser=0#/p381336193/reports/intelligenthome
+            - !Link
+              ico: <i class="fa-solid fa-mobile-screen-button"></i>
+              lbl: Simplytel
+              url: https://www.simplytel.de/
 
             - !Separator
             - !Link
