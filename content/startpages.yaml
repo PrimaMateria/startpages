@@ -258,7 +258,7 @@
               lbl: Element
               url: https://element.primamateria.ddns.net/
             - !Link
-              ico: <b>中文</b>
+              ico: <b>中</b>
               lbl: Zhongwen
               url: https://zhongwen.primamateria.ddns.net/
             - !Link
