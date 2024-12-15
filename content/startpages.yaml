@@ -242,6 +242,30 @@
               lbl: Hanzicraft
               url: https://hanzicraft.com/
 
+    - categories:
+        - name: Homeserver
+          rows:
+            - !Link
+              ico: <i class="fa-solid fa-gauge-high"></i>
+              lbl: Traefik
+              url: http://192.168.178.67:8080/dashboard/#/
+            - !Link
+              ico: <i class="fa-solid fa-comments"></i>
+              lbl: Element
+              url: https://element.primamateria.ddns.net/
+            - !Link
+              ico: <b>中文</b>
+              lbl: Zhongwen
+              url: https://zhongwen.primamateria.ddns.net/
+            - !Link
+              ico: <i class="fa-solid fa-box"></i>
+              lbl: DHL PDF cleaner
+              url: https://dhlpdfcleaner.primamateria.ddns.net/
+            - !Link
+              ico: <i class="fa-solid fa-user-group"></i>
+              lbl: Monica
+              url: https://monica.primamateria.ddns.net/dashboard
+
 - name: Development
   columns:
     - categories:
