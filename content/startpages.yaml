@@ -105,6 +105,10 @@
               ico: <i class="fa-solid fa-chart-bar"></i>
               lbl: Blog Analytics
               url: https://analytics.google.com/analytics/web/?authuser=0#/p381336193/reports/intelligenthome
+            - !Link
+              ico: <i class="fa-solid fa-mobile-screen-button"></i>
+              lbl: Simplytel
+              url: https://www.simplytel.de/
 
             - !Separator
             - !Link
@@ -448,7 +452,10 @@
               ico: <i class="fa-solid fa-book"></i>
               lbl: Vite
               url: https://vitejs.dev/guide/
-
+            - !Link
+              ico: <i class="fa-solid fa-book"></i>
+              lbl: Slidev
+              url: https://sli.dev/
 
         - name: React
           rows:
@@ -615,7 +622,7 @@
             - !Link
               ico: <i class="fa-solid fa-table"></i>
               lbl: DI Releases
-              url: https://teaminvest1.sharepoint.com/:x:/r/sites/produkte/_layouts/15/Doc.aspx?sourcedoc=%7B8B1E9E6F-7A06-4D2F-978D-176899EE9430%7D&file=Di-Releases.xlsx&action=default&mobileredirect=true
+              url: https://teaminvest1.sharepoint.com/:x:/s/produkte/EYxsAT4pXzFCg6mtlCm609MB0Ko9N3EFnEJNQEjW8lLM_g?e=x17SED&nav=MTVfezJFM0E4NjdFLTdFMjUtNEYyNy1CQjM2LUZFQUVDMzcwMDVEQX0              
             - !Link
               ico: <i class="fa-brands fa-jira"></i>
               lbl: DI Board
@@ -687,6 +694,15 @@
               ico: <i class="fa-solid fa-gears"></i>
               lbl: WF2 | Environments
               url: https://finapi.jira.com/wiki/spaces/FWF/pages/1487601910/Environments
+            - !Separator
+            - !Link
+              ico: <i class="fa-brands fa-bitbucket"></i>
+              lbl: WF2 UI | Bitbucket
+              url: https://bitbucket.org/teaminvest/web-form-ui/pull-requests/
+            - !Link
+              ico: <i class="fa-brands fa-jenkins"></i>
+              lbl: WF2 UI | Jenkins
+              url: https://jenkins.dev.finapi.net/job/web-form-ui/
             - !Separator
             - !Link
               ico: <i class="fa-brands fa-bitbucket"></i>
