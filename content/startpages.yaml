@@ -160,10 +160,6 @@
             - !Separator
 
             - !Link
-              ico: <i class="fa-solid fa-rss"></i>
-              lbl: RSS
-              url: https://freshrss.primamateria.ddns.net
-            - !Link
               ico: <i class="fa-solid fa-grin-squint-tears"></i>
               lbl: zomri
               url: https://www.zomri.online/
@@ -253,6 +249,10 @@
               ico: <i class="fa-solid fa-gauge-high"></i>
               lbl: Traefik
               url: http://192.168.178.67:8080/dashboard/#/
+            - !Link
+              ico: <i class="fa-solid fa-rss"></i>
+              lbl: FreshRSS
+              url: https://freshrss.primamateria.ddns.net
             - !Link
               ico: <i class="fa-solid fa-comments"></i>
               lbl: Element
