@@ -269,6 +269,11 @@
               ico: <i class="fa-solid fa-user-group"></i>
               lbl: Monica
               url: https://monica.primamateria.ddns.net/dashboard
+            - !Link
+              ico: <i class="fa-solid fa-bookmark"></i>
+              lbl: Hoarder
+              url: https://hoarder.primamateria.ddns.net
+              
 
 - name: Development
   columns:
