@@ -201,6 +201,10 @@
               ico: <i class="fa-brands fa-fort-awesome"></i>
               lbl: Humble Bundle
               url: https://www.humblebundle.com/
+            - !Link
+              ico: <i class="fa-regular fa-hand-spock"></i>
+              lbl: Stellaris wiki
+              url: https://stellaris.paradoxwikis.com/Stellaris_Wiki
 
     - categories:
         - name: Digest
