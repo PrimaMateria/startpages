@@ -5,6 +5,10 @@
           rows:
             - !Link
               ico: <i class="fa-solid fa-robot"></i>
+              lbl: Deepseek
+              url: https://chat.deepseek.com/
+            - !Link
+              ico: <i class="fa-solid fa-robot"></i>
               lbl: ChatGPT
               url: https://chat.openai.com/
             - !Link
