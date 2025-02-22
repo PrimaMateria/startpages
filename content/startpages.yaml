@@ -957,3 +957,7 @@
               ico: <i class="fa-solid fa-cube"></i>
               lbl: eslint plugin prettier
               url: https://github.com/prettier/eslint-plugin-prettier
+            - !Link
+              ico: <i class="fa-solid fa-cube"></i>
+              lbl: medusajs
+              url: https://docs.medusajs.com/learn
