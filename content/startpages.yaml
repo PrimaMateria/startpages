@@ -5,6 +5,10 @@
           rows:
             - !Link
               ico: <i class="fa-solid fa-robot"></i>
+              lbl: Deepseek
+              url: https://chat.deepseek.com/
+            - !Link
+              ico: <i class="fa-solid fa-robot"></i>
               lbl: ChatGPT
               url: https://chat.openai.com/
             - !Link
@@ -277,7 +281,6 @@
               ico: <i class="fa-solid fa-bookmark"></i>
               lbl: Hoarder
               url: https://hoarder.primamateria.ddns.net
-              
 
 - name: Development
   columns:
@@ -931,6 +934,10 @@
               ico: <i class="fa-solid fa-font"></i>
               lbl: Google Fonts
               url: https://fonts.google.com/
+            - !Link
+              ico: <i class="fa-solid fa-laptop"></i>
+              lbl: Device shots
+              url: https://deviceshots.com/app
     - categories:
         - name: Management
           rows:
