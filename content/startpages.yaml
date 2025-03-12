@@ -5,6 +5,10 @@
           rows:
             - !Link
               ico: <i class="fa-solid fa-robot"></i>
+              lbl: Deepseek
+              url: https://chat.deepseek.com/
+            - !Link
+              ico: <i class="fa-solid fa-robot"></i>
               lbl: ChatGPT
               url: https://chat.openai.com/
             - !Link
@@ -160,10 +164,6 @@
             - !Separator
 
             - !Link
-              ico: <i class="fa-solid fa-rss"></i>
-              lbl: RSS
-              url: https://freshrss.primamateria.ddns.net
-            - !Link
               ico: <i class="fa-solid fa-grin-squint-tears"></i>
               lbl: zomri
               url: https://www.zomri.online/
@@ -205,6 +205,10 @@
               ico: <i class="fa-brands fa-fort-awesome"></i>
               lbl: Humble Bundle
               url: https://www.humblebundle.com/
+            - !Link
+              ico: <i class="fa-regular fa-hand-spock"></i>
+              lbl: Stellaris wiki
+              url: https://stellaris.paradoxwikis.com/Stellaris_Wiki
 
     - categories:
         - name: Digest
@@ -245,6 +249,38 @@
               ico: <b>学</b>
               lbl: Hanzicraft
               url: https://hanzicraft.com/
+
+    - categories:
+        - name: Homeserver
+          rows:
+            - !Link
+              ico: <i class="fa-solid fa-gauge-high"></i>
+              lbl: Traefik
+              url: http://192.168.178.67:8080/dashboard/#/
+            - !Link
+              ico: <i class="fa-solid fa-rss"></i>
+              lbl: FreshRSS
+              url: https://freshrss.primamateria.ddns.net
+            - !Link
+              ico: <i class="fa-solid fa-comments"></i>
+              lbl: Element
+              url: https://element.primamateria.ddns.net/
+            - !Link
+              ico: <b>中</b>
+              lbl: Zhongwen
+              url: https://zhongwen.primamateria.ddns.net/
+            - !Link
+              ico: <i class="fa-solid fa-box"></i>
+              lbl: DHL PDF cleaner
+              url: https://dhlpdfcleaner.primamateria.ddns.net/
+            - !Link
+              ico: <i class="fa-solid fa-user-group"></i>
+              lbl: Monica
+              url: https://monica.primamateria.ddns.net/dashboard
+            - !Link
+              ico: <i class="fa-solid fa-bookmark"></i>
+              lbl: Hoarder
+              url: https://hoarder.primamateria.ddns.net
 
 - name: Development
   columns:
@@ -899,6 +935,10 @@
               lbl: Google Fonts
               url: https://fonts.google.com/
             - !Link
+              ico: <i class="fa-solid fa-laptop"></i>
+              lbl: Device shots
+              url: https://deviceshots.com/app
+            - !Link
               ico: <i class="fa-solid fa-water"></i>
               lbl: Get Waves
               url: https://getwaves.io/
@@ -928,3 +968,7 @@
               ico: <i class="fa-solid fa-cube"></i>
               lbl: eslint plugin prettier
               url: https://github.com/prettier/eslint-plugin-prettier
+            - !Link
+              ico: <i class="fa-solid fa-cube"></i>
+              lbl: medusajs
+              url: https://docs.medusajs.com/learn
