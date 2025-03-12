@@ -898,6 +898,10 @@
               ico: <i class="fa-solid fa-font"></i>
               lbl: Google Fonts
               url: https://fonts.google.com/
+            - !Link
+              ico: <i class="fa-solid fa-water"></i>
+              lbl: Get Waves
+              url: https://getwaves.io/
     - categories:
         - name: Management
           rows:
