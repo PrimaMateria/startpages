@@ -677,13 +677,13 @@
         - name: Access
           rows:
             - !Link
+              ico: <i class="fa-solid fa-plane"></i>
+              lbl: Access | Staging Stable
+              url: https://access-stable.finapi-general-staging.finapi.net/#overview
+            - !Link
               ico: <i class="fa-solid fa-rocket"></i>
               lbl: Access | Release Staging
               url: https://release-staging.finapi.io/#overview
-            - !Link
-              ico: <i class="fa-solid fa-satellite"></i>
-              lbl: Access | Test
-              url: https://test.finapi.io
         - name: WF2
           rows:
             - !Link
