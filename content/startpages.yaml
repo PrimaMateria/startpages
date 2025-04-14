@@ -458,6 +458,10 @@
               url: https://jestjs.io/docs/en/getting-started
             - !Link
               ico: <i class="fa-solid fa-book"></i>
+              lbl: vitest
+              url: https://vitest.dev/guide/
+            - !Link
+              ico: <i class="fa-solid fa-book"></i>
               lbl: Selenium Jupiter
               url: https://bonigarcia.github.io/selenium-jupiter/#quick-reference
             - !Link
