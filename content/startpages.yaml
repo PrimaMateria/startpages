@@ -946,6 +946,10 @@
               ico: <i class="fa-solid fa-water"></i>
               lbl: Get Waves
               url: https://getwaves.io/
+            - !Link
+              ico: <i class="fa-solid fa-pen"></i>
+              lbl: Excalidraw
+              url: https://excalidraw.com
     - categories:
         - name: Management
           rows:
