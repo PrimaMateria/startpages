@@ -78,7 +78,11 @@
             - !Link
               ico: <i class="fa-solid fa-cloud"></i>
               lbl: Weather
-              url: https://www.windy.com
+              url: https://www.yr.no/en/forecast/daily-table/2-2867714/Germany/Bavaria/Upper%20Bavaria/Munich
+            - !Link
+              ico: <i class="fa-solid fa-plant-wilt"></i> 
+              lbl: Pollen Count
+              url: https://pollencount.eu/munich-de
 
     - categories:
         - name: Administration
@@ -877,32 +881,6 @@
               ico: <i class="fa-solid fa-star"></i>
               lbl: FHP | Live
               url: https://di-processctl-finapi-general-live.finapi.io/api/v1/processes/0ee84947-cc5d-11ea-88bf-06bdc5a6b3da/link
-        - name: FCMS
-          rows:
-            - !Link
-              ico: <i class="fa-brands fa-bitbucket"></i>
-              lbl: FCMS | Bitbucket
-              url: https://bitbucket.org/teaminvest/finapi-cms/pull-requests/
-            - !Link
-              ico: <i class="fa-brands fa-jenkins"></i>
-              lbl: FCMS | Jenkins
-              url: https://jenkins.dev.finapi.net/job/finapi-UI-CMS/
-            - !Link
-              ico: <i class="fa-solid fa-plane"></i>
-              lbl: FCMS | Staging
-              url: https://cms.finapi-general-staging.finapi.net/admin/
-            - !Link
-              ico: <i class="fa-solid fa-rocket"></i>
-              lbl: FCMS | Release Staging
-              url: https://cms.finapi-general-release-staging.finapi.net/admin/
-            - !Link
-              ico: <i class="fa-solid fa-satellite"></i>
-              lbl: FCMS | Sandbox
-              url: https://cms-finapi-general-sandbox.finapi.io/admin/
-            - !Link
-              ico: <i class="fa-solid fa-star"></i>
-              lbl: FCMS | Live
-              url: https://cms-finapi-general-live.finapi.io/admin
         - name: Processctl
           rows:
             - !Link
