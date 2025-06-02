@@ -695,27 +695,6 @@
         - name: WF2
           rows:
             - !Link
-              ico: <i class="fa-brands fa-jira"></i>
-              lbl: WF2 | Jira
-              url: https://finapi.jira.com/secure/RapidBoard.jspa?rapidView=136
-            - !Link
-              ico: <i class="fa-brands fa-confluence"></i>
-              lbl: WF2 | Confluence
-              url: https://teaminvest.jira.com/wiki/spaces/FWF/overview?homepageId=1487503628
-            - !Link
-              ico: <i class="fa-brands fa-bitbucket"></i>
-              lbl: WF2 | BitBucket
-              url: https://bitbucket.org/teaminvest/web-form/pull-requests/
-            - !Link
-              ico: <i class="fa-brands fa-jenkins"></i>
-              lbl: WF2 | Jenkins
-              url: https://jenkins.dev.finapi.net/job/WebForm%202/
-            - !Link
-              ico: <i class="fa-solid fa-gears"></i>
-              lbl: WF2 | Environments
-              url: https://finapi.jira.com/wiki/spaces/FWF/pages/1487601910/Environments
-            - !Separator
-            - !Link
               ico: <i class="fa-brands fa-bitbucket"></i>
               lbl: WF2 UI | Bitbucket
               url: https://bitbucket.org/teaminvest/web-form-ui/pull-requests/
@@ -736,6 +715,27 @@
               ico: <i class="fa-solid fa-book"></i>
               lbl: WF2 Loader | Typedocs
               url: https://webform-dist.finapi.io/latest/docs/index.html
+            - !Separator
+            - !Link
+              ico: <i class="fa-brands fa-jira"></i>
+              lbl: WF2 | Jira
+              url: https://finapi.jira.com/secure/RapidBoard.jspa?rapidView=136
+            - !Link
+              ico: <i class="fa-brands fa-confluence"></i>
+              lbl: WF2 | Confluence
+              url: https://teaminvest.jira.com/wiki/spaces/FWF/overview?homepageId=1487503628
+            - !Link
+              ico: <i class="fa-brands fa-bitbucket"></i>
+              lbl: WF2 | BitBucket
+              url: https://bitbucket.org/teaminvest/web-form/pull-requests/
+            - !Link
+              ico: <i class="fa-brands fa-jenkins"></i>
+              lbl: WF2 | Jenkins
+              url: https://jenkins.dev.finapi.net/job/WebForm%202/
+            - !Link
+              ico: <i class="fa-solid fa-gears"></i>
+              lbl: WF2 | Environments
+              url: https://finapi.jira.com/wiki/spaces/FWF/pages/1487601910/Environments
             - !Separator
             - !Link
               ico: <i class="fa-solid fa-plane"></i>
