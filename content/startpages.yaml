@@ -798,7 +798,7 @@
             - !Link
               ico: <i class="fa-solid fa-rocket"></i>
               lbl: FDS | Release Staging
-              url: https://design-system.finapi-general-release-staging.finapi.net/
+              url: https://design-system-finapi-general-release-staging.finapi.io/
         - name: FWL
           rows:
             - !Link
