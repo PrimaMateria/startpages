@@ -11,10 +11,6 @@
               ico: <i class="fa-solid fa-robot"></i>
               lbl: ChatGPT
               url: https://chat.openai.com/
-            - !Link
-              ico: <i class="fa-solid fa-robot"></i>
-              lbl: Perplexity
-              url: https://www.perplexity.ai
 
             - !Separator
             - !Link
@@ -29,6 +25,10 @@
               ico: <i class="fa-solid fa-calendar-days"></i>
               lbl: Calendar
               url: https://calendar.google.com/calendar/r/week
+            - !Link
+              ico: <i class="fa-brands fa-google-drive"></i>
+              lbl: Drive
+              url: https://drive.google.com/drive/u/0/my-drive
             - !Link
               ico: <i class="fa-brands fa-whatsapp"></i>
               lbl: WhatsApp
@@ -57,24 +57,8 @@
               ico: <i class="fa-solid fa-map-marker"></i>
               lbl: Maps
               url: https://www.google.com/maps
-            - !Link
-              ico: <i class="fa-brands fa-google-drive"></i>
-              lbl: Drive
-              url: https://drive.google.com/drive/u/0/my-drive
-            - !Link
-              ico: <i class="fa-solid fa-water"></i>
-              lbl: European Atlas of Seas
-              url: https://ec.europa.eu/maritimeaffairs/atlas/maritime_atlas/#lang=EN;p=w;bkgd=6;theme=11:0.06,10:1.00;c=1944850.649774897,5943205.279900633;z=8
 
             - !Separator
-            - !Link
-              ico: <i class="fa-brands fa-ebay"></i>
-              lbl: Kleinanzeige
-              url: https://www.ebay-kleinanzeigen.de/stadt/muenchen/
-            - !Link
-              ico: <i class="fa-brands fa-trello"></i>
-              lbl: Trello
-              url: https://trello.com/b/eX8WNzjw/kanban
             - !Link
               ico: <i class="fa-solid fa-cloud"></i>
               lbl: Weather
