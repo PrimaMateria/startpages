@@ -142,6 +142,12 @@
               lbl: MVV Tarifplan Gesamtnetz
               url: https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Tarifplaene/TARIFPLAN_Gesamtnetz_2018.PDF
 
+            - !Separator
+            - !Link
+              ico: <i class="fa-solid fa-house"></i>
+              lbl: Immo
+              url: https://www.immobilienscout24.de/savedsearch/myscout/manage/
+
     - categories:
         - name: Digest
           rows:
