@@ -24,11 +24,11 @@
             - !Link
               ico: <i class="fa-solid fa-calendar-days"></i>
               lbl: Calendar
+              url: https://calendar.google.com/calendar/r/week
             - !Link
               ico: <i class="fa-brands fa-google-drive"></i>
               lbl: Drive
               url: https://drive.google.com/drive/u/0/my-drive
-              url: https://calendar.google.com/calendar/r/week
             - !Link
               ico: <i class="fa-brands fa-whatsapp"></i>
               lbl: WhatsApp
@@ -205,6 +205,10 @@
               ico: <i class="fa-brands fa-youtube"></i>
               lbl: YouTube
               url: http://youtube.com
+            - !Link
+              ico: <i class="fa-brands fa-youtube"></i>
+              lbl: YouTube Music
+              url: https://music.youtube.com
             - !Link
               ico: <i class="fa-brands fa-youtube"></i>
               lbl: YouTube Ambients
