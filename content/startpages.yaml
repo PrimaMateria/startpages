@@ -759,6 +759,10 @@
               lbl: UI | Jenkins
               url: https://jenkins.dev.finapi.net/job/finapi-customerdashboard-ui/
             - !Link
+              ico: <i class="fa-brands fa-jenkins"></i>
+              lbl: UI | Jenkins Screenshots
+              url: https://jenkins.dev.finapi.net/job/finapi-customerdashboard-ui-update-screenshots/
+            - !Link
               ico: <i class="fa-solid fa-plane"></i>
               lbl: UI | Staging
               url: https://customerdashboard-ui-finapi-general-staging.finapi.io/
