@@ -213,6 +213,10 @@
               url: http://youtube.com
             - !Link
               ico: <i class="fa-brands fa-youtube"></i>
+              lbl: YouTube Music
+              url: https://music.youtube.com
+            - !Link
+              ico: <i class="fa-brands fa-youtube"></i>
               lbl: YouTube Ambients
               url: https://www.youtube.com/playlist?list=PLjDqZb1FVlst1XPXongf5UD02yU9Md-ot
             - !Link
@@ -760,6 +764,10 @@
               ico: <i class="fa-brands fa-jenkins"></i>
               lbl: UI | Jenkins
               url: https://jenkins.dev.finapi.net/job/finapi-customerdashboard-ui/
+            - !Link
+              ico: <i class="fa-brands fa-jenkins"></i>
+              lbl: UI | Jenkins Screenshots
+              url: https://jenkins.dev.finapi.net/job/finapi-customerdashboard-ui-update-screenshots/
             - !Link
               ico: <i class="fa-solid fa-plane"></i>
               lbl: UI | Staging
