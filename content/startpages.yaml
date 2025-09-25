@@ -279,6 +279,10 @@
               ico: <i class="fa-solid fa-bookmark"></i>
               lbl: Hoarder
               url: https://hoarder.primamateria.ddns.net
+            - !Link
+              ico: <i class="fa-solid fa-meteor"></i>
+              lbl: Suwayomi
+              url: https://suwayomi.primamateria.ddns.net/
 
 - name: Development
   columns:
