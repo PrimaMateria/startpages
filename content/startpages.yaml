@@ -643,13 +643,14 @@
               lbl: FE Confluence 
               url: https://finapi.jira.com/wiki/spaces/Frontend/overview?homepageId=3858399955
             - !Link
-              ico: <i class="fa-solid fa-user"></i>
-              lbl: Personio
-              url: https://finapi-gmbh.personio.de/attendance/employee/13548279
-            - !Link
               ico: <i class="fa-solid fa-table"></i>
               lbl: DI Releases
               url: https://teaminvest1.sharepoint.com/:x:/s/produkte/EYxsAT4pXzFCg6mtlCm609MB0Ko9N3EFnEJNQEjW8lLM_g?e=x17SED&nav=MTVfezJFM0E4NjdFLTdFMjUtNEYyNy1CQjM2LUZFQUVDMzcwMDVEQX0              
+            - !Separator
+            - !Link
+              ico: <i class="fa-solid fa-user"></i>
+              lbl: Personio
+              url: https://finapi-gmbh.personio.de/attendance/employee/13548279
             - !Link
               ico: <i class="fa-solid fa-calendar"></i>
               lbl: Timesheet
@@ -727,15 +728,15 @@
           rows:
             - !Link
               ico: <i class="fa-brands fa-bitbucket"></i>
-              lbl: WF2 Loader | Bitbucket
+              lbl: WFL | Bitbucket
               url: https://bitbucket.org/teaminvest/web-form-loader/pull-requests/
             - !Link
               ico: <i class="fa-brands fa-jenkins"></i>
-              lbl: WF2 Loader | Jenkins
+              lbl: WFL | Jenkins
               url: https://jenkins.dev.finapi.net/job/WebForm2_Loader/
             - !Link
               ico: <i class="fa-solid fa-book"></i>
-              lbl: WF2 Loader | Typedocs
+              lbl: WFL | Typedocs
               url: https://webform-dist.finapi.io/latest/docs/index.html
 
     - categories:
