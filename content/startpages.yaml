@@ -277,8 +277,8 @@
               url: https://monica.primamateria.ddns.net/dashboard
             - !Link
               ico: <i class="fa-solid fa-bookmark"></i>
-              lbl: Hoarder
-              url: https://hoarder.primamateria.ddns.net
+              lbl: karakeep
+              url: https://karakeep.primamateria.ddns.net
             - !Link
               ico: <i class="fa-solid fa-meteor"></i>
               lbl: Suwayomi
