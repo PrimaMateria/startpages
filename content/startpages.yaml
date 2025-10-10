@@ -626,6 +626,19 @@
               url: https://app.slack.com/client/TC2CR89V0/CC2CR8PHQ
             - !Separator
             - !Link
+              ico: <i class="fa-brands fa-jira"></i>
+              lbl: FE Board
+              url: https://finapi.jira.com/jira/people/5f75a51595fe8e00695bb5c3/boards/145
+            - !Link
+              ico: <i class="fa-brands fa-jira"></i>
+              lbl: DI Board
+              url: https://finapi.jira.com/jira/software/c/projects/DATAINT/boards/134
+            - !Link
+              ico: <i class="fa-brands fa-jira"></i>
+              lbl: WF Board
+              url: https://finapi.jira.com/secure/RapidBoard.jspa?rapidView=136
+            - !Separator
+            - !Link
               ico: <i class="fa-brands fa-confluence"></i>
               lbl: FE Confluence 
               url: https://finapi.jira.com/wiki/spaces/Frontend/overview?homepageId=3858399955
@@ -634,17 +647,9 @@
               lbl: Personio
               url: https://finapi-gmbh.personio.de/attendance/employee/13548279
             - !Link
-              ico: <i class="fa-brands fa-jira"></i>
-              lbl: FE Board
-              url: https://finapi.jira.com/jira/people/5f75a51595fe8e00695bb5c3/boards/145
-            - !Link
               ico: <i class="fa-solid fa-table"></i>
               lbl: DI Releases
               url: https://teaminvest1.sharepoint.com/:x:/s/produkte/EYxsAT4pXzFCg6mtlCm609MB0Ko9N3EFnEJNQEjW8lLM_g?e=x17SED&nav=MTVfezJFM0E4NjdFLTdFMjUtNEYyNy1CQjM2LUZFQUVDMzcwMDVEQX0              
-            - !Link
-              ico: <i class="fa-brands fa-jira"></i>
-              lbl: DI Board
-              url: https://finapi.jira.com/jira/software/c/projects/DATAINT/boards/134?selectedIssue=DATAINT-2265&assignee=5f75a51595fe8e00695bb5c3
             - !Link
               ico: <i class="fa-solid fa-calendar"></i>
               lbl: Timesheet
@@ -690,17 +695,36 @@
               ico: <i class="fa-solid fa-rocket"></i>
               lbl: Access | Release Staging
               url: https://release-staging.finapi.io/#overview
-        - name: WF2
+        - name: WF
           rows:
             - !Link
+              ico: <i class="fa-brands fa-confluence"></i>
+              lbl: Confluence
+              url: https://teaminvest.jira.com/wiki/spaces/FWF/overview?homepageId=1487503628
+            - !Separator
+            - !Link
               ico: <i class="fa-brands fa-bitbucket"></i>
-              lbl: WF2 UI | Bitbucket
+              lbl: UI | Bitbucket
               url: https://bitbucket.org/teaminvest/web-form-ui/pull-requests/
             - !Link
               ico: <i class="fa-brands fa-jenkins"></i>
-              lbl: WF2 UI | Jenkins
+              lbl: UI | Jenkins
               url: https://jenkins.dev.finapi.net/job/web-form-ui/
             - !Separator
+            - !Link
+              ico: <i class="fa-regular fa-paper-plane"></i>
+              lbl: Service | Customer Demo
+              url: https://webform-staging.finapi.io/f2406563-6c0d-4b84-90e4-be43304d6e42
+            - !Link
+              ico: <i class="fa-solid fa-plane"></i>
+              lbl: Service | Staging
+              url: https://webform-staging.finapi.io/
+            - !Link
+              ico: <i class="fa-solid fa-rocket"></i>
+              lbl: Service | Release Staging
+              url: https://webform-release-staging.finapi.io/
+        - name: WFL
+          rows:
             - !Link
               ico: <i class="fa-brands fa-bitbucket"></i>
               lbl: WF2 Loader | Bitbucket
@@ -713,44 +737,6 @@
               ico: <i class="fa-solid fa-book"></i>
               lbl: WF2 Loader | Typedocs
               url: https://webform-dist.finapi.io/latest/docs/index.html
-            - !Separator
-            - !Link
-              ico: <i class="fa-brands fa-jira"></i>
-              lbl: WF2 | Jira
-              url: https://finapi.jira.com/secure/RapidBoard.jspa?rapidView=136
-            - !Link
-              ico: <i class="fa-brands fa-confluence"></i>
-              lbl: WF2 | Confluence
-              url: https://teaminvest.jira.com/wiki/spaces/FWF/overview?homepageId=1487503628
-            - !Link
-              ico: <i class="fa-brands fa-bitbucket"></i>
-              lbl: WF2 | BitBucket
-              url: https://bitbucket.org/teaminvest/web-form/pull-requests/
-            - !Link
-              ico: <i class="fa-brands fa-jenkins"></i>
-              lbl: WF2 | Jenkins
-              url: https://jenkins.dev.finapi.net/job/WebForm%202/
-            - !Link
-              ico: <i class="fa-solid fa-gears"></i>
-              lbl: WF2 | Environments
-              url: https://finapi.jira.com/wiki/spaces/FWF/pages/1487601910/Environments
-            - !Separator
-            - !Link
-              ico: <i class="fa-solid fa-plane"></i>
-              lbl: WF2 | Staging
-              url: https://webform-staging.finapi.io/
-            - !Link
-              ico: <i class="fa-solid fa-plane"></i>
-              lbl: WF2 | Staging Customer Demo
-              url: https://webform-staging.finapi.io/f2406563-6c0d-4b84-90e4-be43304d6e42
-            - !Link
-              ico: <i class="fa-solid fa-rocket"></i>
-              lbl: WF2 | Release Staging
-              url: https://webform-release-staging.finapi.io/
-            - !Link
-              ico: <i class="fa-solid fa-rocket"></i>
-              lbl: WF2 | Release Staging Customer Demo
-              url: https://webform-release-staging.finapi.io/f2406563-6c0d-4b84-90e4-be43304d6e42
 
     - categories:
         - name: CD
