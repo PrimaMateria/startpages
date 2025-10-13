@@ -947,3 +947,19 @@
               ico: <i class="fa-solid fa-cube"></i>
               lbl: medusajs
               url: https://docs.medusajs.com/learn
+            - !Link
+              ico: <i class="fa-solid fa-cube"></i>
+              lbl: nextjs
+              url: https://nextjs.org/docs
+            - !Link
+              ico: <i class="fa-solid fa-cube"></i>
+              lbl: tailwindcss
+              url: https://tailwindcss.com/docs
+            - !Link
+              ico: <i class="fa-solid fa-cube"></i>
+              lbl: daisyui
+              url: https://daisyui.com/components/
+            - !Link
+              ico: <i class="fa-solid fa-cube"></i>
+              lbl: fontawesome reactg
+              url: https://docs.fontawesome.com/web/use-with/react
