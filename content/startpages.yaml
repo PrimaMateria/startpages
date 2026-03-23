@@ -713,6 +713,15 @@
               url: https://jenkins.dev.finapi.net/job/web-form-ui/
             - !Separator
             - !Link
+              ico: <i class="fa-brands fa-bitbucket"></i>
+              lbl: UI | Bitbucket
+              url: https://bitbucket.org/teaminvest/web-form-ui-2_1/pull-requests/
+            - !Link
+              ico: <i class="fa-brands fa-jenkins"></i>
+              lbl: UI | Jenkins
+              url: https://jenkins.dev.finapi.net/job/web-form-ui-2_1/
+            - !Separator
+            - !Link
               ico: <i class="fa-regular fa-paper-plane"></i>
               lbl: Service | Customer Demo
               url: https://webform-staging.finapi.io/f2406563-6c0d-4b84-90e4-be43304d6e42
