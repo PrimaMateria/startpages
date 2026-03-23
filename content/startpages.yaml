@@ -336,6 +336,10 @@
               ico: <i class="fa-solid fa-gauge"></i>
               lbl: Web Page Test
               url: https://www.webpagetest.org/
+            - !Link
+              ico: <i class="fa-solid fa-paragraph"></i>
+              lbl: Text tool
+              url: https://thetexttool.com/
 
         - name: Generators
           rows:
