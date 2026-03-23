@@ -718,11 +718,11 @@
             - !Separator
             - !Link
               ico: <i class="fa-brands fa-bitbucket"></i>
-              lbl: UI | Bitbucket
+              lbl: UI 2.1 | Bitbucket
               url: https://bitbucket.org/teaminvest/web-form-ui-2_1/pull-requests/
             - !Link
               ico: <i class="fa-brands fa-jenkins"></i>
-              lbl: UI | Jenkins
+              lbl: UI 2.1 | Jenkins
               url: https://jenkins.dev.finapi.net/job/web-form-ui-2_1/
             - !Separator
             - !Link
