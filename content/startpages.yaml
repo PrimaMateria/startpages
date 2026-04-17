@@ -87,6 +87,10 @@
               ico: <i class="fa-solid fa-bolt"></i>
               lbl: SWM
               url: https://meine.swm.de/iss/ui/#/acc/login
+            - !Link
+              ico: <i class="fa-solid fa-bolt"></i>
+              lbl: Bayernwerk Netz
+              url: https://www.bayernwerk-netz.de
 
             - !Separator
             - !Link
