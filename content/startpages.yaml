@@ -258,7 +258,7 @@
             - !Link
               ico: <i class="fa-solid fa-gauge-high"></i>
               lbl: Traefik
-              url: http://192.168.178.67:8080/dashboard/#/
+              url: http://192.168.2.67:8080/dashboard/#/
             - !Link
               ico: <i class="fa-solid fa-rss"></i>
               lbl: FreshRSS
