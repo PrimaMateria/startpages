@@ -287,6 +287,11 @@
               ico: <i class="fa-solid fa-meteor"></i>
               lbl: Suwayomi
               url: https://suwayomi.primamateria.ddns.net/
+            - !Link
+              ico: <i class="fa-solid fa-book"></i>
+              lbl: Bookorbit
+              url: https://books.primamateria.ddns.net/
+
 
 - name: Development
   columns:
