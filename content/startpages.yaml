@@ -291,6 +291,14 @@
               ico: <i class="fa-solid fa-book"></i>
               lbl: Bookorbit
               url: https://books.primamateria.ddns.net/
+            - !Link
+              ico: <i class="fa-solid fa-tablet"></i>
+              lbl: Calibre
+              url: https://calibre.primamateria.ddns.net/
+            - !Link
+              ico: <i class="fa-solid fa-terminal"></i>
+              lbl: Term
+              url: https://term.primamateria.ddns.net/
 
 
 - name: Development
