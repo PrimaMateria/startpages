@@ -268,9 +268,9 @@
               lbl: Element
               url: https://element.primamateria.ddns.net/
             - !Link
-              ico: <b>中</b>
-              lbl: Zhongwen
-              url: https://zhongwen.primamateria.ddns.net/
+              ico: <i class="fa-solid fa-apple-whole"></i>
+              lbl: Apps
+              url: https://apps.primamateria.ddns.net/
             - !Link
               ico: <i class="fa-solid fa-box"></i>
               lbl: DHL PDF cleaner
