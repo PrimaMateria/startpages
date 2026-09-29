@@ -1,8 +1,6 @@
 # Startpages
 
-![Preview](_docs/colorschemes/base16-default-light.png)
-
-[Other colorschemes](_docs/colorschemes.md)
+![Preview](_docs/preview.png)
 
 Start pages are designed to replace the default browser's new tab page. So
 every time you open a new tab, one of your start pages will be displayed,
@@ -47,10 +45,26 @@ on the code.
 
 ## Styling
 
-Styles are defined inside the `sass/styles.scss`. The easiest way is to choose
-one of the predefined colorscheme by uncommenting the import line. The
-colorschemes were taken from
-[samme/base16-styles](https://github.com/samme/base16-styles).
+Styles are defined in `sass/styles.scss`, which carries a single dark theme.
+Every colour lives in the `:root` block at the top of the file as a CSS custom
+property, so retuning the palette means editing a handful of values instead of
+hunting through the rules below them:
+
+| Variable                          | Used for                                |
+| --------------------------------- | --------------------------------------- |
+| `--ink-900` … `--ink-700`         | page ground, cards, hovered row         |
+| `--line`, `--line-soft`           | hairlines and card borders              |
+| `--fg`, `--fg-dim`, `--fg-mute`   | labels, headings, icons                 |
+| `--amber`                         | accent: headings, hover bar, current tab |
+| `--teal`                          | keyboard focus ring                     |
+
+Type is monospace throughout:
+[Anonymous Pro](https://fonts.google.com/specimen/Anonymous+Pro) for the link
+labels and [Space Mono](https://fonts.google.com/specimen/Space+Mono) for the
+structural elements (page name, category headings, tabs). Both are loaded from
+Google Fonts in `templates/startpage.html`.
+
+Nothing on the page animates or transitions - state changes are instant.
 
 ## Changing startpage template
 

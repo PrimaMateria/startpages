@@ -3,9 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#070605" />
     <title>{{ startpage.name }}</title>
 
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <link
@@ -29,7 +32,7 @@
 
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Anonymous+Pro:wght@400;700&family=Space+Mono:wght@400;700&display=swap"
     />
 
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
@@ -43,13 +46,30 @@
     />
   </head>
   <body>
-    <h1 class="visually-hidden">{{ startpage.name }}</h1>
-    <main class="page">
+    <div class="grain" aria-hidden="true"></div>
+    <div class="glow" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <h1 class="brand">
+        <span class="brand-tick" aria-hidden="true"></span>{{ startpage.name }}
+      </h1>
+      <nav class="tabs" aria-label="Startpages">
+        {%- for nav in navigation %}
+        {%- if nav.name == startpage.name %}
+        <a class="tab is-current" href="{{ nav.path | safe }}" aria-current="page">{{ nav.name }}</a>
+        {%- else %}
+        <a class="tab" href="{{ nav.path | safe }}">{{ nav.name }}</a>
+        {%- endif %}
+        {%- endfor %}
+      </nav>
+    </header>
+
+    <main class="page" style="--columns: {{ startpage.columns | length }}">
       {%- for column in startpage.columns %}
       <div class="column">
         {%- for category in column.categories %}
         <section class="category">
-          <h2>{{ category.name }}</h2>
+          <h2 class="category-title">{{ category.name }}</h2>
           <ul class="rows">
             {%- for row in category.rows %}
             {%- if row == "Separator" %}
@@ -69,14 +89,5 @@
       </div>
       {%- endfor %}
     </main>
-    <nav class="navigation" aria-label="Startpages">
-      {%- for nav in navigation %}
-      {%- if nav.name == startpage.name %}
-      <a href="{{ nav.path | safe }}" class="current" aria-current="page">{{ nav.name }}</a>
-      {%- else %}
-      <a href="{{ nav.path | safe }}">{{ nav.name }}</a>
-      {%- endif %}
-      {%- endfor %}
-    </nav>
   </body>
 </html>

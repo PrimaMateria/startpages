@@ -635,7 +635,7 @@
 - name: Work
   columns:
     - categories:
-        - name: Internal
+        - name: Comms
           rows:
             - !Link
               ico: <i class="fa-solid fa-envelope"></i>
@@ -645,7 +645,8 @@
               ico: <i class="fa-brands fa-slack"></i>
               lbl: Slack
               url: https://app.slack.com/client/TC2CR89V0/CC2CR8PHQ
-            - !Separator
+        - name: Boards
+          rows:
             - !Link
               ico: <i class="fa-brands fa-jira"></i>
               lbl: FE Board
@@ -658,7 +659,8 @@
               ico: <i class="fa-brands fa-jira"></i>
               lbl: WF Board
               url: https://finapi.jira.com/secure/RapidBoard.jspa?rapidView=136
-            - !Separator
+        - name: Docs
+          rows:
             - !Link
               ico: <i class="fa-brands fa-confluence"></i>
               lbl: FE Confluence 
@@ -667,7 +669,9 @@
               ico: <i class="fa-solid fa-table"></i>
               lbl: DI Releases
               url: https://teaminvest1.sharepoint.com/:x:/s/produkte/EYxsAT4pXzFCg6mtlCm609MB0Ko9N3EFnEJNQEjW8lLM_g?e=x17SED&nav=MTVfezJFM0E4NjdFLTdFMjUtNEYyNy1CQjM2LUZFQUVDMzcwMDVEQX0              
-            - !Separator
+    - categories:
+        - name: People
+          rows:
             - !Link
               ico: <i class="fa-solid fa-user"></i>
               lbl: Personio
@@ -680,7 +684,8 @@
               ico: <i class="fa-solid fa-person-walking-luggage"></i>
               lbl: Vacation list
               url: https://finapi.jira.com/wiki/spaces/DI/pages/976060429/Absence+2020+2021+2022
-            - !Separator
+        - name: Infra
+          rows:
             - !Link
               ico: <i class="fa-solid fa-hand-point-right"></i>
               lbl: OneLogin
@@ -705,7 +710,8 @@
               ico: <i class="fa-brands fa-jenkins"></i>
               lbl: Deploy job
               url: https://jenkins.itops.finapi.net/job/deploy_staging/build?delay=0sec
-
+- name: Projects
+  columns:
     - categories:
         - name: Access
           rows:
@@ -768,7 +774,6 @@
               ico: <i class="fa-solid fa-book"></i>
               lbl: WFL | Typedocs
               url: https://webform-dist.finapi.io/latest/docs/index.html
-
     - categories:
         - name: CD
           rows:
@@ -806,7 +811,6 @@
               ico: <i class="fa-solid fa-plane"></i>
               lbl: Service | Staging
               url: https://customerdashboard-finapi-general-staging.finapi.io/
-
     - categories:
         - name: FDS
           rows:
@@ -836,6 +840,7 @@
               ico: <i class="fa-solid fa-plane"></i>
               lbl: FWL | Staging
               url: https://widget-library.finapi-general-staging.finapi.net/docs/index.html?path=/story/girocheck-examples--interactive&globals=clientId:f0907acc-2987-48a1-9e1b-fb0a4e538e37;clientSecret:d9366968-3610-4f78-a162-0f8eccff9b6e
+    - categories:
         - name: FJSL
           rows:
             - !Link
@@ -864,7 +869,6 @@
               ico: <i class="fa-solid fa-plane"></i>
               lbl: FJSSR | Staging
               url: https://js-static-resources-finapi-general-staging.finapi.io/
-
     - categories:
         - name: FHP
           rows:

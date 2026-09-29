@@ -1,92 +1,39 @@
-// @import "colorschemes/base16-3024.scss";
-// @import "colorschemes/base16-apathy.scss";
-// @import "colorschemes/base16-ashes.scss";
-// @import "colorschemes/base16-atelier-cave.scss";
-// @import "colorschemes/base16-atelier-dune.scss";
-// @import "colorschemes/base16-atelier-estuary.scss";
-// @import "colorschemes/base16-atelier-forest.scss";
-// @import "colorschemes/base16-atelier-heath.scss";
-// @import "colorschemes/base16-atelier-lakeside.scss";
-// @import "colorschemes/base16-atelier-plateau.scss";
-// @import "colorschemes/base16-atelier-savanna.scss";
-// @import "colorschemes/base16-atelier-seaside.scss";
-// @import "colorschemes/base16-atelier-sulphurpool.scss";
-// @import "colorschemes/base16-bespin.scss";
-// @import "colorschemes/base16-brewer.scss";
-// @import "colorschemes/base16-bright.scss";
-// @import "colorschemes/base16-chalk.scss";
-// @import "colorschemes/base16-codeschool.scss";
-// @import "colorschemes/base16-cupcake.scss";
-// @import "colorschemes/base16-darktooth.scss";
-// @import "colorschemes/base16-default-dark.scss";
-// @import "colorschemes/base16-default-light.scss";
-// @import "colorschemes/base16-dracula.scss";
-// @import "colorschemes/base16-eighties.scss";
-// @import "colorschemes/base16-embers.scss";
-// @import "colorschemes/base16-flat.scss";
-// @import "colorschemes/base16-github.scss";
-// @import "colorschemes/base16-google-dark.scss";
-// @import "colorschemes/base16-google-light.scss";
-// @import "colorschemes/base16-grayscale-dark.scss";
-// @import "colorschemes/base16-grayscale-light.scss";
-// @import "colorschemes/base16-green-screen.scss";
-@import "colorschemes/base16-gruvbox-dark-hard.scss";
-// @import "colorschemes/base16-gruvbox-dark-medium.scss";
-// @import "colorschemes/base16-gruvbox-dark-pale.scss";
-// @import "colorschemes/base16-gruvbox-dark-soft.scss";
-// @import "colorschemes/base16-gruvbox-light-hard.scss";
-// @import "colorschemes/base16-gruvbox-light-medium.scss";
-// @import "colorschemes/base16-gruvbox-light-soft.scss";
-// @import "colorschemes/base16-harmonic16-dark.scss";
-// @import "colorschemes/base16-harmonic16-light.scss";
-// @import "colorschemes/base16-hopscotch.scss";
-// @import "colorschemes/base16-ir-black.scss";
-// @import "colorschemes/base16-isotope.scss";
-// @import "colorschemes/base16-london-tube.scss";
-// @import "colorschemes/base16-macintosh.scss";
-// @import "colorschemes/base16-marrakesh.scss";
-// @import "colorschemes/base16-materia.scss";
-// @import "colorschemes/base16-mexico-light.scss";
-// @import "colorschemes/base16-mocha.scss";
-// @import "colorschemes/base16-monokai.scss";
-// @import "colorschemes/base16-nord.scss";
-// @import "colorschemes/base16-ocean.scss";
-// @import "colorschemes/base16-oceanicnext.scss";
-// @import "colorschemes/base16-onedark.scss";
-// @import "colorschemes/base16-paraiso.scss";
-// @import "colorschemes/base16-phd.scss";
-// @import "colorschemes/base16-pico.scss";
-// @import "colorschemes/base16-pop.scss";
-// @import "colorschemes/base16-railscasts.scss";
-// @import "colorschemes/base16-rebecca.scss";
-// @import "colorschemes/base16-seti-ui.scss";
-// @import "colorschemes/base16-shapeshifter.scss";
-// @import "colorschemes/base16-solar-flare.scss";
-// @import "colorschemes/base16-solarized-dark.scss";
-// @import "colorschemes/base16-solarized-light.scss";
-// @import "colorschemes/base16-spacemacs.scss";
-// @import "colorschemes/base16-summerfruit-dark.scss";
-// @import "colorschemes/base16-summerfruit-light.scss";
-// @import "colorschemes/base16-tomorrow-night.scss";
-// @import "colorschemes/base16-tomorrow.scss";
-// @import "colorschemes/base16-twilight.scss";
-// @import "colorschemes/base16-unikitty-dark.scss";
-// @import "colorschemes/base16-unikitty-light.scss";
-// @import "colorschemes/base16-woodland.scss";
-
 // ---------------------------------------------------------------------------
-// Layout & theme
+// Startpages - one dark theme, all monospace.
 //
-// Colours come from the base16 colorscheme imported above:
-//   $base00 background        $base01 lighter background (hover)
-//   $base02 borders           $base03 muted (icons)
-//   $base04 body text         $base05/$base06 brighter text
-//   $base0A headings / accent $base0D focus ring
+// Built for a page that gets opened a hundred times a day: no motion, strong
+// separation between cards and ground, and type large enough to scan without
+// leaning in. Anonymous Pro carries the labels, Space Mono the structure.
 // ---------------------------------------------------------------------------
 
-$row-gap: 2px;
-$icon-width: 24px;
-$nav-height: 3rem;
+$max-width: 1660px;
+$gutter: 34px;
+$grid-gap: 20px;
+$column-max: 420px;
+
+$display: "Space Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+$body: "Anonymous Pro", "Space Mono", ui-monospace, Menlo, monospace;
+
+:root {
+  // Surfaces. The step from ground to card is deliberately wide, and every
+  // card also carries a visible border - boxes should read as boxes.
+  --ink-900: #070605;
+  --ink-800: #241f1b;
+  --ink-700: #38302a;
+
+  --line: #574a3f;
+  --line-soft: #3b312a;
+
+  // Text, brightest to faintest.
+  --fg: #f4eee6;
+  --fg-dim: #bcb0a1;
+  --fg-mute: #9a8d7e;
+
+  --amber: #f2b134;
+  --amber-wash: rgba(242, 177, 52, 0.12);
+  --amber-edge: rgba(242, 177, 52, 0.35);
+  --teal: #62cdbb;
+}
 
 *,
 *::before,
@@ -95,65 +42,239 @@ $nav-height: 3rem;
 }
 
 html {
-  // Makes scrollbars follow the colorscheme. Switch to `light` when a light
-  // base16 scheme is imported above.
   color-scheme: dark;
-}
-
-html,
-body {
-  font-family: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
-  background-color: $base00;
-  color: $base04;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-700) transparent;
 }
 
 body {
   margin: 0;
-  // Keeps the last row clear of the fixed navigation bar.
-  padding-bottom: $nav-height;
+  min-height: 100vh;
+  padding-bottom: 48px;
+
+  background-color: var(--ink-900);
+  color: var(--fg);
+  font-family: $body;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
-  text-decoration: none;
   color: inherit;
+  text-decoration: none;
 }
 
-h2 {
-  color: $base0A;
-  margin: 0 0 8px;
-  font-size: 1.4rem;
+::selection {
+  background: rgba(242, 177, 52, 0.3);
+  color: #fff;
 }
 
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ink-700);
+  border: 3px solid var(--ink-900);
+  border-radius: 99px;
+}
+
+// --- Atmosphere -----------------------------------------------------------
+// Film grain plus a warm spill from the top edge. Both fixed and
+// pointer-transparent; nothing here moves or reflows.
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC44IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIiBmaWx0ZXI9InVybCgjbikiLz48L3N2Zz4=");
+}
+
+.glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 75vh;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+      58% 100% at 14% 0%,
+      rgba(184, 112, 40, 0.12),
+      transparent 70%
+    ),
+    radial-gradient(50% 95% at 84% 0%, rgba(140, 84, 34, 0.08), transparent 70%);
+}
+
+// --- Header ---------------------------------------------------------------
+// Page name on the left, startpage tabs on the right. Sticky, so the tabs stay
+// reachable on the long pages.
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px 28px;
+
+  margin-bottom: 26px;
+  padding: 16px $gutter 15px;
+
+  background: rgba(7, 6, 5, 0.93);
+  border-bottom: 1px solid var(--line-soft);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.brand {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  font-family: $display;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.26em;
+  color: var(--fg);
+}
+
+.brand-tick {
+  flex: none;
+  width: 4px;
+  height: 18px;
+  background: var(--amber);
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.tab {
+  padding: 6px 14px;
+
+  font-family: $display;
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--fg-mute);
   white-space: nowrap;
-  border: 0;
+
+  &:hover {
+    color: var(--fg);
+    background: var(--ink-700);
+  }
+
+  &:focus-visible {
+    color: var(--fg);
+    outline: 2px solid var(--teal);
+    outline-offset: -2px;
+  }
+
+  // Brackets mark the current page without relying on colour alone.
+  &.is-current {
+    color: var(--amber);
+    background: var(--amber-wash);
+    box-shadow: inset 0 0 0 1px var(--amber-edge);
+
+    &::before {
+      content: "[";
+      margin-right: 6px;
+      color: var(--amber-edge);
+    }
+
+    &::after {
+      content: "]";
+      margin-left: 6px;
+      color: var(--amber-edge);
+    }
+  }
 }
+
+// --- Columns and cards ----------------------------------------------------
+// auto-fill (not auto-fit) keeps the track width constant, so a two-column
+// page has the same card measure as a five-column one instead of stretching.
 
 .page {
-  max-width: 1600px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  grid-column-gap: 40px;
-  grid-row-gap: 40px;
+  // The template sets --columns to the number of columns this startpage
+  // actually defines, so a two-column page sits centred at its natural width
+  // instead of being stranded against the left edge. Wide pages hit
+  // $max-width first and fill the screen as before.
+  --columns: 5;
+  max-width: min(
+    #{$max-width},
+    calc(
+      var(--columns) * #{$column-max} + (var(--columns) - 1) * #{$grid-gap} +
+        #{$gutter * 2}
+    )
+  );
+  margin: 0 auto;
+  padding: 0 $gutter;
 
-  margin: 3rem auto 0;
-  padding: 0 40px 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: $grid-gap;
+  align-items: start;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .category {
-  margin-bottom: 32px;
+  padding: 16px 14px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--ink-800);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 8px 20px -10px rgba(0, 0, 0, 0.85);
+}
 
-  &:last-child {
-    margin-bottom: 0;
+.category-title {
+  margin: 0 0 12px;
+  padding: 0 4px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  font-family: $display;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--amber);
+
+  // Comment marker, then a hairline running out to the edge of the card.
+  &::before {
+    content: "//";
+    letter-spacing: 0;
+    color: var(--fg-mute);
+  }
+
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
   }
 }
+
+// --- Rows -----------------------------------------------------------------
+// The whole row is the anchor: a generous mouse target, and Vimium drops its
+// hint on the icon instead of over the first letters of the label.
 
 .rows {
   list-style: none;
@@ -161,94 +282,87 @@ h2 {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: $row-gap;
+  gap: 2px;
 }
 
-// The whole row is the link: a bigger mouse target, and Vimium puts its hint
-// over the icon instead of over the first letters of the label.
 .row {
+  position: relative;
   display: flex;
-  // flex-start keeps the icon next to the first line when a long label wraps.
+  // flex-start keeps the icon beside the first line when a long label wraps.
   align-items: flex-start;
-  gap: 8px;
-  padding: 3px 8px;
-  line-height: 1.45;
-  border-radius: 4px;
-  // Removes the 300ms tap delay and stray text selection on double click.
+  gap: 11px;
+  padding: 6px 10px 6px 13px;
+  border-radius: 6px;
+  line-height: 1.5;
   -webkit-tap-highlight-color: transparent;
 
+  // Accent bar on the left edge, shown on hover and focus.
+  &::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 7px;
+    bottom: 7px;
+    width: 2px;
+    background: transparent;
+  }
+
   .ico {
-    flex: 0 0 $icon-width;
+    flex: 0 0 20px;
     text-align: center;
-    color: $base03;
+    font-size: 14px;
+    color: var(--fg-mute);
+  }
+
+  .lbl {
+    font-size: 15.5px;
   }
 
   &:hover,
   &:focus-visible {
-    background-color: $base01;
-    color: $base06;
+    background: var(--ink-700);
+    color: #fff;
+
+    &::before {
+      background: var(--amber);
+    }
 
     .ico {
-      color: $base0A;
+      color: var(--amber);
     }
   }
 
   &:focus-visible {
-    outline: 2px solid $base0D;
+    outline: 2px solid var(--teal);
     outline-offset: 0;
   }
 }
 
 .separator {
-  border-top: 1px solid $base02;
-  margin: 8px 0 8px 8px;
-  max-width: 150px;
+  height: 0;
+  margin: 9px 10px 9px 14px;
+  border-top: 1px dashed var(--line);
 }
 
-.navigation {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: $nav-height;
-  display: flex;
-  gap: 32px;
-  align-items: center;
-  justify-content: center;
+// --- Narrow screens -------------------------------------------------------
 
-  background-color: $base01;
-  border-top: 1px solid $base02;
-
-  a {
-    padding: 4px 10px;
-    border-radius: 4px;
-
-    &:hover,
-    &:focus-visible {
-      background-color: $base02;
-      color: $base06;
-    }
-
-    &:focus-visible {
-      outline: 2px solid $base0D;
-    }
+@media (max-width: 720px) {
+  .topbar {
+    padding: 14px 16px;
+    margin-bottom: 18px;
   }
 
-  .current {
-    color: $base0A;
-    font-weight: 700;
-  }
-}
-
-@media (max-width: 640px) {
   .page {
-    margin-top: 1.5rem;
-    padding: 0 16px 24px;
-    grid-row-gap: 24px;
+    padding: 0 16px;
+    gap: 16px;
+  }
+
+  .column {
+    gap: 16px;
   }
 
   // Bigger tap targets on a phone.
   .row {
-    padding: 8px;
+    padding: 10px 12px 10px 15px;
   }
 }
