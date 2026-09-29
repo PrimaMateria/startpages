@@ -74,26 +74,66 @@
 // @import "colorschemes/base16-unikitty-light.scss";
 // @import "colorschemes/base16-woodland.scss";
 
-@import "https://fonts.googleapis.com/css2?family=Roboto";
+// ---------------------------------------------------------------------------
+// Layout & theme
+//
+// Colours come from the base16 colorscheme imported above:
+//   $base00 background        $base01 lighter background (hover)
+//   $base02 borders           $base03 muted (icons)
+//   $base04 body text         $base05/$base06 brighter text
+//   $base0A headings / accent $base0D focus ring
+// ---------------------------------------------------------------------------
+
+$row-gap: 2px;
+$icon-width: 24px;
+$nav-height: 3rem;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  // Makes scrollbars follow the colorscheme. Switch to `light` when a light
+  // base16 scheme is imported above.
+  color-scheme: dark;
+}
 
 html,
 body {
-  font-family: "Roboto";
+  font-family: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
   background-color: $base00;
   color: $base04;
 }
 
+body {
+  margin: 0;
+  // Keeps the last row clear of the fixed navigation bar.
+  padding-bottom: $nav-height;
+}
+
 a {
   text-decoration: none;
-  color: $base04;
+  color: inherit;
 }
 
 h2 {
   color: $base0A;
+  margin: 0 0 8px;
+  font-size: 1.4rem;
 }
 
-body {
-  margin-top: 5%;
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .page {
@@ -103,34 +143,112 @@ body {
   grid-column-gap: 40px;
   grid-row-gap: 40px;
 
-  margin: 0 auto;
-  padding-left: 40px;
-  padding-right: 40px;
-  padding-bottom: 40px;
+  margin: 3rem auto 0;
+  padding: 0 40px 40px;
 }
 
 .category {
-  .rows {
-    display: grid;
-    grid-row-gap: 4px;
-    grid-template-columns: 30px auto;
+  margin-bottom: 32px;
 
-    .separator {
-      border-top: 1px solid $base02;
-      margin-top: 8px;
-      margin-bottom: 8px;
-      grid-column: 1 / span 2;
-      max-width: 150px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $row-gap;
+}
+
+// The whole row is the link: a bigger mouse target, and Vimium puts its hint
+// over the icon instead of over the first letters of the label.
+.row {
+  display: flex;
+  // flex-start keeps the icon next to the first line when a long label wraps.
+  align-items: flex-start;
+  gap: 8px;
+  padding: 3px 8px;
+  line-height: 1.45;
+  border-radius: 4px;
+  // Removes the 300ms tap delay and stray text selection on double click.
+  -webkit-tap-highlight-color: transparent;
+
+  .ico {
+    flex: 0 0 $icon-width;
+    text-align: center;
+    color: $base03;
+  }
+
+  &:hover,
+  &:focus-visible {
+    background-color: $base01;
+    color: $base06;
+
+    .ico {
+      color: $base0A;
     }
   }
+
+  &:focus-visible {
+    outline: 2px solid $base0D;
+    outline-offset: 0;
+  }
+}
+
+.separator {
+  border-top: 1px solid $base02;
+  margin: 8px 0 8px 8px;
+  max-width: 150px;
 }
 
 .navigation {
   position: fixed;
   bottom: 0;
-  padding: 8px;
+  left: 0;
   width: 100%;
+  height: $nav-height;
   display: flex;
   gap: 32px;
+  align-items: center;
   justify-content: center;
+
+  background-color: $base01;
+  border-top: 1px solid $base02;
+
+  a {
+    padding: 4px 10px;
+    border-radius: 4px;
+
+    &:hover,
+    &:focus-visible {
+      background-color: $base02;
+      color: $base06;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $base0D;
+    }
+  }
+
+  .current {
+    color: $base0A;
+    font-weight: 700;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    margin-top: 1.5rem;
+    padding: 0 16px 24px;
+    grid-row-gap: 24px;
+  }
+
+  // Bigger tap targets on a phone.
+  .row {
+    padding: 8px;
+  }
 }

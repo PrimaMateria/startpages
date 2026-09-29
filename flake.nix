@@ -17,6 +17,7 @@
             buildInputs = [
               pkgs.rustc
               pkgs.cargo
+              pkgs.cargo-watch
             ];
           };
           default = rust;

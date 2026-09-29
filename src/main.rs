@@ -4,7 +4,6 @@ extern crate lazy_static;
 use fs_extra::dir::{copy, CopyOptions};
 use rsass::{compile_scss_path, output};
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 use std::fs;
 use std::fs::File;
 use std::io::Read;
@@ -38,8 +37,14 @@ struct Startpage {
     columns: Vec<Column>,
 }
 
-//  <name, filename>
-type Navigation = HashMap<String, String>;
+#[derive(Debug, Serialize)]
+struct NavItem {
+    name: String,
+    path: String,
+}
+
+/// Startpages in the order they are defined in the configuration.
+type Navigation = Vec<NavItem>;
 
 static OUT_DIR: &str = "_site";
 static CONFIGURATION: &str = "content/startpages.yaml";
@@ -70,18 +75,20 @@ fn get_startpages() -> Result<Vec<Startpage>, Box<dyn std::error::Error>> {
     Ok(startpages)
 }
 
-/// It collects names of startpages and returns a map to their file paths.
+/// It collects names of startpages and their file paths, keeping the order in
+/// which the startpages are defined in the configuration.
 fn get_navigation(startpages: &Vec<Startpage>) -> Navigation {
-    let mut navigation: Navigation = HashMap::new();
+    startpages
+        .iter()
+        .map(|startpage| {
+            let startpage_safe_name = startpage.name.to_lowercase().replace(" ", "_");
 
-    for startpage in startpages {
-        let startpage_name = startpage.name.to_owned();
-        let startpage_safe_name = startpage_name.to_lowercase().replace(" ", "_");
-        let startpage_file_name = format!("{}.html", startpage_safe_name);
-
-        navigation.insert(startpage_name, startpage_file_name);
-    }
-    navigation
+            NavItem {
+                name: startpage.name.to_owned(),
+                path: format!("{}.html", startpage_safe_name),
+            }
+        })
+        .collect()
 }
 
 /// Recreates output directory.
@@ -109,9 +116,11 @@ fn generate_startpages(
         let html_code = TEMPLATES.render("startpage.html", &context)?;
 
         // Write generated html code to the file in the _site directory
-        let startpage_file_name = navigation
-            .get(&startpage.name)
-            .ok_or("Navigation doesn't contain startpage name")?;
+        let startpage_file_name = &navigation
+            .iter()
+            .find(|nav| nav.name == startpage.name)
+            .ok_or("Navigation doesn't contain startpage name")?
+            .path;
 
         let startpage_file_path = format!("{}/{}", OUT_DIR, startpage_file_name);
         let mut file = File::create(startpage_file_path)?;

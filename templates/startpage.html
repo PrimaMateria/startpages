@@ -1,6 +1,12 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{ startpage.name }}</title>
+
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <link
       rel="apple-touch-icon"
@@ -21,6 +27,11 @@
     />
     <link rel="manifest" href="public/favicon/site.webmanifest" />
 
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+    />
+
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
 
     <link
@@ -30,35 +41,42 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
   <body>
-    <div class="page">
-      {% for column in startpage.columns %}
+    <h1 class="visually-hidden">{{ startpage.name }}</h1>
+    <main class="page">
+      {%- for column in startpage.columns %}
       <div class="column">
-        {% for category in column.categories %}
-        <div class="category">
+        {%- for category in column.categories %}
+        <section class="category">
           <h2>{{ category.name }}</h2>
-          <div class="rows">
-            {% for row in category.rows %} {% if row == "Separator" %}
-            <div class="separator"></div>
-            {% else %}
-            <div class="ico">{{ row.Link.ico | safe }}</div>
-            <div class="lbl">
-              <a href="{{ row.Link.url | safe }}">{{ row.Link.lbl }}</a>
-            </div>
-            {% endif %} {% endfor %}
-          </div>
-        </div>
-        {% endfor %}
+          <ul class="rows">
+            {%- for row in category.rows %}
+            {%- if row == "Separator" %}
+            <li class="separator" role="separator"></li>
+            {%- else %}
+            <li>
+              <a class="row" href="{{ row.Link.url | safe }}">
+                <span class="ico" aria-hidden="true">{{ row.Link.ico | safe }}</span
+                ><span class="lbl">{{ row.Link.lbl }}</span>
+              </a>
+            </li>
+            {%- endif %}
+            {%- endfor %}
+          </ul>
+        </section>
+        {%- endfor %}
       </div>
-      {% endfor %}
-    </div>
-    <div class="navigation">
-      {% for startpage_name, startpage_filepath in navigation %}
-      <a href="{{ startpage_filepath | safe }}">{{ startpage_name }}</a>
-      {% endfor %}
-    </div>
+      {%- endfor %}
+    </main>
+    <nav class="navigation" aria-label="Startpages">
+      {%- for nav in navigation %}
+      {%- if nav.name == startpage.name %}
+      <a href="{{ nav.path | safe }}" class="current" aria-current="page">{{ nav.name }}</a>
+      {%- else %}
+      <a href="{{ nav.path | safe }}">{{ nav.name }}</a>
+      {%- endif %}
+      {%- endfor %}
+    </nav>
   </body>
 </html>
