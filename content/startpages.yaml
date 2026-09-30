@@ -882,6 +882,10 @@
               url: https://jenkins.dev.finapi.net/job/finapi-hostpages/
             - !Link
               ico: <i class="fa-solid fa-plane"></i>
+              lbl: FHP | Finde Staging
+              url: https://di-processctl.finapi-general-staging.finapi.net/api/v1/processes/6c14ee79-b936-40f7-a70e-82aadd1bca55/link
+            - !Link
+              ico: <i class="fa-solid fa-plane"></i>
               lbl: FHP | Staging
               url: https://di-processctl-finapi-general-staging.finapi.io/api/v1/processes/3155a272-695e-4464-8f6f-51f1a653b4ee/link
             - !Link
