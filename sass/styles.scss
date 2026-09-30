@@ -24,20 +24,20 @@ $other-size: 13px; // OTHER_CH = 8.6
   // Ordered so the generator's stride (0,4,8,3,7,2,6,1,5) walks the wheel in
   // big steps: green, magenta, gold, blue, amber, violet, cyan, rose, lime.
   --tone-0: 106 236 150; // green
-  --tone-1: 255 118 162; // rose
-  --tone-2: 186 146 255; // violet
-  --tone-3: 106 186 255; // blue
-  --tone-4: 255 122 226; // magenta
+  --tone-1: 255 159 190; // rose
+  --tone-2: 203 173 255; // violet
+  --tone-3: 122 194 255; // blue
+  --tone-4: 255 153 233; // magenta
   --tone-5: 178 255 96; // lime
   --tone-6: 78 230 230; // cyan
   --tone-7: 255 166 74; // amber
   --tone-8: 255 212 92; // gold
 
   --void: #06070a;
-  --ink: #dfe4ea;
-  --ink-dim: #6d7684;
+  --ink: #f4f7fa;
+  --ink-dim: #a8b3c2;
   --wire: 96 110 128;
-  --bark: 122 134 148;
+  --bark: 154 168 184;
 }
 
 *,
@@ -59,7 +59,9 @@ body {
   color: var(--ink);
   font-family: $mono;
   font-size: $leaf-size;
-  -webkit-font-smoothing: antialiased;
+  // Not `antialiased`: it thins the glyphs, and thin strokes are the first
+  // thing to go on a screen being read in daylight.
+  font-weight: 500;
 }
 
 a {
@@ -138,22 +140,78 @@ a {
 // change width along its length - and width is what says how far from the root
 // a segment is. Trunk and branches are bark; only the twig that carries a
 // single category takes that category's colour.
+// The field the tree stands in: contours of the distance to everything else,
+// so they wrap its silhouette rather than sitting in the gaps. Line, not haze.
+.strand {
+  fill: none;
+  stroke: #{"rgb(var(--thread) / var(--ink))"};
+  stroke-width: 1;
+
+  // The field breathes rather than pulses: every string is on the same slow
+  // cycle but started at its own point in it, so the whole thing drifts and
+  // nothing ever beats in time.
+  animation: breathe 26s ease-in-out infinite alternate;
+  animation-delay: var(--beat, 0s);
+  will-change: opacity;
+}
+
+@keyframes breathe {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1.1;
+  }
+}
+
+// A brightening that travels the length of a string and is gone. Long enough
+// between them that one is an event rather than a rhythm.
+.ripple {
+  fill: none;
+  stroke: #{"rgb(var(--thread) / 0.28)"};
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-dasharray: 120 7000;
+  animation: travel 54s linear infinite;
+  animation-delay: var(--wake, 0s);
+}
+
+@keyframes travel {
+  from {
+    stroke-dashoffset: 7120;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .strand,
+  .ripple {
+    animation: none;
+  }
+
+  .ripple {
+    display: none;
+  }
+}
+
 .bough {
-  fill: #{"rgb(var(--bark) / 0.34)"};
+  fill: #{"rgb(var(--bark) / 0.62)"};
   stroke: none;
 
   &.is-tip {
-    fill: #{"rgb(var(--tone) / 0.38)"};
+    fill: #{"rgb(var(--tone) / 0.66)"};
   }
 }
 
 .stem {
-  stroke: #{"rgb(var(--tone) / 0.45)"};
+  stroke: #{"rgb(var(--tone) / 0.78)"};
   stroke-width: 1.2;
 }
 
 .vein {
-  stroke: #{"rgb(var(--tone) / 0.26)"};
+  stroke: #{"rgb(var(--tone) / 0.58)"};
   stroke-width: 1;
 }
 
@@ -167,7 +225,7 @@ a {
 // The junction standing for a separator-delimited group. Deliberately quiet -
 // it is punctuation, not a label.
 .bud {
-  fill: #{"rgb(var(--tone) / 0.85)"};
+  fill: #{"rgb(var(--tone))"};
   stroke: var(--void);
   stroke-width: 1.5;
 }
@@ -251,7 +309,7 @@ a {
     width: 17px;
     text-align: center;
     font-size: 12.5px;
-    color: #{"rgb(var(--tone) / 0.75)"};
+    color: #{"rgb(var(--tone))"};
   }
 
   &:hover {

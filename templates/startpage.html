@@ -58,6 +58,12 @@
           height="{{ map.height }}"
           aria-hidden="true"
         >
+          {%- for strand in map.strands %}
+          <path class="strand" d="{{ strand.d | safe }}" style="--ink: {{ strand.ink }}; --thread: {{ strand.tint }}; --beat: -{{ strand.beat }}s" />
+          {%- if strand.ripple %}
+          <path class="ripple" d="{{ strand.d | safe }}" style="--thread: {{ strand.tint }}; --wake: -{{ strand.wake }}s" />
+          {%- endif %}
+          {%- endfor %}
           {%- for bough in map.boughs %}
           {%- if bough.tone >= 0 %}
           <path class="bough is-tip" d="{{ bough.d | safe }}" style="--tone: var(--tone-{{ bough.tone }})" />

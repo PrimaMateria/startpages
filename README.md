@@ -80,6 +80,17 @@ along its length.
 to a single category takes that category's colour, along with its node, name,
 stems, buds, veins and icons.
 
+The tones are set for a screen read in daylight, not only at a desk. Ambient
+light reflecting off the panel adds a luminance floor to foreground and
+background alike, so a nominal contrast of 15:1 can land nearer 4:1 outdoors and
+anything already dim disappears. What that costs is colour: equalising every
+tone against a glare floor turns them all into pale pastels, and the colours are
+what you navigate by. So only the genuinely dark tones are lifted, and only far
+enough to clear the rest of the family - which keeps the closest pair of tones
+apart while raising the dimmest from 8:1 to 10.5:1. The rest of the margin comes
+from weight and from the alpha on the vector work, neither of which costs any
+hue at all.
+
 ### The crown
 
 The categories are laid out in rows, and the rows are not the same length: each
@@ -150,6 +161,61 @@ Every map is listed in that strip on every page, including the one you are
 looking at, which is marked rather than left out. Omitting it would shift all
 the names after it along, so the strip would move as you moved between maps.
 
+### The field behind it
+
+The tree leaves a lot of dark. What fills it is not decoration laid over the
+page but the same shape read again: the **distance to the nearest content** is a
+scalar field over the canvas, and the strings are its contour lines. So they
+cannot help but follow the crown - they are what "everything 120px out from the
+tree" looks like.
+
+**It is traced over a bleed, not over the map.** The map is only as big as its
+content, so on a sparse page it stops well short of the screen - webdev is
+1198px of map on a 2000px display, and everything right of that was dead space
+the tracer never looked at. The field is traced over a region generously larger
+than the map instead. It paints out there because the SVG is absolutely
+positioned with `overflow: visible`, and shapes outside an SVG's box are drawn
+without joining the scrollable area, since they are not CSS boxes - so the
+background reaches the edge of a wide display without the page gaining a
+scrollbar.
+
+Each contour is traced by predictor-corrector: step across the gradient, then
+correct back onto the level. Seeds are scattered on a grid, kept apart so two
+traces do not walk the same line, and capped per level - though the cap has to
+be loose enough that the scan does not spend its whole budget on the first side
+it reaches, and the far side stays bare.
+
+**The distance is blended, not a plain minimum.** Where two clusters are equally
+close, the minimum of their distances has a crease running between them, and a
+contour crossing that crease comes out with a sharp corner - or, where the
+corrector oscillates across it, a little tangle of spikes. Rounding the join by
+a blend radius removes the crease, and every contour is smooth wherever it runs.
+
+**The gaps widen sharply with distance.** Out past the crown the field is smooth
+and monotonic, so evenly spaced levels lay down a comb of parallel lines at a
+constant gap, which reads as hatching rather than weather - and since the far
+field is the largest area on the page, a constant gap puts the most ink where
+there is least to say. The spacing grows by a cubic: negligible across the first
+few levels, which are the ones that trace the crown, and dominant by the last.
+
+Two kinds of debris have to go: traces that die a few steps after starting, and
+traces that curl up in a pocket between the title and the trunk and come out
+long but tiny. Length catches the first. The second needs *reach* - the extent
+of the trace's bounding box - because a curl covers little ground while
+travelling far. Neither can be caught by how far apart the ends are: a contour
+that legitimately wraps half the crown also comes back on itself.
+
+Colour is a quarter of the nearest category's tone folded into a neutral grey -
+far too little to name, enough that the field belongs to the tree. Opacity falls
+off with distance, so the near strings sit just above the background and the far
+ones barely register.
+
+This is the one thing on the page that moves. Strings breathe on a long
+out-of-phase cycle, and every fourth carries a ripple: a short dash travelling
+its length on a slow loop. Both are CSS on a path that already exists, so
+nothing is computed at runtime. Under `prefers-reduced-motion` the breathing
+stops and the ripples are removed outright.
+
 ### How much is computed
 
 All of it, at build time, in `src/main.rs`: every label measured, every
@@ -183,8 +249,8 @@ computed coordinate, so `f` hints it, middle-click opens it in a tab and the
 text can be selected. A canvas would lose all three.
 
 Type is [Spline Sans Mono](https://fonts.google.com/specimen/Spline+Sans+Mono),
-loaded from Google Fonts in `templates/startpage.html`. Nothing on the page
-moves.
+loaded from Google Fonts in `templates/startpage.html`. Nothing moves except the
+background field, and that stops for `prefers-reduced-motion`.
 
 The canvas has computed dimensions, so a window smaller than the map pans
 rather than reflowing.

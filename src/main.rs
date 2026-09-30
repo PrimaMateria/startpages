@@ -286,6 +286,289 @@ struct Bough {
     tone: i32,
 }
 
+/// The same nine tones as `:root` in sass/styles.scss, so the field can carry a
+/// trace of the palette. KEEP IN STEP WITH THE STYLESHEET.
+/// How far past the map the background field is traced, so that it still
+/// covers a screen wider and taller than the map itself.
+const BLEED_W: f32 = 2800.0;
+const BLEED_H: f32 = 1600.0;
+
+const TONE_RGB: [[f32; 3]; TONES] = [
+    [106.0, 236.0, 150.0],
+    [255.0, 159.0, 190.0],
+    [203.0, 173.0, 255.0],
+    [122.0, 194.0, 255.0],
+    [255.0, 153.0, 233.0],
+    [178.0, 255.0, 96.0],
+    [78.0, 230.0, 230.0],
+    [255.0, 166.0, 74.0],
+    [255.0, 212.0, 92.0],
+];
+
+/// One line of the field the tree stands in.
+#[derive(Debug, Serialize)]
+struct Strand {
+    d: String,
+    ink: f32,
+    tint: String,
+    /// Staggers the breathing, so the field drifts rather than pulses.
+    beat: f32,
+    /// A few strings carry a travelling ripple. Spread far enough apart in time
+    /// that one is an event rather than a rhythm.
+    ripple: bool,
+    wake: f32,
+}
+
+/// How far a point is from the nearest thing already on the canvas.
+fn clearance(point: (f32, f32), taken: &[(f32, f32, f32, f32)]) -> f32 {
+    // Blended rather than a plain `min`. Where two clusters are equally close
+    // the minimum of their distances has a crease running between them, and a
+    // contour crossing that crease comes out with a sharp corner - or, if the
+    // corrector oscillates across it, a little tangle of spikes. Rounding the
+    // join by a blend radius removes the crease, so every contour is smooth
+    // wherever it runs.
+    const BLEND: f32 = 26.0;
+    let mut room = f32::MAX;
+
+    for &(bx, by, bw, bh) in taken {
+        let dx = (bx - point.0).max(point.0 - (bx + bw)).max(0.0);
+        let dy = (by - point.1).max(point.1 - (by + bh)).max(0.0);
+        let reach = (dx * dx + dy * dy).sqrt();
+
+        let blend = ((BLEND - (room - reach).abs()) / BLEND).max(0.0);
+        room = room.min(reach) - blend * blend * BLEND * 0.25;
+    }
+
+    // Far from the tree a plain distance field has nothing left to describe,
+    // and its contours straighten into a rounded rectangle around the content
+    // - long vertical runs down the side of the page that read as a wall
+    // rather than as strings. A slow warp keeps them moving.
+    //
+    // Its amplitude grows with distance, so the close-in family that traces
+    // the crown is left almost untouched while the far field, where the levels
+    // are furthest apart and there is room to wander, gets all of it. Because
+    // the warp is part of the field rather than an offset applied afterwards,
+    // the strings are still contours of one scalar field, and contours of one
+    // field cannot cross.
+    let sway = (room * 0.10).min(55.0);
+
+    room + sway * (point.0 / 263.0).sin() * (point.1 / 197.0).sin()
+}
+
+/// Which way clearance increases, by central difference.
+fn uphill(point: (f32, f32), taken: &[(f32, f32, f32, f32)]) -> (f32, f32) {
+    const H: f32 = 7.0;
+    let dx = clearance((point.0 + H, point.1), taken) - clearance((point.0 - H, point.1), taken);
+    let dy = clearance((point.0, point.1 + H), taken) - clearance((point.0, point.1 - H), taken);
+    (dx, dy)
+}
+
+/// Traces the strings of the field the tree stands in.
+///
+/// Not shapes dropped into gaps: each string is a contour of the distance to
+/// everything already drawn, so it wraps the tree's actual silhouette at a
+/// fixed remove and fills whatever outer space that leaves. Stepping along the
+/// contour drifts off it, so every step is followed by a correction back onto
+/// the level.
+fn field_lines(
+    width: f32,
+    height: f32,
+    taken: &[(f32, f32, f32, f32)],
+    crown: &[(f32, f32, f32, f32)],
+    nodes: &[(f32, f32, usize)],
+) -> Vec<Strand> {
+    // Shorter strides and a firmer correction: a long stride across a corner of
+    // the field lands on a different level, and strings that have swapped
+    // levels cross each other. Contours of one field never do.
+    const STEP: f32 = 32.0;
+    // A family at close intervals, not a handful of marks: the eye reads a run
+    // of near-parallel lines as texture, and three lines as three lines.
+    const LEVELS: usize = 22;
+    // The first level sets how close the field comes to the tree. It should
+    // give the tree more room than it gives the frame.
+    const FIRST: f32 = 98.0;
+    const APART: f32 = 25.0;
+
+    // Keep the field to the space outside the tree. A contour started in among
+    // the clusters would draw an outline around the content instead.
+    //
+    // Measured from the clusters alone: `taken` also holds the full-width strip
+    // at the top of the page, which would make the hull the whole canvas and
+    // leave nowhere counted as outside at all.
+    let (mut left, mut top, mut right, mut foot) = (f32::MAX, f32::MAX, f32::MIN, f32::MIN);
+    for &(bx, by, bw, bh) in crown {
+        left = left.min(bx);
+        top = top.min(by);
+        right = right.max(bx + bw);
+        foot = foot.max(by + bh);
+    }
+
+    let mut out = Vec::new();
+
+    for order in 0..LEVELS {
+        // Spacing widens with distance. Even spacing over the smooth,
+        // monotonic field out past the crown lays down a comb of parallel
+        // lines at a constant gap, which reads as hatching; letting the gap
+        // grow keeps the strings tight where they trace the tree and lets
+        // them thin out into the corners.
+        // Spacing widens with distance, and the cubic is what does the work
+        // out past the crown. Even spacing over the smooth, monotonic far
+        // field lays down a comb of parallel lines at a constant gap, which
+        // reads as hatching; worse, the far field is the largest area on the
+        // page, so a constant gap puts the most ink where there is least to
+        // say. The square term alone still left twenty lines down the right
+        // margin. The cubic is negligible for the first few levels, which are
+        // the ones that trace the crown, and dominant by the last.
+        let step = order as f32;
+        let level = FIRST + step * APART + step * step * 1.6 + step * step * step * 0.22;
+        let mut started: Vec<(f32, f32)> = Vec::new();
+
+        let mut y = 70.0;
+        while y < height - 70.0 {
+            let mut x = 70.0;
+            while x < width - 70.0 {
+                let here = clearance((x, y), taken);
+                let near = started
+                    .iter()
+                    .any(|&(sx, sy)| ((x - sx).powi(2) + (y - sy).powi(2)).sqrt() < 330.0);
+
+                // A level's band is only as wide as the tolerance, so a coarse
+                // scan walks straight over it and the family comes out with
+                // two members instead of twelve.
+                // A contour that closes on itself reads as a box outline
+                // rather than a string, so each is traced outward from its seed
+                // in both directions and capped - an open arc, not a loop.
+                if (here - level).abs() < 13.0 // Capped per level, but high enough that the scan does not spend
+                // its whole budget on the first side it reaches.
+                && !near
+                    && started.len() < 6
+                {
+                    started.push((x, y));
+
+                    let seed = (x, y);
+                    let mut line: Vec<(f32, f32)> = Vec::new();
+
+                    for way in [1.0_f32, -1.0] {
+                        let mut at = seed;
+                        let mut leg = vec![at];
+
+                        for _ in 0..84 {
+                            let slope = uphill(at, taken);
+                            let steep = (slope.0 * slope.0 + slope.1 * slope.1).sqrt();
+                            if steep < 0.001 {
+                                break;
+                            }
+
+                            // Along the contour is across the slope.
+                            at = (
+                                at.0 - slope.1 / steep * STEP * way,
+                                at.1 + slope.0 / steep * STEP * way,
+                            );
+
+                            // Then pull back onto the level it wandered off.
+                            let drift = level - clearance(at, taken);
+                            let slope = uphill(at, taken);
+                            let steep =
+                                (slope.0 * slope.0 + slope.1 * slope.1).sqrt().max(0.001);
+                            at = (
+                                at.0 + slope.0 / steep * drift,
+                                at.1 + slope.1 / steep * drift,
+                            );
+
+                            if at.0 < 30.0
+                                || at.0 > width - 30.0
+                                || at.1 < 30.0
+                                || at.1 > height - 30.0
+                            {
+                                break;
+                            }
+
+                            leg.push(at);
+                        }
+
+                        if way > 0.0 {
+                            leg.reverse();
+                            line = leg;
+                        } else {
+                            line.extend(leg.into_iter().skip(1));
+                        }
+                    }
+
+                    // Anything this short is not a string, it is debris: a
+                    // trace that hit a wall a few steps after it started.
+                    // Drop only the near-closed traces, which read as loops
+                    // rather than strings. A contour that legitimately wraps
+                    // half the crown also has its ends close together, so the
+                    // bar has to sit low or the whole family goes with it.
+                    let span = {
+                        let a = line[0];
+                        let b = line[line.len() - 1];
+                        ((b.0 - a.0).powi(2) + (b.1 - a.1).powi(2)).sqrt()
+                    };
+                    let travelled = line.len() as f32 * STEP;
+
+                    // A trace can also curl up inside a pocket between the
+                    // title and the trunk and come out long but tiny. Reach
+                    // catches those where span cannot, since a curl has its
+                    // ends far apart relative to how little ground it covers.
+                    let reach = {
+                        let left = line.iter().fold(f32::MAX, |m, p| m.min(p.0));
+                        let right = line.iter().fold(f32::MIN, |m, p| m.max(p.0));
+                        let top = line.iter().fold(f32::MAX, |m, p| m.min(p.1));
+                        let foot = line.iter().fold(f32::MIN, |m, p| m.max(p.1));
+                        ((right - left).powi(2) + (foot - top).powi(2)).sqrt()
+                    };
+
+                    if line.len() > 18 && span > travelled * 0.12 && reach > 210.0 {
+                        let thinned: Vec<(f32, f32)> =
+                            line.iter().step_by(3).cloned().collect();
+                        // A trace of whatever tone the string runs nearest,
+                        // folded into a neutral. Far too little to name the
+                        // colour, enough that the field belongs to the tree.
+                        const NEUTRAL: [f32; 3] = [150.0, 166.0, 186.0];
+                        let middle = line[line.len() / 2];
+                        let tint = nodes
+                            .iter()
+                            .min_by(|a, b| {
+                                let reach = |n: &(f32, f32, usize)| {
+                                    (n.0 - middle.0).powi(2) + (n.1 - middle.1).powi(2)
+                                };
+                                reach(a).partial_cmp(&reach(b)).unwrap()
+                            })
+                            .map(|&(_, _, tone)| {
+                                let hue = TONE_RGB[tone % TONES];
+                                format!(
+                                    "{:.0} {:.0} {:.0}",
+                                    NEUTRAL[0] * 0.72 + hue[0] * 0.28,
+                                    NEUTRAL[1] * 0.72 + hue[1] * 0.28,
+                                    NEUTRAL[2] * 0.72 + hue[2] * 0.28
+                                )
+                            })
+                            .unwrap_or_else(|| "150 166 186".to_owned());
+
+                        let nth = out.len();
+                        out.push(Strand {
+                            beat: (nth as f32 * 2.7) % 19.0,
+                            ripple: nth % 4 == 1,
+                            wake: (nth as f32 * 13.0) % 54.0,
+                            d: thread(&thinned),
+                            // Nearer the tree reads a touch stronger, so the
+                            // field falls away rather than stopping flat.
+                            ink: (0.15 - order as f32 * 0.008).max(0.05),
+                            tint,
+                        });
+                    }
+                }
+
+                x += 13.0;
+            }
+            y += 13.0;
+        }
+    }
+
+    out
+}
+
 #[derive(Debug, Serialize)]
 struct Other {
     name: String,
@@ -301,6 +584,7 @@ struct Other {
 struct Map {
     width: f32,
     height: f32,
+    strands: Vec<Strand>,
     core_x: f32,
     core_y: f32,
     boughs: Vec<Bough>,
@@ -1098,9 +1382,34 @@ fn plot(startpage: &Startpage, navigation: &Navigation) -> Map {
         at += nav.name.chars().count() as f32 * OTHER_CH + 34.0;
     }
 
+    // Everything already on the canvas, so the field can be traced around it.
+    let mut taken = rects.clone();
+    taken.push((0.0, 0.0, width, TOP_BAR + 10.0));
+    taken.push((MARGIN - 20.0, core_y - 44.0, root_w + 70.0, 88.0));
+    for branch in &branches {
+        taken.push((branch.node_x - 34.0, branch.node_y - 34.0, 68.0, 68.0));
+    }
+
     Map {
         width: px(width),
         height: px(height),
+        // The map is only as big as its content, so on a sparse page it stops
+        // well short of the screen it is shown on - webdev is 1198px of map on
+        // a 2000px display. Tracing the field over a generous bleed past the
+        // map, rather than over the map, is what puts background in that space.
+        //
+        // It paints there because `.wiring` is absolutely positioned with
+        // `overflow: visible`: SVG shapes outside the element's box are drawn
+        // without becoming part of the scrollable area, since they are not CSS
+        // boxes. So the field reaches the edges of a wide display without the
+        // map growing or the page gaining a scrollbar.
+        strands: field_lines(
+            width.max(BLEED_W),
+            height.max(BLEED_H),
+            &taken,
+            &rects,
+            &nodes,
+        ),
         core_x: px(core_x),
         core_y: px(core_y),
         boughs,
