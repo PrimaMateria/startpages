@@ -107,8 +107,12 @@ the next; committing to the direction it was already travelling turns the same
 dodge into a single arc over or under.
 
 The map is anchored top-left and never centred, and the field is a fixed height
-whatever a particular map needs, so the strip of other maps and the title land
-on the same pixel on every page - `48,24` and `48,534`.
+whatever a particular map needs, so the strip of maps and the title land on the
+same pixel on every page - `48,24` and `48,534`.
+
+Every map is listed in that strip on every page, including the one you are
+looking at, which is marked rather than left out. Omitting it would shift all
+the names after it along, so the strip would move as you moved between maps.
 
 ### How much is computed
 

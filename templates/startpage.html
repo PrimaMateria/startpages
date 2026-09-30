@@ -79,7 +79,6 @@
             <circle class="node" cx="{{ branch.node_x }}" cy="{{ branch.node_y }}" r="4" />
           </g>
           {%- endfor %}
-          <circle class="core" cx="{{ map.core_x }}" cy="{{ map.core_y }}" r="5" />
         </svg>
 
         <h1 class="root" style="left: {{ map.core_x }}px; top: {{ map.core_y }}px">
@@ -87,7 +86,7 @@
         </h1>
 
         {%- for other in map.others %}
-        <a class="other" style="left: {{ other.x }}px; top: {{ other.y }}px" href="{{ other.path | safe }}">{{ other.name }}</a>
+        <a class="other{% if other.here %} is-here{% endif %}" style="left: {{ other.x }}px; top: {{ other.y }}px" href="{{ other.path | safe }}"{% if other.here %} aria-current="page"{% endif %}>{{ other.name }}</a>
         {%- endfor %}
 
         {%- for branch in map.branches %}

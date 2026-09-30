@@ -67,20 +67,20 @@ static CONFIGURATION: &str = "content/startpages.yaml";
 // ---------------------------------------------------------------------------
 
 /// Advance width of one character at the leaf font size.
-const CH: f32 = 8.4;
+const CH: f32 = 9.0;
 /// Advance width of one character in a category name, tracking included.
-const NAME_CH: f32 = 10.4;
+const NAME_CH: f32 = 13.2;
 /// Advance width of one character in the title.
 const ROOT_CH: f32 = 16.7;
 /// Advance width of one character in a link to another map.
 const OTHER_CH: f32 = 8.6;
 
 /// Vertical pitch between leaves.
-const ROW: f32 = 25.0;
+const ROW: f32 = 26.0;
 /// Space between one bud's leaves and the next bud's.
 const GROUP_GAP: f32 = 25.0;
 /// Room the icon and its gap occupy beside a label.
-const ICON: f32 = 24.0;
+const ICON: f32 = 26.0;
 /// Bud to the leaves hanging off it.
 const BUD_DX: f32 = 26.0;
 /// Trailing space after a fan, before the next fan starts.
@@ -283,6 +283,9 @@ struct Other {
     path: String,
     x: f32,
     y: f32,
+    /// Whether this is the map being looked at. Marked, but never left out -
+    /// dropping it would shift every other name along.
+    here: bool,
 }
 
 #[derive(Debug, Serialize)]
@@ -847,21 +850,19 @@ fn plot(startpage: &Startpage, navigation: &Navigation) -> Map {
         &mut boughs,
     );
 
-    // The other maps are navigation, not part of this tree, so they sit in a
-    // strip above it rather than hanging off the title.
-    let elsewhere: Vec<&NavItem> = navigation
-        .iter()
-        .filter(|nav| nav.name != startpage.name)
-        .collect();
-
+    // The maps are navigation, not part of this tree, so they sit in a strip
+    // above it rather than hanging off the title. Every map is listed on every
+    // page, in the same order: leaving the current one out would shift all the
+    // others along, so the strip would move as you moved between maps.
     let mut others = Vec::new();
     let mut at = MARGIN;
-    for nav in elsewhere {
+    for nav in navigation {
         others.push(Other {
             name: nav.name.to_owned(),
             path: nav.path.to_owned(),
             x: px(at),
             y: 32.0,
+            here: nav.name == startpage.name,
         });
         at += nav.name.chars().count() as f32 * OTHER_CH + 34.0;
     }

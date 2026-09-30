@@ -13,8 +13,8 @@
 
 $mono: "Spline Sans Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
-$leaf-size: 14px; // CH     = 8.4  (0.6em advance)
-$name-size: 15px; // NAME_CH = 10.4 (0.6em + 0.09em tracking)
+$leaf-size: 15px; // CH     = 9.0  (0.6em advance)
+$name-size: 19px; // NAME_CH = 13.2 (0.6em + 0.09em tracking)
 $root-size: 27px; // ROOT_CH = 17.6
 $other-size: 13px; // OTHER_CH = 8.6
 
@@ -172,11 +172,6 @@ a {
   stroke-width: 1.5;
 }
 
-.core {
-  fill: var(--ink);
-  filter: drop-shadow(0 0 8px rgba(223, 228, 234, 0.45));
-}
-
 // --- Nodes ----------------------------------------------------------------
 // Everything below is positioned from the computed layout; `top` is a centre
 // line, hence the translate.
@@ -205,6 +200,12 @@ a {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-dim);
+
+  // The map you are already on. Marked rather than removed, so the strip is
+  // identical on every page.
+  &.is-here {
+    color: var(--ink);
+  }
 
   &:hover {
     color: var(--ink);
@@ -247,9 +248,9 @@ a {
 
   .ico {
     flex: none;
-    width: 15px;
+    width: 17px;
     text-align: center;
-    font-size: 11px;
+    font-size: 12.5px;
     color: #{"rgb(var(--tone) / 0.75)"};
   }
 
