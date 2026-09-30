@@ -45,72 +45,70 @@ on the code.
 
 ## The map
 
-The page is not a layout, it is a drawing. The title sits on the left and
-everything grows rightward from it, so every label reads left-aligned. Four
-levels hang off the title:
+The page is not a layout, it is a drawing. The title sits on the left and the
+tree grows rightward from it.
 
 ```
-  root     the startpage itself
-   └─ limb ─ category        a tapered branch reaching out of the title
-       └─ bud               one junction per separator-delimited group
-           └─ leaf          a link
+  root       the startpage itself
+   └─ trunk  thick, and carrying nothing at all
+       ├─ fork ─┬─ fork ─┬─ category ─ bud ─ leaf
+       │        │        └─ category
+       │        └─ fork ─┬─ category
+       │                 └─ category
+       └─ fork ─ ...
 ```
 
-The **buds** are the level the content always had and the page used to throw
-away. A `!Separator` in `content/startpages.yaml` is a real grouping, and it
-gets a junction of its own rather than some extra whitespace.
+### Every joint is a fork of two
 
-The **limbs** are filled outlines rather than strokes, because a stroke cannot
-change width along its length. Each starts thick where it leaves the title and
-tapers to nothing where it arrives, which is most of what makes the map look
-grown instead of wired. Every other connector is a Catmull-Rom curve. Nothing
-on the page is a straight line.
+The skeleton is grown by halving: the categories a segment still has to reach
+are split in two and handed to a fork, again and again, until a segment carries
+one and arrives. So a joint is always a Y and never a run - a branch that sheds
+one category and carries on gives a comb, which reads as a fern rather than a
+tree.
 
-### Packing
+The split is taken across whichever axis the remaining categories are more
+spread over: up and down while a branch still serves several rows, left and
+right once it is down to one.
 
-Categories are all at the same depth in the tree, but nothing says they have to
-be *drawn* at the same x. Each is dropped at the leftmost place it will fit
-beside what is already down - leftmost-fit against a skyline - so their depths
-stagger and a short category tucks into the space a tall neighbour leaves over.
+**Width is depth.** The trunk leaves the title at 10px, every fork keeps two
+thirds of its parent, down to a 1.5px tip. How far a piece of the skeleton is
+from the root reads straight off it - which is also why the skeleton is drawn
+as filled outlines rather than strokes, since a stroke cannot change width
+along its length.
 
-How wide a category spreads is decided by its own shape rather than a fixed
-rule: it adds fans until the block stops being taller than it is wide.
+**Colour marks the group.** Trunk and forks are bark; the tip that has narrowed
+to a single category takes that category's colour, along with its node, name,
+stems, buds, veins and icons.
 
-Then the layout searches for the largest map that still fits a screen. It tries
-every band count against a grid of clearances - the horizontal and vertical
-ones independently, because a map with few small categories wants to breathe
-sideways and downwards by quite different amounts - and keeps whichever result
-comes closest to filling `TARGET_W x TARGET_H` without overshooting.
+### The crown
 
-Packing as tightly as possible is the wrong objective for a page that gets one
-window to itself: it only leaves the map stranded in the corner of a display
-that had room to spare. The slack belongs in the gaps, so the categories are
-pushed apart until the map fills the screen it was drawn for. Overshooting the
-height is penalised hardest, because a map taller than the window has to be
-scrolled while a wider one is only panned.
+The categories are laid out in rows, but the rows are not the same length: each
+aims at a share of the content proportional to how wide an ellipse is at that
+height, so the middle rows are long and the top and bottom ones short. Centring
+them rounds the crown off at both ends - and, just as usefully, leaves the room
+on the left that the branches need to fan out through.
 
-The clearance between blocks is separation, not padding - the field starts at
-the first block and ends at the last, with nothing reserved at the edges, so
-every pixel of the budget goes into the gaps where it does some good.
+Each row also bows across its length, so the categories on it are never all at
+the same height. That is what lets a branch fork *into* a row rather than run
+along it.
 
-### A fixed frame
+How many rows there are comes from a search: every row count up to six, against
+a grid of clearances, keeping the largest crown that still fits the screen. A
+row is never left empty - an empty row still costs the crown its full height.
+
+### Getting past things
+
+A crown puts branches across clusters, so each segment is sampled along its
+length and pushed out of anything it lands inside, then smoothed.
+
+Which way it escapes matters more than it sounds. Escaping to whichever side
+happens to be nearer makes a branch zigzag around one cluster and back around
+the next; committing to the direction it was already travelling turns the same
+dodge into a single arc over or under.
 
 The map is anchored top-left and never centred, and the field is a fixed height
-whatever a particular map happens to need. So the strip of other maps, and the
-title, land on the same pixel on every page - `48,24` and `48,534`. Switching
-maps moves the tree and nothing else. Content shorter than the field is centred
-within it; content taller simply runs past the bottom, and the title stays put
-regardless.
-
-### Routing
-
-Packing at staggered depths means a limb usually has two or three categories
-between it and its target. Each limb is sampled along its length and, at any
-sample landing inside a category's box, pushed out through the nearer side;
-each limb also carries its own wave, so two escaping the same obstacle the same
-way still travel as two strands. The result is smoothed into a curve, so
-dodging reads as meandering rather than as a detour. Labels carry a halo in the
-background colour, so a limb that does pass behind one stays behind it.
+whatever a particular map needs, so the strip of other maps and the title land
+on the same pixel on every page - `48,24` and `48,534`.
 
 ### How much is computed
 

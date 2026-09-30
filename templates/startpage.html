@@ -58,9 +58,15 @@
           height="{{ map.height }}"
           aria-hidden="true"
         >
+          {%- for bough in map.boughs %}
+          {%- if bough.tone >= 0 %}
+          <path class="bough is-tip" d="{{ bough.d | safe }}" style="--tone: var(--tone-{{ bough.tone }})" />
+          {%- else %}
+          <path class="bough" d="{{ bough.d | safe }}" />
+          {%- endif %}
+          {%- endfor %}
           {%- for branch in map.branches %}
           <g style="--tone: var(--tone-{{ branch.tone }})">
-            <path class="limb" d="{{ branch.limb | safe }}" />
             {%- for stem in branch.stems %}
             <path class="stem" d="{{ stem | safe }}" />
             {%- endfor %}

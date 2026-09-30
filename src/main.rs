@@ -97,10 +97,22 @@ const VGAP: f32 = 38.0;
 /// the map simply sits in the middle of it.
 const TARGET_W: f32 = 1840.0;
 const TARGET_H: f32 = 1000.0;
-/// Resolution of the packing skyline.
-const STEP: f32 = 4.0;
+/// Drop from a row's baseline to the category node sitting on it.
+const NODE_DROP: f32 = 16.0;
+/// How far a row bows across its length.
+const ARC: f32 = 11.0;
+/// Drop from a branch to the top of the cluster under it.
+const HANG: f32 = 46.0;
+/// Category node to the first fan hanging off it.
+const FAN_LEAD: f32 = 32.0;
 /// How far a limb reaches before it arrives at the first category.
-const LIMB_REACH: f32 = 96.0;
+const LIMB_REACH: f32 = 214.0;
+/// Width of the trunk where it leaves the title.
+const TRUNK_W: f32 = 10.0;
+/// Width where a branch finally meets a category.
+const TIP_W: f32 = 1.5;
+/// How much of its width a segment keeps when it forks.
+const TAPER: f32 = 0.66;
 
 const MARGIN: f32 = 48.0;
 /// Strip at the top holding the links to the other maps.
@@ -222,62 +234,6 @@ fn taper(points: &[(f32, f32)], from: f32, to: f32) -> String {
     d
 }
 
-/// Steers a limb from the title to a category without driving it through
-/// anything already on the page.
-///
-/// Packing categories at whatever depth they fit means a limb often has to get
-/// past two or three of them on the way. It is sampled along its length and, at
-/// any sample that lands inside a category's box, pushed out through the nearer
-/// side; the result is smoothed into a curve, so dodging reads as meandering
-/// rather than as a detour.
-fn route(
-    from: (f32, f32),
-    to: (f32, f32),
-    obstacles: &[(f32, f32, f32, f32)],
-    sway: f32,
-    floor: f32,
-    ceiling: f32,
-) -> Vec<(f32, f32)> {
-    let mut points = vec![from];
-    let steps = 7;
-
-    for step in 1..steps {
-        let t = step as f32 / steps as f32;
-        let x = from.0 + (to.0 - from.0) * t;
-
-        // Close to the node the limb has to be allowed to arrive.
-        if x > to.0 - 56.0 {
-            break;
-        }
-
-        // Its own wave before it dodges anything, so two limbs escaping the
-        // same obstacle the same way still travel as two strands.
-        let mut y = from.1 + (to.1 - from.1) * t + drift(t * 2.6 + sway, 13.0);
-
-        for _ in 0..4 {
-            let mut clear = true;
-
-            for &(bx, by, bw, bh) in obstacles {
-                if x > bx - 10.0 && x < bx + bw + 10.0 && y > by - 8.0 && y < by + bh + 8.0 {
-                    let up = y - (by - 12.0);
-                    let down = (by + bh + 12.0) - y;
-                    y = if up < down { by - 12.0 } else { by + bh + 12.0 };
-                    clear = false;
-                }
-            }
-
-            if clear {
-                break;
-            }
-        }
-
-        points.push((x, y.clamp(floor, ceiling)));
-    }
-
-    points.push(to);
-    points
-}
-
 #[derive(Debug, Serialize)]
 struct Leaf {
     /// CSS left. On the left-hand field the label grows away from the core, so
@@ -306,10 +262,19 @@ struct Branch {
     name_y: f32,
     node_x: f32,
     node_y: f32,
-    limb: String,
     stems: Vec<String>,
     buds: Vec<Bud>,
     leaves: Vec<Leaf>,
+}
+
+/// One segment of the skeleton: trunk, branch, or the twig that finally reaches
+/// a category. Its width says how far from the root it is.
+#[derive(Debug, Serialize)]
+struct Bough {
+    d: String,
+    /// -1 while the segment is still carrying more than one category; the
+    /// category's own tone once it carries only that one.
+    tone: i32,
 }
 
 #[derive(Debug, Serialize)]
@@ -326,6 +291,7 @@ struct Map {
     height: f32,
     core_x: f32,
     core_y: f32,
+    boughs: Vec<Bough>,
     branches: Vec<Branch>,
     others: Vec<Other>,
 }
@@ -426,6 +392,7 @@ fn measure(startpage: &Startpage) -> Vec<Block<'_>> {
             let name_room =
                 NAME_LEAD + category.name.chars().count() as f32 * NAME_CH + NAME_TRAIL;
 
+
             let mut wanted = 1;
             while wanted < 3 && wanted < groups.len() {
                 let rows = (total as f32 / wanted as f32).ceil();
@@ -478,10 +445,11 @@ fn measure(startpage: &Startpage) -> Vec<Block<'_>> {
                 // A stride coprime with the palette, so consecutive categories
                 // land on opposite sides of the wheel.
                 tone: (blocks.len() * 4) % TONES,
-                width: NAME_LEAD
-                    + category.name.chars().count() as f32 * NAME_CH
-                    + NAME_TRAIL
-                    + fan_w.iter().sum::<f32>(),
+                // The name hangs over the fans rather than beside them, so a
+                // category is only as wide as its fans unless the name itself
+                // is longer.
+                width: (FAN_LEAD + fan_w.iter().sum::<f32>())
+                    .max(NAME_LEAD + category.name.chars().count() as f32 * NAME_CH + 26.0),
                 height,
                 fans,
                 fan_w,
@@ -492,99 +460,225 @@ fn measure(startpage: &Startpage) -> Vec<Block<'_>> {
     blocks
 }
 
-/// Leftmost-fit packing against a skyline.
+/// Lays the categories out as a crown.
 ///
-/// Categories are all at the same depth in the tree, but nothing says they have
-/// to be drawn at the same x. Each one is dropped at the leftmost place it fits
-/// beside what is already down, which staggers their depths and lets a short
-/// category tuck into the space a tall neighbour leaves over. Returns the
-/// top-left of every block plus the extent used.
-fn pack(blocks: &[Block], budget: f32, hgap: f32, vgap: f32) -> (Vec<(f32, f32)>, f32, f32) {
-    let slots = (budget / STEP).ceil() as usize + 2;
-    let mut front = vec![0.0_f32; slots];
+/// The rows are not all the same length: each aims at a share of the content
+/// proportional to how wide an ellipse is at that height, so the middle rows
+/// are long and the top and bottom ones short. Centring them then gives the
+/// whole thing a rounded silhouette - and, just as usefully, leaves the room on
+/// the left that the branches need to fan out through.
+///
+/// Returns each category's row and offset along it, and each row's height and
+/// length.
+fn crown(blocks: &[Block], rows: usize, hgap: f32) -> (Vec<(usize, f32)>, Vec<f32>, Vec<f32>) {
+    let count = rows.max(1);
+
+    let shape: Vec<f32> = (0..count)
+        .map(|r| {
+            let t = if count == 1 {
+                0.0
+            } else {
+                2.0 * r as f32 / (count - 1) as f32 - 1.0
+            };
+            (1.0 - (t * 0.88).powi(2)).max(0.16).sqrt()
+        })
+        .collect();
+
+    let mut left: f32 = blocks.iter().map(|block| block.width + hgap).sum::<f32>() - hgap;
+    let mut share: f32 = shape.iter().sum();
+
     let mut placed = Vec::with_capacity(blocks.len());
-    let (mut right, mut bottom) = (0.0_f32, 0.0_f32);
+    let mut heights = vec![0.0_f32; count];
+    let mut widths = vec![0.0_f32; count];
+    let mut row = 0usize;
+    let mut along = 0.0_f32;
 
-    for block in blocks {
-        let rows = ((block.height + vgap) / STEP).ceil() as usize;
-        let reach = slots.saturating_sub(rows).max(1);
+    for (index, block) in blocks.iter().enumerate() {
+        let target = left * shape[row] / share.max(0.001);
+        let rows_after = count - row - 1;
 
-        let mut best = (f32::MAX, 0_usize);
-        for start in 0..reach {
-            let x = front[start..(start + rows).min(slots)]
-                .iter()
-                .cloned()
-                .fold(0.0_f32, f32::max);
-            if x < best.0 - 0.01 {
-                best = (x, start);
-            }
+        // Move on either because this row has had its share, or because there
+        // are only just enough categories left to give every remaining row one.
+        // Without the second test a row can end up empty and still cost the
+        // crown its full height.
+        let had_enough = along + block.width * 0.5 > target;
+        let must_move = blocks.len() - index <= rows_after;
+
+        if along > 0.0 && row + 1 < count && (must_move || had_enough) {
+            left -= along;
+            share -= shape[row];
+            row += 1;
+            along = 0.0;
         }
 
-        let (x, start) = best;
-        let y = start as f32 * STEP;
-
-        for slot in front
-            .iter_mut()
-            .take((start + rows).min(slots))
-            .skip(start)
-        {
-            *slot = x + block.width + hgap;
-        }
-
-        placed.push((x, y));
-        right = right.max(x + block.width);
-        // The clearance separates a block from the next one down; counting it
-        // here would pad the bottom of the field and steal the room the
-        // categories want to spread into.
-        bottom = bottom.max(y + block.height);
+        heights[row] = heights[row].max(block.height);
+        placed.push((row, along));
+        along += block.width + hgap;
+        widths[row] = along - hgap;
     }
 
-    (placed, right, bottom)
+    (placed, heights, widths)
 }
 
-/// Places the whole map: the title on the left, every category packed into the
-/// space to the right of it, then every connector drawn.
+/// Nudges a point clear of anything it has landed inside.
+///
+/// `bias` is the direction the segment is already travelling. Escaping to
+/// whichever side happens to be nearer makes a branch zigzag around one cluster
+/// and back around the next; committing to the direction it was going anyway
+/// turns the same dodge into a single arc over or under.
+fn clear_of(point: (f32, f32), obstacles: &[(f32, f32, f32, f32)], bias: f32) -> (f32, f32) {
+    let (x, mut y) = point;
+
+    for _ in 0..5 {
+        let mut clear = true;
+        for &(bx, by, bw, bh) in obstacles {
+            if x > bx - 10.0 && x < bx + bw + 10.0 && y > by - 8.0 && y < by + bh + 8.0 {
+                y = if bias < 0.0 { by - 16.0 } else { by + bh + 16.0 };
+                clear = false;
+            }
+        }
+        if clear {
+            break;
+        }
+    }
+
+    (x, y)
+}
+
+/// Steers a segment from one point to another without driving it through a
+/// cluster. Sampled along its length and pushed out through the nearer side of
+/// anything it lands inside, then smoothed, so dodging reads as meandering.
+fn route(
+    from: (f32, f32),
+    to: (f32, f32),
+    obstacles: &[(f32, f32, f32, f32)],
+    sway: f32,
+) -> Vec<(f32, f32)> {
+    let mut points = vec![from];
+    let bias = if to.1 >= from.1 { 1.0 } else { -1.0 };
+
+    for step in 1..9 {
+        let t = step as f32 / 9.0;
+        let x = from.0 + (to.0 - from.0) * t;
+
+        if (x - to.0).abs() < 44.0 {
+            break;
+        }
+
+        let y = from.1 + (to.1 - from.1) * t + drift(t * 2.6 + sway, 11.0);
+        points.push(clear_of((x, y), obstacles, bias));
+    }
+
+    points.push(to);
+    points
+}
+
+/// Grows the skeleton to every category by halving, so every joint is a fork
+/// of two and never a run of one.
+///
+/// The set still to be reached is split across whichever axis it is more spread
+/// over - up and down while the branch is still serving several rows, left and
+/// right once it is down to one - and the fork is placed behind all of them.
+#[allow(clippy::too_many_arguments)]
+fn branch_out(
+    members: &[usize],
+    nodes: &[(f32, f32, usize)],
+    rects: &[(f32, f32, f32, f32)],
+    from: (f32, f32),
+    width: f32,
+    depth: usize,
+    boughs: &mut Vec<Bough>,
+) {
+    if members.is_empty() {
+        return;
+    }
+
+    if members.len() == 1 {
+        let (nx, ny, tone) = nodes[members[0]];
+
+        // Everything except the cluster it is arriving at.
+        let others: Vec<(f32, f32, f32, f32)> = rects
+            .iter()
+            .enumerate()
+            .filter(|(which, _)| *which != members[0])
+            .map(|(_, &rect)| rect)
+            .collect();
+
+        boughs.push(Bough {
+            d: taper(
+                &route((nx, ny), from, &others, depth as f32 * 1.7)
+                    .into_iter()
+                    .rev()
+                    .collect::<Vec<_>>(),
+                width,
+                TIP_W,
+            ),
+            tone: tone as i32,
+        });
+        return;
+    }
+
+    let nearest = members.iter().map(|&m| nodes[m].0).fold(f32::MAX, f32::min);
+    let span = (nearest - from.0).max(52.0);
+    let point = (
+        (from.0 + span * 0.46).min(nearest - 20.0).max(from.0 + 14.0),
+        members.iter().map(|&m| nodes[m].1).sum::<f32>() / members.len() as f32,
+    );
+
+    let point = clear_of(point, rects, if point.1 >= from.1 { 1.0 } else { -1.0 });
+
+    let next = (width * TAPER).max(TIP_W + 0.3);
+    boughs.push(Bough {
+        d: taper(&route(from, point, rects, depth as f32 * 1.3), width, next),
+        tone: -1,
+    });
+
+    // Split across whichever axis the remaining categories are more spread
+    // over, so a fork always separates them into two real groups.
+    let ys: Vec<f32> = members.iter().map(|&m| nodes[m].1).collect();
+    let xs: Vec<f32> = members.iter().map(|&m| nodes[m].0).collect();
+    let spread_y = ys.iter().cloned().fold(f32::MIN, f32::max) - ys.iter().cloned().fold(f32::MAX, f32::min);
+    let spread_x = xs.iter().cloned().fold(f32::MIN, f32::max) - xs.iter().cloned().fold(f32::MAX, f32::min);
+
+    let mut sorted = members.to_vec();
+    if spread_y >= spread_x * 0.6 {
+        sorted.sort_by(|&a, &b| nodes[a].1.partial_cmp(&nodes[b].1).unwrap());
+    } else {
+        sorted.sort_by(|&a, &b| nodes[a].0.partial_cmp(&nodes[b].0).unwrap());
+    }
+
+    let half = sorted.len() / 2;
+    for side in [&sorted[..half], &sorted[half..]] {
+        branch_out(side, nodes, rects, point, next, depth + 1, boughs);
+    }
+}
+
+/// Places the whole map: a crown of categories, and one skeleton grown to
+/// reach them all.
 fn plot(startpage: &Startpage, navigation: &Navigation) -> Map {
     let blocks = measure(startpage);
 
     let root_w = startpage.name.chars().count() as f32 * ROOT_CH;
     let field_x = MARGIN + root_w + LIMB_REACH;
 
-    // Search over both the number of bands and how far apart the categories are
-    // pushed, and keep the largest map that still fits the screen. Packing as
-    // tightly as possible only leaves the map stranded in the corner of a
-    // display that had room to spare - the slack belongs in the gaps.
-    let mut best: Option<(Vec<(f32, f32)>, f32, f32, f32)> = None;
+    let mut best: Option<(Vec<(usize, f32)>, Vec<f32>, Vec<f32>, f32)> = None;
     let mut score = f32::MAX;
 
-    // The two clearances are searched independently: a map with few, small
-    // categories wants to breathe sideways and downwards by quite different
-    // amounts, and tying them together leaves one axis short.
-    for bands in 1..=5 {
-        for across in 0..14 {
-            for down in 0..28 {
-                let hgap = HGAP * (1.0 + across as f32 * 0.32);
-                let vgap = VGAP * (1.0 + down as f32 * 0.38);
+    for rows in 1..=6.min(blocks.len().max(1)) {
+        for across in 0..13 {
+            for down in 0..16 {
+                let hgap = HGAP * (1.0 + across as f32 * 0.3);
+                let vgap = VGAP * (1.0 + down as f32 * 0.42);
 
-                let tallest = blocks
-                    .iter()
-                    .map(|block| block.height + vgap)
-                    .fold(0.0_f32, f32::max);
-                let total: f32 = blocks
-                    .iter()
-                    .map(|block| block.height + vgap)
-                    .sum::<f32>()
-                    .max(1.0);
+                let (placed, heights, widths) = crown(&blocks, rows, hgap);
 
-                let (places, right, bottom) =
-                    pack(&blocks, (total / bands as f32).max(tallest), hgap, vgap);
+                let tall: f32 = heights.iter().map(|h| h + HANG).sum::<f32>()
+                    + vgap * (heights.len().saturating_sub(1)) as f32;
+                let wide = widths.iter().cloned().fold(0.0_f32, f32::max);
 
-                let w = field_x + right + MARGIN;
-                let h = bottom + TOP_BAR + MARGIN * 2.0;
+                let w = field_x + wide + MARGIN;
+                let h = tall + TOP_BAR + MARGIN * 2.0;
 
-                // Overshooting is worse than undershooting, and overshooting
-                // the height is worst of all: a map taller than the window has
-                // to be scrolled, a wider one is only panned.
                 let cost = (w - TARGET_W).max(0.0) * 3.0
                     + (h - TARGET_H).max(0.0) * 7.0
                     + (TARGET_W - w).max(0.0) * 2.0
@@ -592,73 +686,76 @@ fn plot(startpage: &Startpage, navigation: &Navigation) -> Map {
 
                 if cost < score {
                     score = cost;
-                    best = Some((places, right, bottom, vgap));
+                    best = Some((placed, heights, widths, vgap));
                 }
             }
         }
     }
 
-    let (places, right, bottom, _vgap) = best.expect("at least one packing");
+    let (placed, heights, widths, vgap) = best.expect("at least one crown");
 
-    // The field is a fixed height whatever this particular map needs, so the
-    // title sits at the same point on every one of them and switching maps
-    // never moves it. Content shorter than the field is centred in it.
-    let field_h = bottom.max(TARGET_H - TOP_BAR - MARGIN * 2.0);
-    let lift = TOP_BAR + MARGIN + (field_h - bottom) * 0.5;
+    if std::env::var("MAP_DEBUG").is_ok() {
+        let mut per_row = vec![0usize; heights.len()];
+        for (row, _) in &placed {
+            per_row[*row] += 1;
+        }
+        eprintln!(
+            "{}: rows={} per_row={:?} widths={:?} heights={:?} vgap={:.0}",
+            startpage.name,
+            heights.len(),
+            per_row,
+            widths.iter().map(|w| w.round()).collect::<Vec<_>>(),
+            heights.iter().map(|h| h.round()).collect::<Vec<_>>(),
+            vgap
+        );
+    }
 
-    let width = field_x + right + MARGIN;
+    let tall: f32 = heights.iter().map(|h| h + HANG).sum::<f32>()
+        + vgap * (heights.len().saturating_sub(1)) as f32;
+    let wide = widths.iter().cloned().fold(0.0_f32, f32::max);
+
+    let field_h = tall.max(TARGET_H - TOP_BAR - MARGIN * 2.0);
+    let lift = TOP_BAR + MARGIN + (field_h - tall) * 0.5;
+
+    let width = field_x + wide + MARGIN;
     let height = TOP_BAR + MARGIN + field_h + MARGIN;
     let core_x = MARGIN + root_w * 0.5;
-    // Pinned to the target field rather than to this map's content, so the
-    // title lands on the same line even on a map too big to fit it. Switching
-    // maps then moves the tree and nothing else.
     let core_y = TOP_BAR + MARGIN + (TARGET_H - TOP_BAR - MARGIN * 2.0) * 0.5;
 
-    // Every category's footprint, so the limbs can be steered around them.
-    let rects: Vec<(f32, f32, f32, f32)> = blocks
-        .iter()
-        .zip(places.iter())
-        .map(|(block, &(bx, by))| {
-            (
-                field_x + bx,
-                lift + by,
-                block.width,
-                block.height,
-            )
-        })
-        .collect();
+    // Rows are centred, which is what rounds the crown off at both ends.
+    let mut baseline = Vec::with_capacity(heights.len());
+    let mut inset = Vec::with_capacity(heights.len());
+    let mut at = lift;
+    for (row, h) in heights.iter().enumerate() {
+        baseline.push(at);
+        inset.push((wide - widths[row]) * 0.5);
+        at += h + HANG + vgap;
+    }
 
     let mut branches = Vec::new();
+    let mut nodes = Vec::with_capacity(blocks.len());
 
-    for (order, (block, &(bx, by))) in blocks.iter().zip(places.iter()).enumerate() {
-        let node_x = field_x + bx;
-        let node_y = lift + by + block.height * 0.5;
-        let name_w = block.name.chars().count() as f32 * NAME_CH;
+    for (index, block) in blocks.iter().enumerate() {
+        let (row, along) = placed[index];
+        let node_x = field_x + inset[row] + along;
 
-        // The limb leaves the title on the heading of its category, then finds
-        // its way past anything packed in between.
-        let origin = (core_x + root_w * 0.5 + 14.0, core_y);
-        let barriers: Vec<(f32, f32, f32, f32)> = rects
-            .iter()
-            .enumerate()
-            .filter(|(other, &(ox, _, ow, _))| *other != order && ox + ow < node_x - 12.0)
-            .map(|(_, &rect)| rect)
-            .collect();
+        // A row bows across its length, so the categories on it are never all
+        // at the same height - which is what lets the branches fork into them
+        // rather than run along them.
+        let sweep = if widths[row] > 1.0 {
+            (along + block.width * 0.5) / widths[row]
+        } else {
+            0.5
+        };
+        let node_y = baseline[row] + NODE_DROP + (sweep * std::f32::consts::PI).sin() * ARC;
 
-        let path = route(
-            origin,
-            (node_x, node_y),
-            &barriers,
-            order as f32 * 1.7,
-            MARGIN * 0.6,
-            height - MARGIN * 0.6,
-        );
+        let top = baseline[row] + HANG;
+        let middle = top + block.height * 0.5;
 
         let mut stems = Vec::new();
         let mut buds = Vec::new();
         let mut leaves = Vec::new();
-
-        let mut fan_x = node_x + NAME_LEAD + name_w + NAME_TRAIL;
+        let mut fan_x = node_x + FAN_LEAD;
 
         for (which, fan) in block.fans.iter().enumerate() {
             let fan_h: f32 = fan
@@ -667,24 +764,21 @@ fn plot(startpage: &Startpage, navigation: &Navigation) -> Map {
                 .sum::<f32>()
                 + (fan.len().saturating_sub(1)) as f32 * GROUP_GAP;
 
-            let mut top = node_y - fan_h * 0.5;
+            let mut head = middle - fan_h * 0.5;
 
             for group in fan {
                 let run = group.leaves.len() as f32 * ROW;
-                let bud = (fan_x, top + run * 0.5);
+                let bud = (fan_x, head + run * 0.5);
 
                 stems.push(thread(&[
-                    (node_x + 5.0, node_y),
-                    (
-                        node_x + (bud.0 - node_x) * 0.55,
-                        node_y + (bud.1 - node_y) * 0.25,
-                    ),
-                    (bud.0 - 14.0, bud.1),
+                    (node_x + 3.0, node_y + 6.0),
+                    (node_x + (bud.0 - node_x) * 0.4, node_y + (bud.1 - node_y) * 0.6),
+                    (bud.0 - 16.0, bud.1),
                     bud,
                 ]));
 
                 for (j, (ico, lbl, url)) in group.leaves.iter().enumerate() {
-                    let leaf_y = top + j as f32 * ROW + ROW * 0.5;
+                    let leaf_y = head + j as f32 * ROW + ROW * 0.5;
                     let inner = bud.0 + BUD_DX;
 
                     leaves.push(Leaf {
@@ -706,11 +800,13 @@ fn plot(startpage: &Startpage, navigation: &Navigation) -> Map {
                     y: px(bud.1),
                 });
 
-                top += run + GROUP_GAP;
+                head += run + GROUP_GAP;
             }
 
             fan_x += block.fan_w[which];
         }
+
+        nodes.push((node_x, node_y, block.tone));
 
         branches.push(Branch {
             name: block.name.to_owned(),
@@ -719,12 +815,37 @@ fn plot(startpage: &Startpage, navigation: &Navigation) -> Map {
             name_y: px(node_y),
             node_x: px(node_x),
             node_y: px(node_y),
-            limb: taper(&path, 5.5, 1.4),
             stems,
             buds,
             leaves,
         });
     }
+
+    // What each category occupies, name included, so the skeleton can be kept
+    // out of it.
+    let rects: Vec<(f32, f32, f32, f32)> = blocks
+        .iter()
+        .enumerate()
+        .map(|(index, block)| {
+            let (row, _) = placed[index];
+            let (node_x, node_y, _) = nodes[index];
+            let top = node_y - 13.0;
+            let foot = baseline[row] + HANG + block.height;
+            (node_x - 6.0, top, block.width + 12.0, foot - top)
+        })
+        .collect();
+
+    let all: Vec<usize> = (0..nodes.len()).collect();
+    let mut boughs = Vec::new();
+    branch_out(
+        &all,
+        &nodes,
+        &rects,
+        (core_x + root_w * 0.5 + 16.0, core_y),
+        TRUNK_W,
+        0,
+        &mut boughs,
+    );
 
     // The other maps are navigation, not part of this tree, so they sit in a
     // strip above it rather than hanging off the title.
@@ -750,6 +871,7 @@ fn plot(startpage: &Startpage, navigation: &Navigation) -> Map {
         height: px(height),
         core_x: px(core_x),
         core_y: px(core_y),
+        boughs,
         branches,
         others,
     }

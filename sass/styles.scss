@@ -37,6 +37,7 @@ $other-size: 13px; // OTHER_CH = 8.6
   --ink: #dfe4ea;
   --ink-dim: #6d7684;
   --wire: 96 110 128;
+  --bark: 122 134 148;
 }
 
 *,
@@ -133,11 +134,17 @@ a {
   pointer-events: none;
 }
 
-// A limb is a filled outline, not a stroke: it starts thick at the core and
-// tapers to nothing at the category, which a stroke cannot do.
-.limb {
-  fill: #{"rgb(var(--tone) / 0.26)"};
+// The skeleton is filled outlines rather than strokes, because a stroke cannot
+// change width along its length - and width is what says how far from the root
+// a segment is. Trunk and branches are bark; only the twig that carries a
+// single category takes that category's colour.
+.bough {
+  fill: #{"rgb(var(--bark) / 0.34)"};
   stroke: none;
+
+  &.is-tip {
+    fill: #{"rgb(var(--tone) / 0.38)"};
+  }
 }
 
 .stem {
