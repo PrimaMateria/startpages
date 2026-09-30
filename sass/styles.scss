@@ -13,6 +13,25 @@
 
 $mono: "Spline Sans Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
+// What a link is drawn on, so that a limb crossing it passes behind rather than
+// through. It has to be a filled shape: a text-shadow halo is a blurred copy of
+// the glyphs, so it darkens only where there is ink and leaves every gap between
+// the words wide open, which is where most of a crossing line shows. Measured,
+// a halo hid 11% of the line inside a label and this hides two thirds of it -
+// the rest is the fade at its ends, which is the price of having no edge.
+//
+// Radial rather than a flat colour so there is no edge to it. The page has no
+// boxes on it, and a rectangle of background over a background is still a
+// rectangle - it covers the ambient gradients that light everything around it,
+// and a hard-edged one reads as a panel. Faded out by its own corners it is a
+// patch of deeper dark, and at size it does not read as anything at all.
+$behind: radial-gradient(
+  118% 150% at 50% 50%,
+  var(--void) 0%,
+  var(--void) 52%,
+  rgba(6, 7, 10, 0) 100%
+);
+
 $leaf-size: 15px; // CH     = 9.0  (0.6em advance)
 $name-size: 19px; // NAME_CH = 13.2 (0.6em + 0.09em tracking)
 $root-size: 27px; // ROOT_CH = 17.6
@@ -252,10 +271,12 @@ a {
 // Everything below is positioned from the computed layout; `top` is a centre
 // line, hence the translate.
 
-// The strip generates no box of its own, so the links inside it go on being
-// placed against the map exactly as before. It is here for the column layout,
-// where it becomes the one thing that has to be a row.
-.strip {
+// Neither of these generates a box of its own, so everything inside them goes
+// on being placed against the map exactly as before. They exist for the column
+// layout: the strip is the one thing there that has to be a row, and a limb is
+// a category and its links, which a column has to be able to keep together.
+.strip,
+.limb {
   display: contents;
 }
 
@@ -324,10 +345,23 @@ a {
   font-size: $leaf-size;
   line-height: 1;
   color: var(--ink);
+
   -webkit-tap-highlight-color: transparent;
+
   // Limbs are drawn behind everything and a long one crosses whatever is in
-  // its way; the halo keeps the word on top of the line.
-  text-shadow: 0 0 7px var(--void), 0 0 3px var(--void);
+  // its way, so every line has to pass behind the words rather than through
+  // them. This was two wide blurs, which was not enough: one shadow of an
+  // opaque colour is thin at every radius, and a vein still crossed a label
+  // like a strikethrough. Stacking three tight ones builds a core that is
+  // genuinely opaque against the letterforms, and the two wider ones behind
+  // them carry it off without an edge.
+  //
+  // A shadow rather than a background, because a background is a box and there
+  // are no boxes on this page. Inherited by the icon, which needs it too.
+  background-image: $behind;
+  // Still worth a halo on top of the fill: it tightens the letterforms against
+  // whatever the fill does not reach, at the very ends of the row.
+  text-shadow: 0 0 2px var(--void), 0 0 2px var(--void), 0 0 6px var(--void);
 
   .ico {
     flex: none;
@@ -339,7 +373,13 @@ a {
 
   &:hover {
     color: #fff;
-    background: #{"rgb(var(--tone) / 0.14)"};
+    // Layered over the fill rather than replacing it, or the limb would come
+    // back through the row under the cursor.
+    background-image: linear-gradient(
+        #{"rgb(var(--tone) / 0.14)"},
+        #{"rgb(var(--tone) / 0.14)"}
+      ),
+      $behind;
 
     .ico {
       color: #{"rgb(var(--tone))"};
@@ -369,7 +409,7 @@ a {
 // then the strip, then each category name immediately followed by its own
 // links - so switching the positioning off leaves the content in the right
 // order, and the structure that the wiring carried is carried by sequence.
-@media (max-width: 900px) {
+@mixin column-layout {
   .viewport {
     overflow: visible;
   }
@@ -414,16 +454,27 @@ a {
     border-bottom: 1px solid #{"rgb(var(--bark) / 0.35)"};
   }
 
+  .limb {
+    display: block;
+  }
+
   .branch {
     margin: 26px 0 8px;
     text-shadow: none;
   }
 
-  // A finger, not a cursor: every link gets a row it can be hit in.
+  // A finger, not a cursor: every link gets a row it can be hit in. No patch
+  // behind it either - there is no line here for it to hide.
   .leaf {
     min-height: 44px;
     padding: 8px 10px 8px 6px;
     border-radius: 5px;
+    background-image: none;
+
+    &:hover {
+      background-color: #{"rgb(var(--tone) / 0.14)"};
+      background-image: none;
+    }
   }
 
   .ico {
@@ -434,4 +485,78 @@ a {
   .lbl {
     font-size: 16px;
   }
+}
+
+// --- Falling back on purpose ------------------------------------------------
+// The map is the point, but it is not always what you want: a narrow window has
+// no room for it, and sometimes neither does the person reading it. Below the
+// width where it fits there is no choice, and above it there is a switch, whose
+// answer is remembered.
+@media (max-width: 900px) {
+  @include column-layout;
+
+  // Nothing to switch to down here - it is already columns.
+  :root.js .mode {
+    display: none;
+  }
+}
+
+:root.as-columns {
+  @include column-layout;
+}
+
+// One column of 73 links is a very long scroll on a desktop, so above the
+// breakpoint the same content flows into as many columns as the window holds.
+// A limb is what does not get broken across one, which is why it is a box here
+// and nothing at all everywhere else.
+@media (min-width: 901px) {
+  :root.as-columns .map {
+    display: block;
+    columns: 300px;
+    column-gap: 44px;
+    padding: 26px 32px 72px;
+  }
+
+  :root.as-columns .root,
+  :root.as-columns .strip {
+    column-span: all;
+  }
+
+  :root.as-columns .limb {
+    break-inside: avoid;
+  }
+}
+
+// The switch itself. Hidden until the script that works it has run, so a page
+// without scripting never offers a control that would do nothing.
+.mode {
+  display: none;
+  position: fixed;
+  top: 22px;
+  right: 26px;
+  z-index: 3;
+  padding: 5px 7px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--ink-dim);
+  font: inherit;
+  font-size: $other-size;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--ink);
+  }
+
+  &:focus-visible {
+    color: var(--ink);
+    outline: 1px solid var(--ink-dim);
+    outline-offset: 3px;
+  }
+}
+
+:root.js .mode {
+  display: block;
 }

@@ -80,6 +80,17 @@ along its length.
 to a single category takes that category's colour, along with its node, name,
 stems, buds, veins and icons.
 
+A limb on its way somewhere crosses whatever is in between, so a link is drawn
+on a patch of background and the line passes behind it rather than through it.
+It has to be a fill. A text-shadow halo is a blurred copy of the glyphs, so it
+darkens only where there is ink and leaves every gap between the words open,
+which is where most of a crossing line shows: measured on one label, a halo hid
+11% of the line and the patch hid two thirds. The patch is radial rather than
+flat, because a rectangle of background over a background is still a rectangle -
+it covers the ambient gradients that light everything around it, and a hard
+edge reads as a panel. Faded out by its own corners it does not read as
+anything.
+
 The tones are set for a screen read in daylight, not only at a desk. Ambient
 light reflecting off the panel adds a luminance floor to foreground and
 background alike, so a nominal contrast of 15:1 can land nearer 4:1 outdoors and

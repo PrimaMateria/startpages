@@ -4,6 +4,21 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="dark" />
+
+    <script>
+      // The only script on the page, and it runs before the first paint on
+      // purpose: the layout is a stored preference, and a preference applied
+      // after the page is drawn is a flash of the wrong one. `js` is what
+      // reveals the switch, so without scripting there is no control offered
+      // that could not work.
+      try {
+        var seen = localStorage.getItem("startpages-view");
+        document.documentElement.className =
+          "js" + (seen === "columns" ? " as-columns" : "");
+      } catch (e) {
+        document.documentElement.className = "js";
+      }
+    </script>
     <meta name="theme-color" content="#06070a" />
     <title>{{ startpage.name }}</title>
 
@@ -102,6 +117,7 @@
         </nav>
 
         {%- for branch in map.branches %}
+        <div class="limb">
         <h2
           class="branch"
           style="left: {{ branch.name_x }}px; top: {{ branch.name_y }}px; --tone: var(--tone-{{ branch.tone }})"
@@ -114,8 +130,37 @@
         ><span class="ico" aria-hidden="true">{{ leaf.ico | safe }}</span
           ><span class="lbl">{{ leaf.lbl }}</span></a>
         {%- endfor %}
+        </div>
         {%- endfor %}
       </div>
     </div>
+
+    <button class="mode" type="button" aria-pressed="false">Columns</button>
+
+    <script>
+      (function () {
+        var root = document.documentElement,
+          knob = document.querySelector(".mode");
+
+        function paint() {
+          var columns = root.classList.contains("as-columns");
+          knob.textContent = columns ? "Map" : "Columns";
+          knob.setAttribute("aria-pressed", columns);
+        }
+
+        paint();
+
+        knob.addEventListener("click", function () {
+          var columns = root.classList.toggle("as-columns");
+          try {
+            localStorage.setItem(
+              "startpages-view",
+              columns ? "columns" : "map"
+            );
+          } catch (e) {}
+          paint();
+        });
+      })();
+    </script>
   </body>
 </html>
