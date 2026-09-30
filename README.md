@@ -82,29 +82,65 @@ stems, buds, veins and icons.
 
 ### The crown
 
-The categories are laid out in rows, but the rows are not the same length: each
+The categories are laid out in rows, and the rows are not the same length: each
 aims at a share of the content proportional to how wide an ellipse is at that
 height, so the middle rows are long and the top and bottom ones short. Centring
-them rounds the crown off at both ends - and, just as usefully, leaves the room
-on the left that the branches need to fan out through.
+them rounds the crown off at both ends - and leaves the room on the left that
+the branches need to fan out through.
 
-Each row also bows across its length, so the categories on it are never all at
-the same height. That is what lets a branch fork *into* a row rather than run
-along it.
+Every other category on a row is dropped below its neighbours. A row all at one
+height gives the branch above it nothing to fork into, and whatever the skeleton
+does up there collapses into a flat bus with ticks hanging off it; the stagger
+is what lets a fork be a Y.
 
-How many rows there are comes from a search: every row count up to six, against
-a grid of clearances, keeping the largest crown that still fits the screen. A
-row is never left empty - an empty row still costs the crown its full height.
+A run of more than eight links with no separator in it makes a fan tall enough
+to set the height of its whole row, which forces the crown wider or taller than
+it needs to be. Long runs are halved so the packer can put them side by side
+rather than end to end.
+
+How many rows there are comes from a search over every row count up to four,
+against a grid of clearances, keeping the largest crown that still fits. The cap
+matters: beyond four the crown grows taller than the title it hangs off, and
+since the title is pinned the trunk turns into a long vertical spine up the
+left-hand side.
+
+The densest map needs more area than a screen has, so the only question is where
+the overflow goes. Overshooting the width is weighted heavier than overshooting
+the height - too tall is a mouse wheel, too wide is a horizontal pan, and
+panning is the worse of the two.
 
 ### Getting past things
 
-A crown puts branches across clusters, so each segment is sampled along its
-length and pushed out of anything it lands inside, then smoothed.
+A crown puts branches across clusters, so a segment has to find its way past
+them. Two things about how turned out to matter more than they sound.
 
-Which way it escapes matters more than it sounds. Escaping to whichever side
-happens to be nearer makes a branch zigzag around one cluster and back around
-the next; committing to the direction it was already travelling turns the same
-dodge into a single arc over or under.
+**Displace waypoints, not samples.** Pushing every sample that lands inside a
+cluster out to the clearance line squares the detour off - a flat plateau with
+a corner at each end - and spreading that push into neighbouring samples only
+trades square shoulders for spikes, because the tents around adjacent clusters
+pile up. What a segment needs is a handful of deliberate waypoints: the
+clusters the straight line crosses are found, merged into runs, and each run
+gets one apex to arc over. Few points in, smooth curve out.
+
+**Commit to one direction.** Escaping to whichever side happens to be nearer
+makes a branch zigzag around one cluster and back around the next; going the
+way the segment was already travelling turns the same dodge into a single arc.
+
+A long clear stretch between two waypoints then gets a little belly, so it does
+not come out ruler-straight.
+
+Each segment is its own filled outline, so where a parent ends and two children
+begin, three square ends meet at an angle and leave a notch. A child is backed
+up slightly into its parent and given a first waypoint along the direction the
+parent arrived on, which fills the notch and leaves the joint on the same
+tangent - but only when it is genuinely carrying on that way. Backing a sharply
+turning child into its parent makes the path double back, and a curve through a
+reversal ties a knot.
+
+Once a branch is down to categories on a single row, its forks move up into the
+clear lane above that row. A fork has to sit behind everything it feeds, so a
+fork left of the row means the twig to the far end has to cross every cluster in
+between; up in the lane it travels over open ground and drops onto each node.
 
 The map is anchored top-left and never centred, and the field is a fixed height
 whatever a particular map needs, so the strip of maps and the title land on the

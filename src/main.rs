@@ -95,12 +95,18 @@ const HGAP: f32 = 58.0;
 const VGAP: f32 = 38.0;
 /// The screen the map is drawn to fill. Smaller windows pan; on a larger one
 /// the map simply sits in the middle of it.
-const TARGET_W: f32 = 1840.0;
+const TARGET_W: f32 = 1950.0;
 const TARGET_H: f32 = 1000.0;
 /// Drop from a row's baseline to the category node sitting on it.
 const NODE_DROP: f32 = 16.0;
 /// How far a row bows across its length.
-const ARC: f32 = 11.0;
+const ARC: f32 = 9.0;
+/// How far every other category on a row is dropped below its neighbours.
+///
+/// A row of categories all at one height gives the branch above it nothing to
+/// fork into: whatever the skeleton does up there collapses into a flat bus
+/// with ticks hanging off it. Staggering them is what lets a fork be a Y.
+const STAGGER: f32 = 26.0;
 /// Drop from a branch to the top of the cluster under it.
 const HANG: f32 = 46.0;
 /// Category node to the first fan hanging off it.
@@ -199,7 +205,10 @@ fn sample(points: &[(f32, f32)], per_segment: usize) -> Vec<(f32, f32)> {
 /// thins to nothing at the category is what makes the map look grown instead
 /// of wired, so the limbs are filled outlines rather than strokes.
 fn taper(points: &[(f32, f32)], from: f32, to: f32) -> String {
-    let curve = sample(points, 14);
+    // Enough samples to read as a curve, without re-sampling an already-dense
+    // routed path into several kilobytes of path data.
+    let per_segment = (56 / points.len().max(1)).clamp(2, 14);
+    let curve = sample(points, per_segment);
     if curve.len() < 2 {
         return String::new();
     }
@@ -380,6 +389,24 @@ fn measure(startpage: &Startpage) -> Vec<Block<'_>> {
                 groups.push(Group { leaves: current });
             }
 
+            // A run of a dozen links with no separator in it makes a fan tall
+            // enough to set the height of its whole row, which forces the crown
+            // wider or taller than it has any need to be. Long runs are halved
+            // so the packer can put them side by side instead of end to end.
+            let mut split: Vec<Group> = Vec::new();
+            for group in groups {
+                if group.leaves.len() > 8 {
+                    let half = group.leaves.len().div_ceil(2);
+                    let mut leaves = group.leaves;
+                    let tail = leaves.split_off(half);
+                    split.push(Group { leaves });
+                    split.push(Group { leaves: tail });
+                } else {
+                    split.push(group);
+                }
+            }
+            let groups = split;
+
             let total: usize = groups.iter().map(|group| group.leaves.len()).sum();
             // How many fans a category spreads over is decided by its own
             // shape rather than a fixed rule: add fans until the block stops
@@ -549,31 +576,165 @@ fn clear_of(point: (f32, f32), obstacles: &[(f32, f32, f32, f32)], bias: f32) ->
 }
 
 /// Steers a segment from one point to another without driving it through a
-/// cluster. Sampled along its length and pushed out through the nearer side of
-/// anything it lands inside, then smoothed, so dodging reads as meandering.
+/// cluster.
+///
+/// Displacing every sample that lands inside something is the wrong model: it
+/// builds a tent around each one, and tents from neighbouring clusters pile up
+/// into spikes. What the segment actually needs is a handful of deliberate
+/// waypoints - so the clusters the straight line crosses are found, merged into
+/// runs, and each run gets one apex to arc over. Few points in, smooth curve
+/// out.
 fn route(
     from: (f32, f32),
     to: (f32, f32),
     obstacles: &[(f32, f32, f32, f32)],
     sway: f32,
 ) -> Vec<(f32, f32)> {
-    let mut points = vec![from];
+    const PROBES: usize = 28;
+
+    // Committing to the direction the segment is already travelling turns a
+    // dodge into a single arc rather than a zigzag.
     let bias = if to.1 >= from.1 { 1.0 } else { -1.0 };
 
-    for step in 1..9 {
-        let t = step as f32 / 9.0;
-        let x = from.0 + (to.0 - from.0) * t;
+    // Where the straight line is blocked, and how far clear it would have to be.
+    let mut blocked: Vec<Option<f32>> = Vec::with_capacity(PROBES + 1);
 
-        if (x - to.0).abs() < 44.0 {
-            break;
+    for i in 0..=PROBES {
+        let t = i as f32 / PROBES as f32;
+        let x = from.0 + (to.0 - from.0) * t;
+        let y = from.1 + (to.1 - from.1) * t;
+        let mut clear: Option<f32> = None;
+
+        for &(bx, by, bw, bh) in obstacles {
+            let hit = x > bx - 14.0
+                && x < bx + bw + 14.0
+                && y > by - 12.0
+                && y < by + bh + 12.0;
+
+            if hit {
+                let edge = if bias < 0.0 { by - 20.0 } else { by + bh + 20.0 };
+                clear = Some(match clear {
+                    Some(had) if (had - y).abs() > (edge - y).abs() => had,
+                    _ => edge,
+                });
+            }
         }
 
-        let y = from.1 + (to.1 - from.1) * t + drift(t * 2.6 + sway, 11.0);
-        points.push(clear_of((x, y), obstacles, bias));
+        blocked.push(clear);
+    }
+
+    // One apex per run of blocked probes.
+    let mut points = vec![from];
+    let mut run: Option<(usize, f32)> = None;
+
+    for i in 0..=PROBES {
+        match (blocked[i], run) {
+            (Some(edge), None) => run = Some((i, edge)),
+            (Some(edge), Some((start, worst))) => {
+                let keep = if (edge - from.1).abs() > (worst - from.1).abs() {
+                    edge
+                } else {
+                    worst
+                };
+                run = Some((start, keep));
+            }
+            (None, Some((start, worst))) => {
+                let mid = (start + i - 1) as f32 * 0.5 / PROBES as f32;
+                points.push((
+                    from.0 + (to.0 - from.0) * mid,
+                    worst + drift(mid * 3.0 + sway, 6.0),
+                ));
+                run = None;
+            }
+            (None, None) => {}
+        }
+    }
+
+    if let Some((start, worst)) = run {
+        let mid = (start + PROBES) as f32 * 0.5 / PROBES as f32;
+        points.push((
+            from.0 + (to.0 - from.0) * mid,
+            worst + drift(mid * 3.0 + sway, 6.0),
+        ));
+    }
+
+    // Nothing in the way: still give the segment a little belly so it reads as
+    // grown rather than ruled.
+    if points.len() == 1 {
+        points.push((
+            from.0 + (to.0 - from.0) * 0.5,
+            from.1 + (to.1 - from.1) * 0.5 + drift(sway, 13.0),
+        ));
     }
 
     points.push(to);
-    points
+
+    // A long clear stretch between two waypoints comes out ruler-straight;
+    // give it a little belly so the whole skeleton reads as grown.
+    let mut bellied = vec![points[0]];
+    for pair in points.windows(2) {
+        let (a, b) = (pair[0], pair[1]);
+        let reach = ((b.0 - a.0).powi(2) + (b.1 - a.1).powi(2)).sqrt();
+        if reach > 240.0 {
+            bellied.push((
+                (a.0 + b.0) * 0.5,
+                (a.1 + b.1) * 0.5 + drift(a.0 * 0.004 + sway, 14.0),
+            ));
+        }
+        bellied.push(b);
+    }
+
+    bellied
+}
+
+/// Eases a segment out of the joint it starts from.
+///
+/// Each segment is its own filled outline, so where a parent ends and two
+/// children begin the three square ends meet at an angle and leave a notch.
+/// Backing each child up a little into its parent fills that in, and giving it
+/// a first waypoint along the direction the parent arrived on means it leaves
+/// the joint on the same tangent - which is what turns a kink into a Y.
+fn ease_out(path: &mut Vec<(f32, f32)>, heading: (f32, f32)) {
+    if path.len() < 2 {
+        return;
+    }
+
+    let root = path[0];
+    let next = path[1];
+    let (dx, dy) = (next.0 - root.0, next.1 - root.1);
+    let gap = (dx * dx + dy * dy).sqrt();
+    if gap < 1.0 {
+        return;
+    }
+
+    // Only ease a child that is carrying on roughly the way its parent
+    // arrived. Backing a sharply turning one into its parent makes the path
+    // double back on itself, and a curve through a reversal loops.
+    // 0.3 still lets a near-reversal through, and the back-step then ties a
+    // small knot in the path. Half is the point where the child is genuinely
+    // carrying on the parent's way.
+    let along = (dx / gap) * heading.0 + (dy / gap) * heading.1;
+    if along < 0.5 {
+        return;
+    }
+
+    if gap > 46.0 {
+        path.insert(1, (root.0 + heading.0 * 17.0, root.1 + heading.1 * 17.0));
+    }
+
+    path.insert(0, (root.0 - heading.0 * 5.0, root.1 - heading.1 * 5.0));
+}
+
+/// The direction a path is travelling as it arrives.
+fn heading_of(path: &[(f32, f32)]) -> (f32, f32) {
+    if path.len() < 2 {
+        return (1.0, 0.0);
+    }
+    let a = path[path.len() - 2];
+    let b = path[path.len() - 1];
+    let (dx, dy) = (b.0 - a.0, b.1 - a.1);
+    let len = (dx * dx + dy * dy).sqrt().max(0.001);
+    (dx / len, dy / len)
 }
 
 /// Grows the skeleton to every category by halving, so every joint is a fork
@@ -586,8 +747,12 @@ fn route(
 fn branch_out(
     members: &[usize],
     nodes: &[(f32, f32, usize)],
+    rows: &[usize],
+    lanes: &[f32],
+    corridor: f32,
     rects: &[(f32, f32, f32, f32)],
     from: (f32, f32),
+    heading: (f32, f32),
     width: f32,
     depth: usize,
     boughs: &mut Vec<Bough>,
@@ -607,19 +772,57 @@ fn branch_out(
             .map(|(_, &rect)| rect)
             .collect();
 
+        let mut path: Vec<(f32, f32)> = route((nx, ny), from, &others, depth as f32 * 1.7)
+            .into_iter()
+            .rev()
+            .collect();
+        ease_out(&mut path, heading);
+
         boughs.push(Bough {
-            d: taper(
-                &route((nx, ny), from, &others, depth as f32 * 1.7)
-                    .into_iter()
-                    .rev()
-                    .collect::<Vec<_>>(),
-                width,
-                TIP_W,
-            ),
+            d: taper(&path, width, TIP_W),
             tone: tone as i32,
         });
         return;
     }
+
+    // Split whole rows off while the branch still serves more than one, and
+    // only split left from right once it is down to a single row.
+    //
+    // Splitting on raw spread lets a subtree hold categories from opposite ends
+    // of the crown, and a fork has to sit behind all of its members - so the
+    // branch is dragged back across everything in between. Keeping a subtree to
+    // whole rows, or to one run within a row, keeps every fork local to what it
+    // feeds.
+    let mut sorted = members.to_vec();
+    sorted.sort_by(|&a, &b| {
+        rows[a]
+            .cmp(&rows[b])
+            .then(nodes[a].0.partial_cmp(&nodes[b].0).unwrap())
+    });
+
+    let spans = {
+        let mut seen: Vec<usize> = sorted.iter().map(|&m| rows[m]).collect();
+        seen.dedup();
+        seen.len()
+    };
+
+    let half = if spans > 1 {
+        // Cut on a row boundary, whichever is nearest the middle.
+        let mut best = sorted.len() / 2;
+        let mut closest = usize::MAX;
+        for cut in 1..sorted.len() {
+            if rows[sorted[cut]] != rows[sorted[cut - 1]] {
+                let off = cut.abs_diff(sorted.len() / 2);
+                if off < closest {
+                    closest = off;
+                    best = cut;
+                }
+            }
+        }
+        best
+    } else {
+        sorted.len() / 2
+    };
 
     let nearest = members.iter().map(|&m| nodes[m].0).fold(f32::MAX, f32::min);
     let span = (nearest - from.0).max(52.0);
@@ -628,31 +831,40 @@ fn branch_out(
         members.iter().map(|&m| nodes[m].1).sum::<f32>() / members.len() as f32,
     );
 
+    // Once a branch is down to categories on one row, its forks belong in the
+    // clear lane just above that row rather than out to the left of it. A fork
+    // has to sit behind everything it feeds, so left of the row means the twig
+    // to the far end has to cross every cluster in between; up in the lane it
+    // travels over open ground and drops straight down onto each node.
+    // The higher in the lane a fork sits, the more it still carries - so the
+    // little tree above a row has visible depth instead of collapsing into one
+    // flat bus with ticks hanging off it.
+    let single = sorted.windows(2).all(|pair| rows[pair[0]] == rows[pair[1]]);
+    let point = if single {
+        let load = (sorted.len() as f32).min(6.0);
+        let rise = (14.0 + load * 6.0).min(corridor - 10.0).max(14.0);
+        (point.0, lanes[rows[sorted[0]]] - rise)
+    } else {
+        point
+    };
+
     let point = clear_of(point, rects, if point.1 >= from.1 { 1.0 } else { -1.0 });
 
     let next = (width * TAPER).max(TIP_W + 0.3);
+    let mut path = route(from, point, rects, depth as f32 * 1.3);
+    ease_out(&mut path, heading);
+    let onward = heading_of(&path);
+
     boughs.push(Bough {
-        d: taper(&route(from, point, rects, depth as f32 * 1.3), width, next),
+        d: taper(&path, width, next),
         tone: -1,
     });
 
-    // Split across whichever axis the remaining categories are more spread
-    // over, so a fork always separates them into two real groups.
-    let ys: Vec<f32> = members.iter().map(|&m| nodes[m].1).collect();
-    let xs: Vec<f32> = members.iter().map(|&m| nodes[m].0).collect();
-    let spread_y = ys.iter().cloned().fold(f32::MIN, f32::max) - ys.iter().cloned().fold(f32::MAX, f32::min);
-    let spread_x = xs.iter().cloned().fold(f32::MIN, f32::max) - xs.iter().cloned().fold(f32::MAX, f32::min);
-
-    let mut sorted = members.to_vec();
-    if spread_y >= spread_x * 0.6 {
-        sorted.sort_by(|&a, &b| nodes[a].1.partial_cmp(&nodes[b].1).unwrap());
-    } else {
-        sorted.sort_by(|&a, &b| nodes[a].0.partial_cmp(&nodes[b].0).unwrap());
-    }
-
-    let half = sorted.len() / 2;
     for side in [&sorted[..half], &sorted[half..]] {
-        branch_out(side, nodes, rects, point, next, depth + 1, boughs);
+        branch_out(
+            side, nodes, rows, lanes, corridor, rects, point, onward, next, depth + 1,
+            boughs,
+        );
     }
 }
 
@@ -667,7 +879,10 @@ fn plot(startpage: &Startpage, navigation: &Navigation) -> Map {
     let mut best: Option<(Vec<(usize, f32)>, Vec<f32>, Vec<f32>, f32)> = None;
     let mut score = f32::MAX;
 
-    for rows in 1..=6.min(blocks.len().max(1)) {
+    // Four rows at most. Beyond that the crown stops being a crown: it grows
+    // taller than the title it hangs off, and since the title is pinned the
+    // trunk turns into a long vertical spine up the left-hand side.
+    for rows in 1..=4.min(blocks.len().max(1)) {
         for across in 0..13 {
             for down in 0..16 {
                 let hgap = HGAP * (1.0 + across as f32 * 0.3);
@@ -675,15 +890,19 @@ fn plot(startpage: &Startpage, navigation: &Navigation) -> Map {
 
                 let (placed, heights, widths) = crown(&blocks, rows, hgap);
 
-                let tall: f32 = heights.iter().map(|h| h + HANG).sum::<f32>()
+                let tall: f32 = heights.iter().map(|h| h + HANG + STAGGER).sum::<f32>()
                     + vgap * (heights.len().saturating_sub(1)) as f32;
                 let wide = widths.iter().cloned().fold(0.0_f32, f32::max);
 
                 let w = field_x + wide + MARGIN;
                 let h = tall + TOP_BAR + MARGIN * 2.0;
 
-                let cost = (w - TARGET_W).max(0.0) * 3.0
-                    + (h - TARGET_H).max(0.0) * 7.0
+                // The densest map needs more area than a screen has, so the
+                // question is only where the overflow goes. Width costs more
+                // than height: too tall is a mouse wheel, too wide is a
+                // horizontal pan, and panning is the worse of the two.
+                let cost = (w - TARGET_W).max(0.0) * 5.0
+                    + (h - TARGET_H).max(0.0) * 5.0
                     + (TARGET_W - w).max(0.0) * 2.0
                     + (TARGET_H - h).max(0.0) * 2.5;
 
@@ -713,7 +932,7 @@ fn plot(startpage: &Startpage, navigation: &Navigation) -> Map {
         );
     }
 
-    let tall: f32 = heights.iter().map(|h| h + HANG).sum::<f32>()
+    let tall: f32 = heights.iter().map(|h| h + HANG + STAGGER).sum::<f32>()
         + vgap * (heights.len().saturating_sub(1)) as f32;
     let wide = widths.iter().cloned().fold(0.0_f32, f32::max);
 
@@ -732,15 +951,21 @@ fn plot(startpage: &Startpage, navigation: &Navigation) -> Map {
     for (row, h) in heights.iter().enumerate() {
         baseline.push(at);
         inset.push((wide - widths[row]) * 0.5);
-        at += h + HANG + vgap;
+        at += h + HANG + STAGGER + vgap;
     }
 
     let mut branches = Vec::new();
     let mut nodes = Vec::with_capacity(blocks.len());
 
+    let mut along_row = vec![0usize; heights.len()];
+
     for (index, block) in blocks.iter().enumerate() {
         let (row, along) = placed[index];
         let node_x = field_x + inset[row] + along;
+
+        let step = along_row[row];
+        along_row[row] += 1;
+        let drop = if step % 2 == 1 { STAGGER } else { 0.0 };
 
         // A row bows across its length, so the categories on it are never all
         // at the same height - which is what lets the branches fork into them
@@ -750,9 +975,10 @@ fn plot(startpage: &Startpage, navigation: &Navigation) -> Map {
         } else {
             0.5
         };
-        let node_y = baseline[row] + NODE_DROP + (sweep * std::f32::consts::PI).sin() * ARC;
+        let node_y =
+            baseline[row] + NODE_DROP + drop + (sweep * std::f32::consts::PI).sin() * ARC;
 
-        let top = baseline[row] + HANG;
+        let top = baseline[row] + HANG + drop;
         let middle = top + block.height * 0.5;
 
         let mut stems = Vec::new();
@@ -838,13 +1064,18 @@ fn plot(startpage: &Startpage, navigation: &Navigation) -> Map {
         })
         .collect();
 
+    let node_rows: Vec<usize> = (0..blocks.len()).map(|index| placed[index].0).collect();
     let all: Vec<usize> = (0..nodes.len()).collect();
     let mut boughs = Vec::new();
     branch_out(
         &all,
         &nodes,
+        &node_rows,
+        &baseline,
+        vgap,
         &rects,
         (core_x + root_w * 0.5 + 16.0, core_y),
+        (1.0, 0.0),
         TRUNK_W,
         0,
         &mut boughs,
