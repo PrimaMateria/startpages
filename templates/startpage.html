@@ -58,25 +58,25 @@
           height="{{ map.height }}"
           aria-hidden="true"
         >
-          <circle class="heart" cx="{{ map.heart_x }}" cy="{{ map.heart_y }}" r="4" />
-          {%- for trunk in map.trunks %}
-          <path class="trunk" d="{{ trunk.d | safe }}" style="--tone: var(--tone-{{ trunk.tone }})" />
-          {%- endfor %}
-          {%- for spine in map.spines %}
-          <path class="spine" d="{{ spine | safe }}" />
-          {%- endfor %}
           {%- for branch in map.branches %}
           <g style="--tone: var(--tone-{{ branch.tone }})">
-            <path class="stem" d="{{ branch.stem | safe }}" />
+            <path class="limb" d="{{ branch.limb | safe }}" />
+            {%- for stem in branch.stems %}
+            <path class="stem" d="{{ stem | safe }}" />
+            {%- endfor %}
             {%- for leaf in branch.leaves %}
             <path class="vein" d="{{ leaf.vein | safe }}" />
             {%- endfor %}
-            <circle class="node" cx="{{ branch.dot_x }}" cy="{{ branch.dot_y }}" r="3.4" />
+            {%- for bud in branch.buds %}
+            <circle class="bud" cx="{{ bud.x }}" cy="{{ bud.y }}" r="2.6" />
+            {%- endfor %}
+            <circle class="node" cx="{{ branch.node_x }}" cy="{{ branch.node_y }}" r="4" />
           </g>
           {%- endfor %}
+          <circle class="core" cx="{{ map.core_x }}" cy="{{ map.core_y }}" r="5" />
         </svg>
 
-        <h1 class="root" style="left: {{ map.root_x }}px; top: {{ map.root_y }}px">
+        <h1 class="root" style="left: {{ map.core_x }}px; top: {{ map.core_y }}px">
           {{ startpage.name }}
         </h1>
 
@@ -87,7 +87,7 @@
         {%- for branch in map.branches %}
         <h2
           class="branch"
-          style="left: {{ branch.x }}px; top: {{ branch.y }}px; --tone: var(--tone-{{ branch.tone }})"
+          style="left: {{ branch.name_x }}px; top: {{ branch.name_y }}px; --tone: var(--tone-{{ branch.tone }})"
         >{{ branch.name }}</h2>
         {%- for leaf in branch.leaves %}
         <a

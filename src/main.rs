@@ -53,64 +53,75 @@ static CONFIGURATION: &str = "content/startpages.yaml";
 // Geometry
 //
 // The page is a drawn map, not a flow layout, so the generator has to know
-// where every word lands. Monospace makes that exact: a label is
-// `chars * advance` wide, full stop. Every constant below is in CSS pixels and
-// has to agree with sass/styles.scss.
+// where every word lands before the browser sees it. Monospace makes that
+// exact: a label is `characters * advance` wide, full stop.
+//
+// The tree has four levels. The title is the core; a limb reaches out to every
+// category; each category fans to the buds that stand for its separator-
+// delimited groups; each bud fans to its links. Categories are shared between a
+// left and a right field and centred on the core, so the whole thing grows
+// outward from the middle.
+//
+// EVERY CONSTANT HERE HAS TO AGREE WITH sass/styles.scss. Change a font size on
+// one side only and the veins stop meeting the words.
 // ---------------------------------------------------------------------------
 
 /// Advance width of one character at the leaf font size.
 const CH: f32 = 8.4;
-/// Advance width of one character in a branch name, tracking included.
+/// Advance width of one character in a category name, tracking included.
 const NAME_CH: f32 = 10.4;
-/// Advance width of one character in the map title.
+/// Advance width of one character in the title.
 const ROOT_CH: f32 = 16.7;
 /// Advance width of one character in a link to another map.
 const OTHER_CH: f32 = 8.6;
 
 /// Vertical pitch between leaves.
-const ROW: f32 = 27.0;
-/// Extra breathing room where the content has a separator.
-const SEP: f32 = 13.0;
-/// Room the icon occupies in front of a label.
+const ROW: f32 = 25.0;
+/// Space between one bud's leaves and the next bud's.
+const GROUP_GAP: f32 = 25.0;
+/// Room the icon and its gap occupy beside a label.
 const ICON: f32 = 24.0;
-/// Drop from the top of a cluster to its first leaf.
-const HEAD: f32 = 40.0;
-/// Space between one cluster and the next down the same branch.
-const CLUSTER_GAP: f32 = 48.0;
-/// How far the stem sits from the spine.
-const STEM_DX: f32 = 27.0;
-/// How far the leaves sit from the spine.
-const LEAF_DX: f32 = 63.0;
+/// Bud to the leaves hanging off it.
+const BUD_DX: f32 = 26.0;
+/// Trailing space after a fan, before the next fan starts.
+const COL_PAD: f32 = 46.0;
+/// Category node to its name, and its name to the first fan.
+const NAME_LEAD: f32 = 17.0;
+const NAME_TRAIL: f32 = 28.0;
+/// Smallest clearance between a category and whatever is packed to its right.
+/// The layout opens this up until the map fills the screen.
+const HGAP: f32 = 58.0;
+/// Smallest clearance between a category and whatever is packed under it.
+const VGAP: f32 = 38.0;
+/// The screen the map is drawn to fill. Smaller windows pan; on a larger one
+/// the map simply sits in the middle of it.
+const TARGET_W: f32 = 1840.0;
+const TARGET_H: f32 = 1000.0;
+/// Resolution of the packing skyline.
+const STEP: f32 = 4.0;
+/// How far a limb reaches before it arrives at the first category.
+const LIMB_REACH: f32 = 96.0;
 
-const COL_GAP: f32 = 48.0;
-const MARGIN: f32 = 44.0;
-/// Room above the first cluster, where the title and the trunks live. The
-/// trunks need real vertical travel or the fan flattens into a horizontal rule.
-const TOP: f32 = 258.0;
-/// Where the trunks leave the title.
-const HEART: f32 = 134.0;
-/// Branches start at staggered depths, so the fan is uneven and the columns
-/// never line up along a common top edge.
-const LIFT: f32 = 36.0;
-const BOTTOM: f32 = 78.0;
+const MARGIN: f32 = 48.0;
+/// Strip at the top holding the links to the other maps.
+const TOP_BAR: f32 = 68.0;
 
 /// How many tones the stylesheet defines.
 const TONES: usize = 9;
 
-/// Rounded to a tenth of a pixel - enough for the renderer, short enough that
-/// the generated markup stays readable.
+/// Rounded to whole pixels - enough for the renderer, short enough that the
+/// generated markup stays readable.
 fn px(value: f32) -> f32 {
     value.round()
 }
 
-/// A deterministic wobble. Everything drawn here is a curve with a little drift
-/// in it, so the map reads as something grown rather than something plotted.
+/// A deterministic wobble. Everything drawn here carries a little drift, so the
+/// map reads as something grown rather than something plotted.
 fn drift(k: f32, amount: f32) -> f32 {
     (k * 1.9).sin() * amount
 }
 
-/// A smooth path through the given points (Catmull-Rom, converted to cubics).
-/// Nothing is ever a straight line.
+/// Catmull-Rom through the given points, as a cubic bezier path.
 fn thread(points: &[(f32, f32)]) -> String {
     if points.len() < 2 {
         return String::new();
@@ -136,8 +147,141 @@ fn thread(points: &[(f32, f32)]) -> String {
     d
 }
 
+/// The same curve, evaluated rather than described, so it can be given width.
+fn sample(points: &[(f32, f32)], per_segment: usize) -> Vec<(f32, f32)> {
+    let mut out = Vec::new();
+
+    for i in 0..points.len().saturating_sub(1) {
+        let p0 = points[i.saturating_sub(1)];
+        let p1 = points[i];
+        let p2 = points[i + 1];
+        let p3 = points[(i + 2).min(points.len() - 1)];
+
+        for step in 0..per_segment {
+            let t = step as f32 / per_segment as f32;
+            let t2 = t * t;
+            let t3 = t2 * t;
+
+            out.push((
+                0.5 * ((2.0 * p1.0)
+                    + (-p0.0 + p2.0) * t
+                    + (2.0 * p0.0 - 5.0 * p1.0 + 4.0 * p2.0 - p3.0) * t2
+                    + (-p0.0 + 3.0 * p1.0 - 3.0 * p2.0 + p3.0) * t3),
+                0.5 * ((2.0 * p1.1)
+                    + (-p0.1 + p2.1) * t
+                    + (2.0 * p0.1 - 5.0 * p1.1 + 4.0 * p2.1 - p3.1) * t2
+                    + (-p0.1 + 3.0 * p1.1 - 3.0 * p2.1 + p3.1) * t3),
+            ));
+        }
+    }
+
+    if let Some(&last) = points.last() {
+        out.push(last);
+    }
+
+    out
+}
+
+/// A closed shape that follows a curve and tapers along it. A stroke cannot
+/// change width down its length; a limb that starts thick at the core and
+/// thins to nothing at the category is what makes the map look grown instead
+/// of wired, so the limbs are filled outlines rather than strokes.
+fn taper(points: &[(f32, f32)], from: f32, to: f32) -> String {
+    let curve = sample(points, 14);
+    if curve.len() < 2 {
+        return String::new();
+    }
+
+    let last = curve.len() - 1;
+    let mut near = Vec::with_capacity(curve.len());
+    let mut far = Vec::with_capacity(curve.len());
+
+    for (i, &(x, y)) in curve.iter().enumerate() {
+        let t = i as f32 / last as f32;
+        let width = from + (to - from) * t;
+
+        let before = curve[i.saturating_sub(1)];
+        let after = curve[(i + 1).min(last)];
+        let (dx, dy) = (after.0 - before.0, after.1 - before.1);
+        let length = (dx * dx + dy * dy).sqrt().max(0.001);
+        let (nx, ny) = (-dy / length, dx / length);
+
+        near.push((x + nx * width * 0.5, y + ny * width * 0.5));
+        far.push((x - nx * width * 0.5, y - ny * width * 0.5));
+    }
+
+    let mut d = format!("M{:.1},{:.1}", near[0].0, near[0].1);
+    for point in near.iter().skip(1) {
+        d.push_str(&format!("L{:.1},{:.1}", point.0, point.1));
+    }
+    for point in far.iter().rev() {
+        d.push_str(&format!("L{:.1},{:.1}", point.0, point.1));
+    }
+    d.push('Z');
+
+    d
+}
+
+/// Steers a limb from the title to a category without driving it through
+/// anything already on the page.
+///
+/// Packing categories at whatever depth they fit means a limb often has to get
+/// past two or three of them on the way. It is sampled along its length and, at
+/// any sample that lands inside a category's box, pushed out through the nearer
+/// side; the result is smoothed into a curve, so dodging reads as meandering
+/// rather than as a detour.
+fn route(
+    from: (f32, f32),
+    to: (f32, f32),
+    obstacles: &[(f32, f32, f32, f32)],
+    sway: f32,
+    floor: f32,
+    ceiling: f32,
+) -> Vec<(f32, f32)> {
+    let mut points = vec![from];
+    let steps = 7;
+
+    for step in 1..steps {
+        let t = step as f32 / steps as f32;
+        let x = from.0 + (to.0 - from.0) * t;
+
+        // Close to the node the limb has to be allowed to arrive.
+        if x > to.0 - 56.0 {
+            break;
+        }
+
+        // Its own wave before it dodges anything, so two limbs escaping the
+        // same obstacle the same way still travel as two strands.
+        let mut y = from.1 + (to.1 - from.1) * t + drift(t * 2.6 + sway, 13.0);
+
+        for _ in 0..4 {
+            let mut clear = true;
+
+            for &(bx, by, bw, bh) in obstacles {
+                if x > bx - 10.0 && x < bx + bw + 10.0 && y > by - 8.0 && y < by + bh + 8.0 {
+                    let up = y - (by - 12.0);
+                    let down = (by + bh + 12.0) - y;
+                    y = if up < down { by - 12.0 } else { by + bh + 12.0 };
+                    clear = false;
+                }
+            }
+
+            if clear {
+                break;
+            }
+        }
+
+        points.push((x, y.clamp(floor, ceiling)));
+    }
+
+    points.push(to);
+    points
+}
+
 #[derive(Debug, Serialize)]
 struct Leaf {
+    /// CSS left. On the left-hand field the label grows away from the core, so
+    /// this is already offset by the label's measured width.
     x: f32,
     y: f32,
     ico: String,
@@ -146,24 +290,26 @@ struct Leaf {
     vein: String,
 }
 
+/// The node standing for one separator-delimited group. It has no name in the
+/// content, so it is drawn as a junction and nothing else.
+#[derive(Debug, Serialize)]
+struct Bud {
+    x: f32,
+    y: f32,
+}
+
 #[derive(Debug, Serialize)]
 struct Branch {
     name: String,
     tone: usize,
-    x: f32,
-    y: f32,
-    dot_x: f32,
-    dot_y: f32,
-    stem: String,
+    name_x: f32,
+    name_y: f32,
+    node_x: f32,
+    node_y: f32,
+    limb: String,
+    stems: Vec<String>,
+    buds: Vec<Bud>,
     leaves: Vec<Leaf>,
-}
-
-#[derive(Debug, Serialize)]
-struct Trunk {
-    d: String,
-    /// Tone of the first branch it feeds, so the fan itself says where each
-    /// wire is going.
-    tone: usize,
 }
 
 #[derive(Debug, Serialize)]
@@ -178,40 +324,33 @@ struct Other {
 struct Map {
     width: f32,
     height: f32,
-    root_x: f32,
-    root_y: f32,
-    heart_x: f32,
-    heart_y: f32,
-    trunks: Vec<Trunk>,
-    spines: Vec<String>,
+    core_x: f32,
+    core_y: f32,
     branches: Vec<Branch>,
     others: Vec<Other>,
 }
 
-/// A category measured but not yet placed.
-struct Cluster<'a> {
+/// One separator-delimited run of links.
+struct Group<'a> {
+    leaves: Vec<(&'a str, &'a str, &'a str)>,
+}
+
+/// A category, measured but not yet placed.
+struct Block<'a> {
     name: &'a str,
     tone: usize,
-    cells: Vec<Cell<'a>>,
+    fans: Vec<Vec<Group<'a>>>,
+    fan_w: Vec<f32>,
     width: f32,
     height: f32,
 }
 
-enum Cell<'a> {
-    Leaf {
-        ico: &'a str,
-        lbl: &'a str,
-        url: &'a str,
-    },
-    Gap,
-}
-
 /// Strips a leading "<category> |" from a label.
 ///
-/// A branch called FHP whose leaves all read "FHP | Bitbucket", "FHP | Jenkins"
-/// says its own name nine times, and the branch is already labelled. Only
-/// stripped when every leaf carries it and it is the branch's own name, so
-/// nothing that distinguishes two links can be lost.
+/// A category called FHP whose links all read "FHP | Bitbucket", "FHP |
+/// Jenkins" says its own name nine times, and the category is already
+/// labelled. Only stripped when every link carries it and it is the category's
+/// own name, so nothing that distinguishes two links can be lost.
 fn shorten<'a>(label: &'a str, category: &str) -> Option<&'a str> {
     let rest = label.strip_prefix(category)?.trim_start();
     let rest = rest.strip_prefix('|')?.trim_start();
@@ -223,298 +362,394 @@ fn shorten<'a>(label: &'a str, category: &str) -> Option<&'a str> {
     }
 }
 
-fn measure(startpage: &Startpage) -> Vec<Cluster<'_>> {
-    let mut clusters = Vec::new();
+/// Splits every category into its groups and works out how much room it needs.
+///
+/// A category with more than a handful of links puts its groups into two fans
+/// side by side rather than one long run. That is what keeps a map rooted in
+/// the middle from growing taller than the screen.
+fn measure(startpage: &Startpage) -> Vec<Block<'_>> {
+    let mut blocks = Vec::new();
 
     for column in &startpage.columns {
         for category in &column.categories {
-            let labels: Vec<&String> = category
+            let redundant = category
                 .rows
                 .iter()
                 .filter_map(|row| match row {
                     Row::Link { lbl, .. } => Some(lbl),
                     Row::Separator => None,
                 })
-                .collect();
+                .fold(None, |all: Option<bool>, lbl| {
+                    Some(all.unwrap_or(true) && shorten(lbl, &category.name).is_some())
+                })
+                .unwrap_or(false);
 
-            let redundant = !labels.is_empty()
-                && labels
-                    .iter()
-                    .all(|lbl| shorten(lbl, &category.name).is_some());
+            let mut groups: Vec<Group> = Vec::new();
+            let mut current: Vec<(&str, &str, &str)> = Vec::new();
 
-            let cells: Vec<Cell> = category
-                .rows
-                .iter()
-                .map(|row| match row {
-                    Row::Separator => Cell::Gap,
-                    Row::Link { ico, lbl, url } => Cell::Leaf {
+            for row in &category.rows {
+                match row {
+                    Row::Separator => {
+                        if !current.is_empty() {
+                            groups.push(Group {
+                                leaves: std::mem::take(&mut current),
+                            });
+                        }
+                    }
+                    Row::Link { ico, lbl, url } => current.push((
                         ico,
-                        url,
-                        lbl: if redundant {
+                        if redundant {
                             shorten(lbl, &category.name).unwrap_or(lbl)
                         } else {
                             lbl
                         },
-                    },
+                        url,
+                    )),
+                }
+            }
+            if !current.is_empty() {
+                groups.push(Group { leaves: current });
+            }
+
+            let total: usize = groups.iter().map(|group| group.leaves.len()).sum();
+            // How many fans a category spreads over is decided by its own
+            // shape rather than a fixed rule: add fans until the block stops
+            // being taller than it is wide. Height is the scarce dimension, so
+            // a tall narrow category is always worth trading for a squat one.
+            let average = groups
+                .iter()
+                .flat_map(|group| group.leaves.iter())
+                .map(|(_, lbl, _)| lbl.chars().count() as f32 * CH)
+                .sum::<f32>()
+                / total.max(1) as f32;
+
+            let name_room =
+                NAME_LEAD + category.name.chars().count() as f32 * NAME_CH + NAME_TRAIL;
+
+            let mut wanted = 1;
+            while wanted < 3 && wanted < groups.len() {
+                let rows = (total as f32 / wanted as f32).ceil();
+                let tall = rows * ROW + (groups.len() as f32 / wanted as f32) * GROUP_GAP;
+                let wide = name_room + wanted as f32 * (BUD_DX + ICON + average + COL_PAD);
+
+                if tall <= wide * 0.7 {
+                    break;
+                }
+                wanted += 1;
+            }
+
+            let mut fans: Vec<Vec<Group>> = (0..wanted).map(|_| Vec::new()).collect();
+            let target = total as f32 / wanted as f32;
+            let mut at = 0;
+            let mut carried = 0.0_f32;
+
+            for group in groups {
+                let size = group.leaves.len() as f32;
+                if at + 1 < wanted && !fans[at].is_empty() && carried + size * 0.5 > target {
+                    at += 1;
+                    carried = 0.0;
+                }
+                carried += size;
+                fans[at].push(group);
+            }
+
+            let fan_w: Vec<f32> = fans
+                .iter()
+                .map(|fan| {
+                    let widest = fan
+                        .iter()
+                        .flat_map(|group| group.leaves.iter())
+                        .map(|(_, lbl, _)| lbl.chars().count() as f32 * CH)
+                        .fold(0.0_f32, f32::max);
+                    BUD_DX + ICON + widest + COL_PAD
                 })
                 .collect();
 
-            let widest = cells
+            let height = fans
                 .iter()
-                .map(|cell| match cell {
-                    Cell::Leaf { lbl, .. } => lbl.chars().count() as f32 * CH,
-                    Cell::Gap => 0.0,
+                .map(|fan| {
+                    let rows: usize = fan.iter().map(|group| group.leaves.len()).sum();
+                    rows as f32 * ROW + (fan.len().saturating_sub(1)) as f32 * GROUP_GAP
                 })
                 .fold(0.0_f32, f32::max);
 
-            let height = HEAD
-                + cells
-                    .iter()
-                    .map(|cell| match cell {
-                        Cell::Leaf { .. } => ROW,
-                        Cell::Gap => SEP,
-                    })
-                    .sum::<f32>();
-
-            clusters.push(Cluster {
+            blocks.push(Block {
                 name: &category.name,
-                // A stride coprime with the palette, so consecutive branches
-                // land on opposite sides of the wheel instead of shading into
-                // each other.
-                tone: (clusters.len() * 4) % TONES,
-                width: (LEAF_DX + ICON + widest + 12.0)
-                    .max(NAME_CH * category.name.chars().count() as f32 + 34.0),
+                // A stride coprime with the palette, so consecutive categories
+                // land on opposite sides of the wheel.
+                tone: (blocks.len() * 4) % TONES,
+                width: NAME_LEAD
+                    + category.name.chars().count() as f32 * NAME_CH
+                    + NAME_TRAIL
+                    + fan_w.iter().sum::<f32>(),
                 height,
-                cells,
+                fans,
+                fan_w,
             });
         }
     }
 
-    clusters
+    blocks
 }
 
-/// Fills `n` branches top to bottom, in reading order, aiming for equal
-/// lengths. Returns the clusters per branch plus the canvas it needs.
-fn share(clusters: &[Cluster], n: usize) -> (Vec<Vec<usize>>, f32, f32) {
-    let total: f32 = clusters
-        .iter()
-        .map(|cluster| cluster.height + CLUSTER_GAP)
-        .sum();
-    let target = total / n as f32;
+/// Leftmost-fit packing against a skyline.
+///
+/// Categories are all at the same depth in the tree, but nothing says they have
+/// to be drawn at the same x. Each one is dropped at the leftmost place it fits
+/// beside what is already down, which staggers their depths and lets a short
+/// category tuck into the space a tall neighbour leaves over. Returns the
+/// top-left of every block plus the extent used.
+fn pack(blocks: &[Block], budget: f32, hgap: f32, vgap: f32) -> (Vec<(f32, f32)>, f32, f32) {
+    let slots = (budget / STEP).ceil() as usize + 2;
+    let mut front = vec![0.0_f32; slots];
+    let mut placed = Vec::with_capacity(blocks.len());
+    let (mut right, mut bottom) = (0.0_f32, 0.0_f32);
 
-    let mut columns: Vec<Vec<usize>> = vec![Vec::new(); n];
-    let mut heights = vec![0.0_f32; n];
-    let mut at = 0;
+    for block in blocks {
+        let rows = ((block.height + vgap) / STEP).ceil() as usize;
+        let reach = slots.saturating_sub(rows).max(1);
 
-    for (index, cluster) in clusters.iter().enumerate() {
-        let span = cluster.height + CLUSTER_GAP;
-
-        if at + 1 < n && !columns[at].is_empty() && heights[at] + span * 0.5 > target {
-            at += 1;
+        let mut best = (f32::MAX, 0_usize);
+        for start in 0..reach {
+            let x = front[start..(start + rows).min(slots)]
+                .iter()
+                .cloned()
+                .fold(0.0_f32, f32::max);
+            if x < best.0 - 0.01 {
+                best = (x, start);
+            }
         }
 
-        columns[at].push(index);
-        heights[at] += span;
+        let (x, start) = best;
+        let y = start as f32 * STEP;
+
+        for slot in front
+            .iter_mut()
+            .take((start + rows).min(slots))
+            .skip(start)
+        {
+            *slot = x + block.width + hgap;
+        }
+
+        placed.push((x, y));
+        right = right.max(x + block.width);
+        // The clearance separates a block from the next one down; counting it
+        // here would pad the bottom of the field and steal the room the
+        // categories want to spread into.
+        bottom = bottom.max(y + block.height);
     }
 
-    let widths: Vec<f32> = columns
-        .iter()
-        .map(|column| {
-            column
-                .iter()
-                .map(|&index| clusters[index].width)
-                .fold(0.0_f32, f32::max)
-        })
-        .collect();
-
-    let width = MARGIN * 2.0 + widths.iter().sum::<f32>() + COL_GAP * (n as f32 - 1.0);
-    let height = TOP + heights.iter().cloned().fold(0.0_f32, f32::max) + LIFT * 2.0 + BOTTOM;
-
-    (columns, width, height)
+    (placed, right, bottom)
 }
 
-/// Lays the whole map out: picks a branch count that keeps the canvas roughly
-/// landscape, then places every node and draws every connector.
+/// Places the whole map: the title on the left, every category packed into the
+/// space to the right of it, then every connector drawn.
 fn plot(startpage: &Startpage, navigation: &Navigation) -> Map {
-    let clusters = measure(startpage);
+    let blocks = measure(startpage);
 
-    let n = (1..=6)
-        .min_by(|&a, &b| {
-            let cost = |n: usize| {
-                let (_, w, h) = share(&clusters, n);
-                let over = if w > 1660.0 { (w - 1660.0) * 0.06 } else { 0.0 };
-                (w / h - 1.55).abs() + over
-            };
-            cost(a).partial_cmp(&cost(b)).unwrap()
-        })
-        .unwrap()
-        .min(clusters.len().max(1));
+    let root_w = startpage.name.chars().count() as f32 * ROOT_CH;
+    let field_x = MARGIN + root_w + LIMB_REACH;
 
-    let (columns, width, _) = share(&clusters, n);
+    // Search over both the number of bands and how far apart the categories are
+    // pushed, and keep the largest map that still fits the screen. Packing as
+    // tightly as possible only leaves the map stranded in the corner of a
+    // display that had room to spare - the slack belongs in the gaps.
+    let mut best: Option<(Vec<(f32, f32)>, f32, f32, f32)> = None;
+    let mut score = f32::MAX;
 
-    let column_widths: Vec<f32> = columns
-        .iter()
-        .map(|column| {
-            column
-                .iter()
-                .map(|&index| clusters[index].width)
-                .fold(0.0_f32, f32::max)
-        })
-        .collect();
+    // The two clearances are searched independently: a map with few, small
+    // categories wants to breathe sideways and downwards by quite different
+    // amounts, and tying them together leaves one axis short.
+    for bands in 1..=5 {
+        for across in 0..14 {
+            for down in 0..28 {
+                let hgap = HGAP * (1.0 + across as f32 * 0.32);
+                let vgap = VGAP * (1.0 + down as f32 * 0.38);
 
-    let mut column_x = Vec::new();
-    let mut x = MARGIN;
-    for w in &column_widths {
-        column_x.push(x);
-        x += w + COL_GAP;
-    }
+                let tallest = blocks
+                    .iter()
+                    .map(|block| block.height + vgap)
+                    .fold(0.0_f32, f32::max);
+                let total: f32 = blocks
+                    .iter()
+                    .map(|block| block.height + vgap)
+                    .sum::<f32>()
+                    .max(1.0);
 
-    // Every spine drifts on its own phase, so no two run parallel.
-    let spine_x = |column: usize, y: f32| -> f32 {
-        column_x[column] + ((y * 0.0085) + column as f32 * 1.3).sin() * 9.0
-    };
+                let (places, right, bottom) =
+                    pack(&blocks, (total / bands as f32).max(tallest), hgap, vgap);
 
-    let heart = width / 2.0;
-    let root_x = heart;
-    let root_y = 70.0;
+                let w = field_x + right + MARGIN;
+                let h = bottom + TOP_BAR + MARGIN * 2.0;
 
-    let mut branches = Vec::new();
-    let mut spines = Vec::new();
-    let mut trunks: Vec<Trunk> = Vec::new();
-    let mut deepest = 0.0_f32;
+                // Overshooting is worse than undershooting, and overshooting
+                // the height is worst of all: a map taller than the window has
+                // to be scrolled, a wider one is only panned.
+                let cost = (w - TARGET_W).max(0.0) * 3.0
+                    + (h - TARGET_H).max(0.0) * 7.0
+                    + (TARGET_W - w).max(0.0) * 2.0
+                    + (TARGET_H - h).max(0.0) * 2.5;
 
-    for (column, indices) in columns.iter().enumerate() {
-        let lift = (column % 3) as f32 * LIFT;
-        let head = TOP - 26.0 + lift;
-        let mut y = TOP + lift;
-
-        for &index in indices {
-            let cluster = &clusters[index];
-
-            let dot_x = spine_x(column, y);
-            let dot_y = y;
-
-            let mut leaf_y = y + HEAD;
-            let mut stem_points = vec![(dot_x, dot_y + 7.0)];
-            let mut leaves = Vec::new();
-
-            for cell in &cluster.cells {
-                match cell {
-                    Cell::Gap => leaf_y += SEP,
-                    Cell::Leaf { ico, lbl, url } => {
-                        let leaf_x = column_x[column] + LEAF_DX;
-                        let stem_point = (
-                            column_x[column] + STEM_DX + drift(leaves.len() as f32, 4.0),
-                            leaf_y - 8.0,
-                        );
-
-                        leaves.push(Leaf {
-                            x: px(leaf_x),
-                            y: px(leaf_y),
-                            ico: (*ico).to_owned(),
-                            lbl: (*lbl).to_owned(),
-                            url: (*url).to_owned(),
-                            vein: format!(
-                                "M{:.1},{:.1} C{:.1},{:.1} {:.1},{:.1} {:.1},{:.1}",
-                                stem_point.0,
-                                stem_point.1,
-                                stem_point.0 + 13.0,
-                                stem_point.1,
-                                leaf_x - 22.0,
-                                leaf_y,
-                                leaf_x - 7.0,
-                                leaf_y
-                            ),
-                        });
-
-                        stem_points.push(stem_point);
-                        leaf_y += ROW;
-                    }
+                if cost < score {
+                    score = cost;
+                    best = Some((places, right, bottom, vgap));
                 }
             }
-
-            branches.push(Branch {
-                name: cluster.name.to_owned(),
-                tone: cluster.tone,
-                x: px(column_x[column] + 22.0),
-                y: px(dot_y),
-                dot_x: px(dot_x),
-                dot_y: px(dot_y),
-                stem: thread(&stem_points),
-                leaves,
-            });
-
-            y += cluster.height + CLUSTER_GAP;
         }
-
-        // The spine runs the length of the branch, sampled often enough for the
-        // drift to read as a curve.
-        let foot = y - CLUSTER_GAP + 12.0;
-        let mut spine_points = Vec::new();
-        let mut at = head;
-        while at < foot {
-            spine_points.push((spine_x(column, at), at));
-            at += 64.0;
-        }
-        spine_points.push((spine_x(column, foot), foot));
-        spines.push(thread(&spine_points));
-
-        // And a trunk sweeping out from under the title. The waypoints run
-        // diagonally the whole way, so every trunk leaves the heart on its own
-        // heading and the set reads as a fan rather than a bridge.
-        let target = spine_x(column, head);
-        let reach = target - heart;
-        let fall = head - HEART;
-        trunks.push(Trunk {
-            d: thread(&[
-                (heart, HEART),
-                (heart + reach * 0.3, HEART + fall * 0.4),
-                (heart + reach * 0.74, HEART + fall * 0.62),
-                (target, head),
-            ]),
-            tone: indices
-                .first()
-                .map(|&index| clusters[index].tone)
-                .unwrap_or(0),
-        });
-
-        deepest = deepest.max(foot);
     }
 
-    // The other maps sit under the title, centred as a row.
+    let (places, right, bottom, _vgap) = best.expect("at least one packing");
+
+    // The field is a fixed height whatever this particular map needs, so the
+    // title sits at the same point on every one of them and switching maps
+    // never moves it. Content shorter than the field is centred in it.
+    let field_h = bottom.max(TARGET_H - TOP_BAR - MARGIN * 2.0);
+    let lift = TOP_BAR + MARGIN + (field_h - bottom) * 0.5;
+
+    let width = field_x + right + MARGIN;
+    let height = TOP_BAR + MARGIN + field_h + MARGIN;
+    let core_x = MARGIN + root_w * 0.5;
+    // Pinned to the target field rather than to this map's content, so the
+    // title lands on the same line even on a map too big to fit it. Switching
+    // maps then moves the tree and nothing else.
+    let core_y = TOP_BAR + MARGIN + (TARGET_H - TOP_BAR - MARGIN * 2.0) * 0.5;
+
+    // Every category's footprint, so the limbs can be steered around them.
+    let rects: Vec<(f32, f32, f32, f32)> = blocks
+        .iter()
+        .zip(places.iter())
+        .map(|(block, &(bx, by))| {
+            (
+                field_x + bx,
+                lift + by,
+                block.width,
+                block.height,
+            )
+        })
+        .collect();
+
+    let mut branches = Vec::new();
+
+    for (order, (block, &(bx, by))) in blocks.iter().zip(places.iter()).enumerate() {
+        let node_x = field_x + bx;
+        let node_y = lift + by + block.height * 0.5;
+        let name_w = block.name.chars().count() as f32 * NAME_CH;
+
+        // The limb leaves the title on the heading of its category, then finds
+        // its way past anything packed in between.
+        let origin = (core_x + root_w * 0.5 + 14.0, core_y);
+        let barriers: Vec<(f32, f32, f32, f32)> = rects
+            .iter()
+            .enumerate()
+            .filter(|(other, &(ox, _, ow, _))| *other != order && ox + ow < node_x - 12.0)
+            .map(|(_, &rect)| rect)
+            .collect();
+
+        let path = route(
+            origin,
+            (node_x, node_y),
+            &barriers,
+            order as f32 * 1.7,
+            MARGIN * 0.6,
+            height - MARGIN * 0.6,
+        );
+
+        let mut stems = Vec::new();
+        let mut buds = Vec::new();
+        let mut leaves = Vec::new();
+
+        let mut fan_x = node_x + NAME_LEAD + name_w + NAME_TRAIL;
+
+        for (which, fan) in block.fans.iter().enumerate() {
+            let fan_h: f32 = fan
+                .iter()
+                .map(|group| group.leaves.len() as f32 * ROW)
+                .sum::<f32>()
+                + (fan.len().saturating_sub(1)) as f32 * GROUP_GAP;
+
+            let mut top = node_y - fan_h * 0.5;
+
+            for group in fan {
+                let run = group.leaves.len() as f32 * ROW;
+                let bud = (fan_x, top + run * 0.5);
+
+                stems.push(thread(&[
+                    (node_x + 5.0, node_y),
+                    (
+                        node_x + (bud.0 - node_x) * 0.55,
+                        node_y + (bud.1 - node_y) * 0.25,
+                    ),
+                    (bud.0 - 14.0, bud.1),
+                    bud,
+                ]));
+
+                for (j, (ico, lbl, url)) in group.leaves.iter().enumerate() {
+                    let leaf_y = top + j as f32 * ROW + ROW * 0.5;
+                    let inner = bud.0 + BUD_DX;
+
+                    leaves.push(Leaf {
+                        x: px(inner),
+                        y: px(leaf_y),
+                        ico: (*ico).to_owned(),
+                        lbl: (*lbl).to_owned(),
+                        url: (*url).to_owned(),
+                        vein: thread(&[
+                            (bud.0 + 4.0, bud.1),
+                            (bud.0 + BUD_DX * 0.5, bud.1 + (leaf_y - bud.1) * 0.55),
+                            (inner - 6.0, leaf_y),
+                        ]),
+                    });
+                }
+
+                buds.push(Bud {
+                    x: px(bud.0),
+                    y: px(bud.1),
+                });
+
+                top += run + GROUP_GAP;
+            }
+
+            fan_x += block.fan_w[which];
+        }
+
+        branches.push(Branch {
+            name: block.name.to_owned(),
+            tone: block.tone,
+            name_x: px(node_x + NAME_LEAD),
+            name_y: px(node_y),
+            node_x: px(node_x),
+            node_y: px(node_y),
+            limb: taper(&path, 5.5, 1.4),
+            stems,
+            buds,
+            leaves,
+        });
+    }
+
+    // The other maps are navigation, not part of this tree, so they sit in a
+    // strip above it rather than hanging off the title.
     let elsewhere: Vec<&NavItem> = navigation
         .iter()
         .filter(|nav| nav.name != startpage.name)
         .collect();
 
-    let row: f32 = elsewhere
-        .iter()
-        .map(|nav| nav.name.chars().count() as f32 * OTHER_CH + 34.0)
-        .sum::<f32>()
-        - 34.0;
-
     let mut others = Vec::new();
-    let mut at = heart - row / 2.0;
+    let mut at = MARGIN;
     for nav in elsewhere {
         others.push(Other {
             name: nav.name.to_owned(),
             path: nav.path.to_owned(),
             x: px(at),
-            y: px(root_y + 42.0),
+            y: 32.0,
         });
-
         at += nav.name.chars().count() as f32 * OTHER_CH + 34.0;
     }
 
     Map {
         width: px(width),
-        height: px(deepest + BOTTOM),
-        root_x: px(root_x),
-        root_y: px(root_y),
-        heart_x: px(heart),
-        heart_y: px(HEART),
-        trunks,
-        spines,
+        height: px(height),
+        core_x: px(core_x),
+        core_y: px(core_y),
         branches,
         others,
     }

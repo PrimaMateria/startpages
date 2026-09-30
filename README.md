@@ -45,53 +45,110 @@ on the code.
 
 ## The map
 
-The page is not a layout, it is a drawing. There are no containers anywhere on
-it - structure is carried entirely by wiring:
+The page is not a layout, it is a drawing. The title sits on the left and
+everything grows rightward from it, so every label reads left-aligned. Four
+levels hang off the title:
 
 ```
-                       Home            <- the heart
-                    ╱   │   ╲
-              TOOLS   DIGEST  HOMESERVER    <- branches, one colour each
-                ╲       ╲         ╲
-                 Gmail   Reddit    Calibre  <- leaves, one vein each
+  root     the startpage itself
+   └─ limb ─ category        a tapered branch reaching out of the title
+       └─ bud               one junction per separator-delimited group
+           └─ leaf          a link
 ```
 
-A trunk leaves the heart for every branch, a spine runs the length of each
-branch, a stem hangs off every node and a vein reaches every single link.
-Nothing is a straight line: each path is a Catmull-Rom curve through waypoints
-carrying a deterministic drift, so the map reads as something grown rather than
-plotted.
+The **buds** are the level the content always had and the page used to throw
+away. A `!Separator` in `content/startpages.yaml` is a real grouping, and it
+gets a junction of its own rather than some extra whitespace.
 
-`src/main.rs` computes all of it at build time - it measures every label,
-decides how many branches keep the canvas roughly landscape, packs the
-categories across them in reading order, staggers their depths so no two
-branches start at the same height, and emits the SVG path data. It can only do
-this because **the type is monospaced**: a label is exactly
+The **limbs** are filled outlines rather than strokes, because a stroke cannot
+change width along its length. Each starts thick where it leaves the title and
+tapers to nothing where it arrives, which is most of what makes the map look
+grown instead of wired. Every other connector is a Catmull-Rom curve. Nothing
+on the page is a straight line.
+
+### Packing
+
+Categories are all at the same depth in the tree, but nothing says they have to
+be *drawn* at the same x. Each is dropped at the leftmost place it will fit
+beside what is already down - leftmost-fit against a skyline - so their depths
+stagger and a short category tucks into the space a tall neighbour leaves over.
+
+How wide a category spreads is decided by its own shape rather than a fixed
+rule: it adds fans until the block stops being taller than it is wide.
+
+Then the layout searches for the largest map that still fits a screen. It tries
+every band count against a grid of clearances - the horizontal and vertical
+ones independently, because a map with few small categories wants to breathe
+sideways and downwards by quite different amounts - and keeps whichever result
+comes closest to filling `TARGET_W x TARGET_H` without overshooting.
+
+Packing as tightly as possible is the wrong objective for a page that gets one
+window to itself: it only leaves the map stranded in the corner of a display
+that had room to spare. The slack belongs in the gaps, so the categories are
+pushed apart until the map fills the screen it was drawn for. Overshooting the
+height is penalised hardest, because a map taller than the window has to be
+scrolled while a wider one is only panned.
+
+The clearance between blocks is separation, not padding - the field starts at
+the first block and ends at the last, with nothing reserved at the edges, so
+every pixel of the budget goes into the gaps where it does some good.
+
+### A fixed frame
+
+The map is anchored top-left and never centred, and the field is a fixed height
+whatever a particular map happens to need. So the strip of other maps, and the
+title, land on the same pixel on every page - `48,24` and `48,534`. Switching
+maps moves the tree and nothing else. Content shorter than the field is centred
+within it; content taller simply runs past the bottom, and the title stays put
+regardless.
+
+### Routing
+
+Packing at staggered depths means a limb usually has two or three categories
+between it and its target. Each limb is sampled along its length and, at any
+sample landing inside a category's box, pushed out through the nearer side;
+each limb also carries its own wave, so two escaping the same obstacle the same
+way still travel as two strands. The result is smoothed into a curve, so
+dodging reads as meandering rather than as a detour. Labels carry a halo in the
+background colour, so a limb that does pass behind one stays behind it.
+
+### How much is computed
+
+All of it, at build time, in `src/main.rs`: every label measured, every
+category split into groups and packed into fans, every block placed, every limb
+routed, every curve sampled and given width.
+
+This works because **the type is monospaced**: a label is exactly
 `characters x advance` wide, so the generator knows where every word will land
-without ever rendering it.
+without rendering anything. The geometry constants in `src/main.rs` and the
+font sizes in `sass/styles.scss` are therefore two halves of one contract.
+Change a font size on one side without the other and the veins stop meeting the
+words.
 
-That makes the geometry constants in `src/main.rs` and the font sizes in
-`sass/styles.scss` two halves of one contract. Change a font size on one side
-without the other and the veins stop meeting the words.
+### Why not d3
 
-**Colour is the index.** Each branch gets one of nine signal tones, handed out
-with a stride across the wheel so neighbours never shade into each other. The
-tone drives that branch's trunk, spine, stem, veins, node, name and icons -
-which is how you find a group before reading a word of it, and why the same
-Jenkins icon on five projects is five different colours.
+d3-hierarchy would give `tree()` and `cluster()` and their radial variants. The
+layout here needs none of them - leftmost-fit packing, shape-driven fan
+splitting and obstacle routing are a custom pass whichever library is
+underneath. What d3 would add is a CDN dependency, a layout pass on every new
+tab, a frame of reflow before the page settles, and link positions that only
+exist after JavaScript has run, which is exactly when Vimium wants to hint
+them.
 
-**Repeated prefixes are dropped.** A branch called `FHP` whose leaves all read
-`FHP | Bitbucket`, `FHP | Jenkins` says its own name nine times, and the branch
-is already labelled. The generator strips the prefix - but only when every leaf
-carries it and only when it is the branch's own name, so nothing that
-distinguishes two links is lost. `WF`, whose prefixes are `UI` / `UI 2.1` /
-`Service`, keeps them.
+The useful half of d3 is the mathematics, and that runs perfectly well in Rust
+at build time. So the page ships as static HTML with an SVG in it: no script,
+no library, no layout pass, nothing to wait for.
+
+Nor is there reason to leave HTML for canvas or WebGL. The medium was never the
+limit - leaving the layout to CSS was. Every link is an ordinary `<a>` at a
+computed coordinate, so `f` hints it, middle-click opens it in a tab and the
+text can be selected. A canvas would lose all three.
 
 Type is [Spline Sans Mono](https://fonts.google.com/specimen/Spline+Sans+Mono),
-loaded from Google Fonts in `templates/startpage.html`. There is no JavaScript
-and nothing on the page moves.
+loaded from Google Fonts in `templates/startpage.html`. Nothing on the page
+moves.
 
-The canvas has computed dimensions, so a window narrower than the map pans
+The canvas has computed dimensions, so a window smaller than the map pans
 rather than reflowing.
 
 ## Changing startpage template

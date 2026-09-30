@@ -110,15 +110,18 @@ a {
 // The map is drawn at a computed size. On a screen too narrow to hold it the
 // viewport scrolls rather than reflowing - the wiring has fixed coordinates.
 
+// Anchored top-left and never centred: the strip of other maps and the title
+// have to land on the same pixel on every page, so that switching maps moves
+// the tree and nothing else.
 .viewport {
   position: relative;
   z-index: 1;
-  overflow-x: auto;
+  overflow: auto;
 }
 
 .map {
   position: relative;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .wiring {
@@ -130,24 +133,20 @@ a {
   pointer-events: none;
 }
 
-.trunk,
-.spine {
-  stroke: #{"rgb(var(--wire) / 0.42)"};
-  stroke-width: 1;
-}
-
-.trunk {
-  stroke: #{"rgb(var(--tone) / 0.34)"};
-  stroke-width: 1.1;
+// A limb is a filled outline, not a stroke: it starts thick at the core and
+// tapers to nothing at the category, which a stroke cannot do.
+.limb {
+  fill: #{"rgb(var(--tone) / 0.26)"};
+  stroke: none;
 }
 
 .stem {
-  stroke: #{"rgb(var(--tone) / 0.5)"};
-  stroke-width: 1.25;
+  stroke: #{"rgb(var(--tone) / 0.45)"};
+  stroke-width: 1.2;
 }
 
 .vein {
-  stroke: #{"rgb(var(--tone) / 0.3)"};
+  stroke: #{"rgb(var(--tone) / 0.26)"};
   stroke-width: 1;
 }
 
@@ -158,9 +157,17 @@ a {
   filter: drop-shadow(0 0 5px #{"rgb(var(--tone) / 0.55)"});
 }
 
-.heart {
+// The junction standing for a separator-delimited group. Deliberately quiet -
+// it is punctuation, not a label.
+.bud {
+  fill: #{"rgb(var(--tone) / 0.85)"};
+  stroke: var(--void);
+  stroke-width: 1.5;
+}
+
+.core {
   fill: var(--ink);
-  filter: drop-shadow(0 0 7px rgba(223, 228, 234, 0.4));
+  filter: drop-shadow(0 0 8px rgba(223, 228, 234, 0.45));
 }
 
 // --- Nodes ----------------------------------------------------------------
@@ -183,6 +190,7 @@ a {
   font-weight: 700;
   letter-spacing: 0.015em;
   color: var(--ink);
+  text-shadow: 0 0 22px rgba(6, 7, 10, 0.95), 0 0 8px rgba(6, 7, 10, 0.95);
 }
 
 .other {
@@ -209,6 +217,7 @@ a {
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: #{"rgb(var(--tone))"};
+  text-shadow: 0 0 8px var(--void), 0 0 4px var(--void);
 }
 
 .leaf {
@@ -225,6 +234,9 @@ a {
   line-height: 1;
   color: var(--ink);
   -webkit-tap-highlight-color: transparent;
+  // Limbs are drawn behind everything and a long one crosses whatever is in
+  // its way; the halo keeps the word on top of the line.
+  text-shadow: 0 0 7px var(--void), 0 0 3px var(--void);
 
   .ico {
     flex: none;
@@ -255,3 +267,4 @@ a {
     outline-offset: 2px;
   }
 }
+
