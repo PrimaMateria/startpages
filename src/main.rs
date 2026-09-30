@@ -311,12 +311,65 @@ struct Strand {
     d: String,
     ink: f32,
     tint: String,
-    /// Staggers the breathing, so the field drifts rather than pulses.
+}
+
+/// A set of strings that breathe together.
+///
+/// The breathing used to be declared on every string, each with its own delay.
+/// That is one animating element per string - up to a hundred of them, each
+/// with a bounding box the size of the field - and the browser answers an
+/// animation it cannot composite by repainting that area every frame. Sharing
+/// one animation between a handful of groups buys back nearly all of it and
+/// still keeps the drift, since the groups are out of phase with each other.
+#[derive(Debug, Serialize)]
+struct Breath {
     beat: f32,
-    /// A few strings carry a travelling ripple. Spread far enough apart in time
-    /// that one is an event rather than a rhythm.
-    ripple: bool,
+    strands: Vec<Strand>,
+}
+
+/// A brightening that travels the length of one string.
+#[derive(Debug, Serialize)]
+struct Ripple {
+    d: String,
+    tint: String,
     wake: f32,
+}
+
+/// Sort the field into groups that breathe together, and choose the few strings
+/// that carry a ripple.
+fn weave(strands: Vec<Strand>) -> (Vec<Breath>, Vec<Ripple>) {
+    /// Enough that the field drifts rather than pulsing in one body, few enough
+    /// that the page is not repainting itself for each one.
+    const BREATHS: usize = 4;
+    /// `Occasional` was the brief. One ripple per four strings is a rhythm, and
+    /// on a wide page it was twenty of them at once.
+    const CARRIED: usize = 3;
+
+    let mut ripples = Vec::new();
+    if !strands.is_empty() {
+        for nth in 0..CARRIED.min(strands.len()) {
+            // Spread along the field, and spread around the cycle, so they
+            // neither cluster in one corner nor arrive together.
+            let pick = (nth * 2 + 1) * strands.len() / (CARRIED * 2);
+            ripples.push(Ripple {
+                d: strands[pick].d.clone(),
+                tint: strands[pick].tint.clone(),
+                wake: nth as f32 * 54.0 / CARRIED as f32,
+            });
+        }
+    }
+
+    let mut field: Vec<Breath> = (0..BREATHS)
+        .map(|nth| Breath {
+            beat: nth as f32 * 19.0 / BREATHS as f32,
+            strands: Vec::new(),
+        })
+        .collect();
+    for (nth, strand) in strands.into_iter().enumerate() {
+        field[nth % BREATHS].strands.push(strand);
+    }
+
+    (field, ripples)
 }
 
 /// How far a point is from the nearest thing already on the canvas.
@@ -546,11 +599,7 @@ fn field_lines(
                             })
                             .unwrap_or_else(|| "150 166 186".to_owned());
 
-                        let nth = out.len();
                         out.push(Strand {
-                            beat: (nth as f32 * 2.7) % 19.0,
-                            ripple: nth % 4 == 1,
-                            wake: (nth as f32 * 13.0) % 54.0,
                             d: thread(&thinned),
                             // Nearer the tree reads a touch stronger, so the
                             // field falls away rather than stopping flat.
@@ -584,7 +633,8 @@ struct Other {
 struct Map {
     width: f32,
     height: f32,
-    strands: Vec<Strand>,
+    field: Vec<Breath>,
+    ripples: Vec<Ripple>,
     core_x: f32,
     core_y: f32,
     boughs: Vec<Bough>,
@@ -1390,6 +1440,14 @@ fn plot(startpage: &Startpage, navigation: &Navigation) -> Map {
         taken.push((branch.node_x - 34.0, branch.node_y - 34.0, 68.0, 68.0));
     }
 
+    let (field, ripples) = weave(field_lines(
+        width.max(BLEED_W),
+        height.max(BLEED_H),
+        &taken,
+        &rects,
+        &nodes,
+    ));
+
     Map {
         width: px(width),
         height: px(height),
@@ -1403,13 +1461,8 @@ fn plot(startpage: &Startpage, navigation: &Navigation) -> Map {
         // without becoming part of the scrollable area, since they are not CSS
         // boxes. So the field reaches the edges of a wide display without the
         // map growing or the page gaining a scrollbar.
-        strands: field_lines(
-            width.max(BLEED_W),
-            height.max(BLEED_H),
-            &taken,
-            &rects,
-            &nodes,
-        ),
+        field,
+        ripples,
         core_x: px(core_x),
         core_y: px(core_y),
         boughs,

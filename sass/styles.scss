@@ -120,6 +120,14 @@ a {
   position: relative;
   z-index: 1;
   overflow: auto;
+
+  // `overflow` clips to this box, and the box is only as tall as the map. The
+  // field is traced past the map on every side and paints out of the SVG, which
+  // works sideways because this element is already the full width of the page -
+  // but downwards it was being cut off at the last row of the tree, and on a
+  // window taller than the map it left a bare band under it. A screenful is the
+  // least it can be.
+  min-height: 100vh;
 }
 
 .map {
@@ -144,15 +152,25 @@ a {
 // so they wrap its silhouette rather than sitting in the gaps. Line, not haze.
 .strand {
   fill: none;
-  stroke: #{"rgb(var(--thread) / var(--ink))"};
+  // Its own name, not `--ink`: that one is the text colour, and a string whose
+  // inline style went missing would otherwise take a hex colour as its alpha.
+  stroke: #{"rgb(var(--thread) / var(--fade))"};
   stroke-width: 1;
+}
 
-  // The field breathes rather than pulses: every string is on the same slow
-  // cycle but started at its own point in it, so the whole thing drifts and
-  // nothing ever beats in time.
+// The field breathes rather than pulses: the strings are dealt into a few
+// groups on the same slow cycle, each started at its own point in it, so the
+// whole thing drifts and nothing ever beats in time.
+//
+// The animation belongs here, on the group, and not on each string. Declared
+// per string it is one animating element per line, each with a bounding box the
+// size of the field, and no `will-change` either - promoting a hundred of those
+// asks for hundreds of megabytes of layer memory, and a browser that cannot
+// keep the tiles drops them and repaints, which on screen is whole regions of
+// the page blinking out.
+.breath {
   animation: breathe 26s ease-in-out infinite alternate;
   animation-delay: var(--beat, 0s);
-  will-change: opacity;
 }
 
 @keyframes breathe {
@@ -186,7 +204,7 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .strand,
+  .breath,
   .ripple {
     animation: none;
   }
@@ -233,6 +251,13 @@ a {
 // --- Nodes ----------------------------------------------------------------
 // Everything below is positioned from the computed layout; `top` is a centre
 // line, hence the translate.
+
+// The strip generates no box of its own, so the links inside it go on being
+// placed against the map exactly as before. It is here for the column layout,
+// where it becomes the one thing that has to be a row.
+.strip {
+  display: contents;
+}
 
 .root,
 .other,
@@ -334,3 +359,79 @@ a {
   }
 }
 
+// --- Small screens --------------------------------------------------------
+// The map is a drawing at computed coordinates, so it cannot reflow: there is
+// no arrangement of a fixed-coordinate tree that reads on a phone. Below the
+// width where it fits, the whole conceit is dropped and the page falls back to
+// the plain column it would have been without any of it.
+//
+// Nothing has to be reordered to do that. Document order is already title,
+// then the strip, then each category name immediately followed by its own
+// links - so switching the positioning off leaves the content in the right
+// order, and the structure that the wiring carried is carried by sequence.
+@media (max-width: 900px) {
+  .viewport {
+    overflow: visible;
+  }
+
+  // Width and height are inline on the element, computed per map, so they can
+  // only be overridden - there is nothing to unset.
+  .map {
+    display: flex;
+    flex-direction: column;
+    width: auto !important;
+    height: auto !important;
+    padding: 22px 18px 64px;
+  }
+
+  // The drawing, and with it every animation on the page.
+  .wiring {
+    display: none;
+  }
+
+  .root,
+  .other,
+  .branch,
+  .leaf {
+    position: static;
+    transform: none;
+    // Long labels wrap here rather than pushing the page sideways.
+    white-space: normal;
+  }
+
+  .root {
+    margin-bottom: 16px;
+    font-size: 30px;
+    text-shadow: none;
+  }
+
+  .strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #{"rgb(var(--bark) / 0.35)"};
+  }
+
+  .branch {
+    margin: 26px 0 8px;
+    text-shadow: none;
+  }
+
+  // A finger, not a cursor: every link gets a row it can be hit in.
+  .leaf {
+    min-height: 44px;
+    padding: 8px 10px 8px 6px;
+    border-radius: 5px;
+  }
+
+  .ico {
+    width: 22px !important;
+    font-size: 15px !important;
+  }
+
+  .lbl {
+    font-size: 16px;
+  }
+}

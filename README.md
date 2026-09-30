@@ -179,6 +179,14 @@ without joining the scrollable area, since they are not CSS boxes - so the
 background reaches the edge of a wide display without the page gaining a
 scrollbar.
 
+What it cannot escape is the scroll container. `.viewport` is `overflow: auto`,
+which clips to that element's own box, and the box is only as tall as the map.
+Sideways this never showed, because the viewport is already the full width of
+the page; downwards it cut the field off at the last row of the tree - 569px of
+traced field on the shorter maps - and left a bare band under it on any window
+taller than the map. A `min-height` of one screenful is what stretches the clip
+to the bottom of the window.
+
 Each contour is traced by predictor-corrector: step across the gradient, then
 correct back onto the level. Seeds are scattered on a grid, kept apart so two
 traces do not walk the same line, and capped per level - though the cap has to
@@ -210,11 +218,24 @@ far too little to name, enough that the field belongs to the tree. Opacity falls
 off with distance, so the near strings sit just above the background and the far
 ones barely register.
 
-This is the one thing on the page that moves. Strings breathe on a long
-out-of-phase cycle, and every fourth carries a ripple: a short dash travelling
-its length on a slow loop. Both are CSS on a path that already exists, so
-nothing is computed at runtime. Under `prefers-reduced-motion` the breathing
-stops and the ripples are removed outright.
+This is the one thing on the page that moves. The strings are dealt into four
+groups that breathe on a long cycle, each group started at its own point in it,
+and three strings carry a ripple: a short dash travelling the length on a slow
+loop. Both are CSS on paths that already exist, so nothing is computed at
+runtime. Under `prefers-reduced-motion` the breathing stops and the ripples are
+removed outright.
+
+**The animation belongs on the groups, not on the strings.** Declared per string
+it is one animating element per line - up to a hundred of them, each with a
+bounding box the size of the field - and `will-change: opacity` on each asks the
+browser to promote every one to its own compositor layer. That came to 314-461MB
+of layer memory per page, far past what a laptop will hold, and a browser that
+cannot keep its tiles drops them and rasterises again: on screen, whole regions
+of the page blinking out. Sharing one animation between four groups and dropping
+`will-change` takes it to no promoted layers at all and a sixth of the repaint
+area, with nothing to see in the result. One ripple per four strings was a
+rhythm rather than an event, and on a wide page it was twenty at once; three is
+the whole point of the word occasional.
 
 ### How much is computed
 
@@ -253,7 +274,25 @@ loaded from Google Fonts in `templates/startpage.html`. Nothing moves except the
 background field, and that stops for `prefers-reduced-motion`.
 
 The canvas has computed dimensions, so a window smaller than the map pans
-rather than reflowing.
+rather than reflowing - down to 900px, below which it stops being a map at all.
+
+### On a phone
+
+There is no arrangement of a fixed-coordinate drawing that reads on a phone, so
+below 900px the whole conceit is dropped and the page falls back to the plain
+column it would have been without any of it: the wiring is hidden, the absolute
+positioning is switched off, and the links become 44px rows.
+
+Nothing has to be reordered to do that, because document order already is the
+column - the title, then the strip of maps, then each category name immediately
+followed by its own links. The structure the wiring carried is carried by
+sequence instead, and the one thing that is kept is the colour per category,
+which is what the tree was using to say where you are anyway.
+
+The strip of maps is the only part that has to become a row rather than a
+column, so it is wrapped in a `nav` that is `display: contents` everywhere else
+- generating no box, it leaves the links inside it positioned against the map
+exactly as before.
 
 ## Changing startpage template
 

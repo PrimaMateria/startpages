@@ -58,11 +58,15 @@
           height="{{ map.height }}"
           aria-hidden="true"
         >
-          {%- for strand in map.strands %}
-          <path class="strand" d="{{ strand.d | safe }}" style="--ink: {{ strand.ink }}; --thread: {{ strand.tint }}; --beat: -{{ strand.beat }}s" />
-          {%- if strand.ripple %}
-          <path class="ripple" d="{{ strand.d | safe }}" style="--thread: {{ strand.tint }}; --wake: -{{ strand.wake }}s" />
-          {%- endif %}
+          {%- for breath in map.field %}
+          <g class="breath" style="--beat: -{{ breath.beat }}s">
+            {%- for strand in breath.strands %}
+            <path class="strand" d="{{ strand.d | safe }}" style="--fade: {{ strand.ink }}; --thread: {{ strand.tint }}" />
+            {%- endfor %}
+          </g>
+          {%- endfor %}
+          {%- for ripple in map.ripples %}
+          <path class="ripple" d="{{ ripple.d | safe }}" style="--thread: {{ ripple.tint }}; --wake: -{{ ripple.wake }}s" />
           {%- endfor %}
           {%- for bough in map.boughs %}
           {%- if bough.tone >= 0 %}
@@ -91,9 +95,11 @@
           {{ startpage.name }}
         </h1>
 
-        {%- for other in map.others %}
-        <a class="other{% if other.here %} is-here{% endif %}" style="left: {{ other.x }}px; top: {{ other.y }}px" href="{{ other.path | safe }}"{% if other.here %} aria-current="page"{% endif %}>{{ other.name }}</a>
-        {%- endfor %}
+        <nav class="strip">
+          {%- for other in map.others %}
+          <a class="other{% if other.here %} is-here{% endif %}" style="left: {{ other.x }}px; top: {{ other.y }}px" href="{{ other.path | safe }}"{% if other.here %} aria-current="page"{% endif %}>{{ other.name }}</a>
+          {%- endfor %}
+        </nav>
 
         {%- for branch in map.branches %}
         <h2
