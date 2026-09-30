@@ -1,38 +1,42 @@
 // ---------------------------------------------------------------------------
-// Startpages - one dark theme, all monospace.
+// Startpages - drawn as a map.
 //
-// Built for a page that gets opened a hundred times a day: no motion, strong
-// separation between cards and ground, and type large enough to scan without
-// leaning in. Anonymous Pro carries the labels, Space Mono the structure.
+// There are no containers on this page. Structure is carried entirely by the
+// wiring: a trunk leaves the title, a spine runs down each branch, a stem hangs
+// off each node and a vein reaches every single link. Nothing is a straight
+// line - every path is a Catmull-Rom curve with a deterministic drift in it.
+//
+// Geometry is computed in src/main.rs, which can only do that because the type
+// is monospaced. THE CONSTANTS BELOW MUST AGREE WITH THE ONES IN THAT FILE:
+// change a font size here and the veins stop meeting the words.
 // ---------------------------------------------------------------------------
 
-$max-width: 1660px;
-$gutter: 34px;
-$grid-gap: 20px;
-$column-max: 420px;
+$mono: "Spline Sans Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
-$display: "Space Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-$body: "Anonymous Pro", "Space Mono", ui-monospace, Menlo, monospace;
+$leaf-size: 14px; // CH     = 8.4  (0.6em advance)
+$name-size: 15px; // NAME_CH = 10.4 (0.6em + 0.09em tracking)
+$root-size: 27px; // ROOT_CH = 17.6
+$other-size: 13px; // OTHER_CH = 8.6
 
 :root {
-  // Surfaces. The step from ground to card is deliberately wide, and every
-  // card also carries a visible border - boxes should read as boxes.
-  --ink-900: #070605;
-  --ink-800: #241f1b;
-  --ink-700: #38302a;
+  // Signal colours: saturated, electric, legible at 1px on near-black. One per
+  // branch, so a group is found by its wavelength before a word is read.
+  // Ordered so the generator's stride (0,4,8,3,7,2,6,1,5) walks the wheel in
+  // big steps: green, magenta, gold, blue, amber, violet, cyan, rose, lime.
+  --tone-0: 106 236 150; // green
+  --tone-1: 255 118 162; // rose
+  --tone-2: 186 146 255; // violet
+  --tone-3: 106 186 255; // blue
+  --tone-4: 255 122 226; // magenta
+  --tone-5: 178 255 96; // lime
+  --tone-6: 78 230 230; // cyan
+  --tone-7: 255 166 74; // amber
+  --tone-8: 255 212 92; // gold
 
-  --line: #574a3f;
-  --line-soft: #3b312a;
-
-  // Text, brightest to faintest.
-  --fg: #f4eee6;
-  --fg-dim: #bcb0a1;
-  --fg-mute: #9a8d7e;
-
-  --amber: #f2b134;
-  --amber-wash: rgba(242, 177, 52, 0.12);
-  --amber-edge: rgba(242, 177, 52, 0.35);
-  --teal: #62cdbb;
+  --void: #06070a;
+  --ink: #dfe4ea;
+  --ink-dim: #6d7684;
+  --wire: 96 110 128;
 }
 
 *,
@@ -44,19 +48,16 @@ $body: "Anonymous Pro", "Space Mono", ui-monospace, Menlo, monospace;
 html {
   color-scheme: dark;
   scrollbar-width: thin;
-  scrollbar-color: var(--ink-700) transparent;
+  scrollbar-color: #1b2028 transparent;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  padding-bottom: 48px;
-
-  background-color: var(--ink-900);
-  color: var(--fg);
-  font-family: $body;
-  font-size: 16px;
-  line-height: 1.5;
+  background: var(--void);
+  color: var(--ink);
+  font-family: $mono;
+  font-size: $leaf-size;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -66,303 +67,191 @@ a {
 }
 
 ::selection {
-  background: rgba(242, 177, 52, 0.3);
-  color: #fff;
+  background: rgba(223, 228, 234, 0.2);
 }
 
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 11px;
+  height: 11px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--ink-700);
-  border: 3px solid var(--ink-900);
+  background: #1b2028;
+  border: 3px solid var(--void);
   border-radius: 99px;
 }
 
-// --- Atmosphere -----------------------------------------------------------
-// Film grain plus a warm spill from the top edge. Both fixed and
-// pointer-transparent; nothing here moves or reflows.
+// --- Ground ---------------------------------------------------------------
 
+.deep,
 .grain {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.045;
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC44IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIiBmaWx0ZXI9InVybCgjbikiLz48L3N2Zz4=");
 }
 
-.glow {
-  position: fixed;
+.deep {
+  background: radial-gradient(
+      48% 42% at 12% 0%,
+      rgba(64, 120, 150, 0.16),
+      transparent 68%
+    ),
+    radial-gradient(44% 40% at 92% 8%, rgba(120, 70, 130, 0.12), transparent 68%),
+    radial-gradient(70% 55% at 50% 108%, rgba(50, 110, 100, 0.1), transparent 72%);
+}
+
+.grain {
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIj48ZmlsdGVyIGlkPSJnIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC44NSIgbnVtT2N0YXZlcz0iMyIgc3RpdGNoVGlsZXM9InN0aXRjaCIvPjxmZUNvbG9yTWF0cml4IHR5cGU9InNhdHVyYXRlIiB2YWx1ZXM9IjAiLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgZmlsdGVyPSJ1cmwoI2cpIi8+PC9zdmc+");
+}
+
+// --- Canvas ---------------------------------------------------------------
+// The map is drawn at a computed size. On a screen too narrow to hold it the
+// viewport scrolls rather than reflowing - the wiring has fixed coordinates.
+
+.viewport {
+  position: relative;
+  z-index: 1;
+  overflow-x: auto;
+}
+
+.map {
+  position: relative;
+  margin: 0 auto;
+}
+
+.wiring {
+  position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  height: 75vh;
-  z-index: 0;
+  overflow: visible;
+  fill: none;
   pointer-events: none;
-  background: radial-gradient(
-      58% 100% at 14% 0%,
-      rgba(184, 112, 40, 0.12),
-      transparent 70%
-    ),
-    radial-gradient(50% 95% at 84% 0%, rgba(140, 84, 34, 0.08), transparent 70%);
 }
 
-// --- Header ---------------------------------------------------------------
-// Page name on the left, startpage tabs on the right. Sticky, so the tabs stay
-// reachable on the long pages.
-
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 14px 28px;
-
-  margin-bottom: 26px;
-  padding: 16px $gutter 15px;
-
-  background: rgba(7, 6, 5, 0.93);
-  border-bottom: 1px solid var(--line-soft);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+.trunk,
+.spine {
+  stroke: #{"rgb(var(--wire) / 0.42)"};
+  stroke-width: 1;
 }
 
-.brand {
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 13px;
-
-  font-family: $display;
-  font-size: 15px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.26em;
-  color: var(--fg);
+.trunk {
+  stroke: #{"rgb(var(--tone) / 0.34)"};
+  stroke-width: 1.1;
 }
 
-.brand-tick {
-  flex: none;
-  width: 4px;
-  height: 18px;
-  background: var(--amber);
+.stem {
+  stroke: #{"rgb(var(--tone) / 0.5)"};
+  stroke-width: 1.25;
 }
 
-.tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+.vein {
+  stroke: #{"rgb(var(--tone) / 0.3)"};
+  stroke-width: 1;
 }
 
-.tab {
-  padding: 6px 14px;
+.node {
+  fill: #{"rgb(var(--tone))"};
+  stroke: var(--void);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 5px #{"rgb(var(--tone) / 0.55)"});
+}
 
-  font-family: $display;
-  font-size: 12.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--fg-mute);
+.heart {
+  fill: var(--ink);
+  filter: drop-shadow(0 0 7px rgba(223, 228, 234, 0.4));
+}
+
+// --- Nodes ----------------------------------------------------------------
+// Everything below is positioned from the computed layout; `top` is a centre
+// line, hence the translate.
+
+.root,
+.other,
+.branch,
+.leaf {
+  position: absolute;
+  transform: translateY(-50%);
   white-space: nowrap;
+}
+
+.root {
+  margin: 0;
+  transform: translate(-50%, -50%);
+  font-size: $root-size;
+  font-weight: 700;
+  letter-spacing: 0.015em;
+  color: var(--ink);
+}
+
+.other {
+  font-size: $other-size;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
 
   &:hover {
-    color: var(--fg);
-    background: var(--ink-700);
+    color: var(--ink);
   }
 
   &:focus-visible {
-    color: var(--fg);
-    outline: 2px solid var(--teal);
-    outline-offset: -2px;
-  }
-
-  // Brackets mark the current page without relying on colour alone.
-  &.is-current {
-    color: var(--amber);
-    background: var(--amber-wash);
-    box-shadow: inset 0 0 0 1px var(--amber-edge);
-
-    &::before {
-      content: "[";
-      margin-right: 6px;
-      color: var(--amber-edge);
-    }
-
-    &::after {
-      content: "]";
-      margin-left: 6px;
-      color: var(--amber-edge);
-    }
+    color: var(--ink);
+    outline: 1px solid var(--ink-dim);
+    outline-offset: 3px;
   }
 }
 
-// --- Columns and cards ----------------------------------------------------
-// auto-fill (not auto-fit) keeps the track width constant, so a two-column
-// page has the same card measure as a five-column one instead of stretching.
-
-.page {
-  // The template sets --columns to the number of columns this startpage
-  // actually defines, so a two-column page sits centred at its natural width
-  // instead of being stranded against the left edge. Wide pages hit
-  // $max-width first and fill the screen as before.
-  --columns: 5;
-  max-width: min(
-    #{$max-width},
-    calc(
-      var(--columns) * #{$column-max} + (var(--columns) - 1) * #{$grid-gap} +
-        #{$gutter * 2}
-    )
-  );
-  margin: 0 auto;
-  padding: 0 $gutter;
-
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: $grid-gap;
-  align-items: start;
+.branch {
+  margin: 0;
+  font-size: $name-size;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #{"rgb(var(--tone))"};
 }
 
-.column {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.category {
-  padding: 16px 14px 14px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--ink-800);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    0 8px 20px -10px rgba(0, 0, 0, 0.85);
-}
-
-.category-title {
-  margin: 0 0 12px;
-  padding: 0 4px;
-
+.leaf {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
 
-  font-family: $display;
-  font-size: 12.5px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--amber);
-
-  // Comment marker, then a hairline running out to the edge of the card.
-  &::before {
-    content: "//";
-    letter-spacing: 0;
-    color: var(--fg-mute);
-  }
-
-  &::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: var(--line);
-  }
-}
-
-// --- Rows -----------------------------------------------------------------
-// The whole row is the anchor: a generous mouse target, and Vimium drops its
-// hint on the icon instead of over the first letters of the label.
-
-.rows {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.row {
-  position: relative;
-  display: flex;
-  // flex-start keeps the icon beside the first line when a long label wraps.
-  align-items: flex-start;
-  gap: 11px;
-  padding: 6px 10px 6px 13px;
-  border-radius: 6px;
-  line-height: 1.5;
+  // The negative margin lets the hover wash reach a little left of the icon
+  // without moving the text off the coordinate the vein was drawn to.
+  padding: 3px 9px 3px 6px;
+  margin-left: -6px;
+  border-radius: 3px;
+  font-size: $leaf-size;
+  line-height: 1;
+  color: var(--ink);
   -webkit-tap-highlight-color: transparent;
 
-  // Accent bar on the left edge, shown on hover and focus.
-  &::before {
-    content: "";
-    position: absolute;
-    left: 4px;
-    top: 7px;
-    bottom: 7px;
-    width: 2px;
-    background: transparent;
-  }
-
   .ico {
-    flex: 0 0 20px;
+    flex: none;
+    width: 15px;
     text-align: center;
-    font-size: 14px;
-    color: var(--fg-mute);
+    font-size: 11px;
+    color: #{"rgb(var(--tone) / 0.75)"};
   }
 
-  .lbl {
-    font-size: 15.5px;
-  }
-
-  &:hover,
-  &:focus-visible {
-    background: var(--ink-700);
+  &:hover {
     color: #fff;
-
-    &::before {
-      background: var(--amber);
-    }
+    background: #{"rgb(var(--tone) / 0.14)"};
 
     .ico {
-      color: var(--amber);
+      color: #{"rgb(var(--tone))"};
+    }
+
+    .lbl {
+      text-decoration: underline;
+      text-decoration-color: #{"rgb(var(--tone) / 0.7)"};
+      text-underline-offset: 4px;
+      text-decoration-thickness: 1px;
     }
   }
 
   &:focus-visible {
-    outline: 2px solid var(--teal);
-    outline-offset: 0;
-  }
-}
-
-.separator {
-  height: 0;
-  margin: 9px 10px 9px 14px;
-  border-top: 1px dashed var(--line);
-}
-
-// --- Narrow screens -------------------------------------------------------
-
-@media (max-width: 720px) {
-  .topbar {
-    padding: 14px 16px;
-    margin-bottom: 18px;
-  }
-
-  .page {
-    padding: 0 16px;
-    gap: 16px;
-  }
-
-  .column {
-    gap: 16px;
-  }
-
-  // Bigger tap targets on a phone.
-  .row {
-    padding: 10px 12px 10px 15px;
+    outline: 1px solid #{"rgb(var(--tone))"};
+    outline-offset: 2px;
   }
 }

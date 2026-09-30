@@ -43,28 +43,56 @@ copy-paste it uses the whole snippet in the format:
 You can easily copy the snippet by opening the icon popup window and clicking
 on the code.
 
-## Styling
+## The map
 
-Styles are defined in `sass/styles.scss`, which carries a single dark theme.
-Every colour lives in the `:root` block at the top of the file as a CSS custom
-property, so retuning the palette means editing a handful of values instead of
-hunting through the rules below them:
+The page is not a layout, it is a drawing. There are no containers anywhere on
+it - structure is carried entirely by wiring:
 
-| Variable                          | Used for                                |
-| --------------------------------- | --------------------------------------- |
-| `--ink-900` … `--ink-700`         | page ground, cards, hovered row         |
-| `--line`, `--line-soft`           | hairlines and card borders              |
-| `--fg`, `--fg-dim`, `--fg-mute`   | labels, headings, icons                 |
-| `--amber`                         | accent: headings, hover bar, current tab |
-| `--teal`                          | keyboard focus ring                     |
+```
+                       Home            <- the heart
+                    ╱   │   ╲
+              TOOLS   DIGEST  HOMESERVER    <- branches, one colour each
+                ╲       ╲         ╲
+                 Gmail   Reddit    Calibre  <- leaves, one vein each
+```
 
-Type is monospace throughout:
-[Anonymous Pro](https://fonts.google.com/specimen/Anonymous+Pro) for the link
-labels and [Space Mono](https://fonts.google.com/specimen/Space+Mono) for the
-structural elements (page name, category headings, tabs). Both are loaded from
-Google Fonts in `templates/startpage.html`.
+A trunk leaves the heart for every branch, a spine runs the length of each
+branch, a stem hangs off every node and a vein reaches every single link.
+Nothing is a straight line: each path is a Catmull-Rom curve through waypoints
+carrying a deterministic drift, so the map reads as something grown rather than
+plotted.
 
-Nothing on the page animates or transitions - state changes are instant.
+`src/main.rs` computes all of it at build time - it measures every label,
+decides how many branches keep the canvas roughly landscape, packs the
+categories across them in reading order, staggers their depths so no two
+branches start at the same height, and emits the SVG path data. It can only do
+this because **the type is monospaced**: a label is exactly
+`characters x advance` wide, so the generator knows where every word will land
+without ever rendering it.
+
+That makes the geometry constants in `src/main.rs` and the font sizes in
+`sass/styles.scss` two halves of one contract. Change a font size on one side
+without the other and the veins stop meeting the words.
+
+**Colour is the index.** Each branch gets one of nine signal tones, handed out
+with a stride across the wheel so neighbours never shade into each other. The
+tone drives that branch's trunk, spine, stem, veins, node, name and icons -
+which is how you find a group before reading a word of it, and why the same
+Jenkins icon on five projects is five different colours.
+
+**Repeated prefixes are dropped.** A branch called `FHP` whose leaves all read
+`FHP | Bitbucket`, `FHP | Jenkins` says its own name nine times, and the branch
+is already labelled. The generator strips the prefix - but only when every leaf
+carries it and only when it is the branch's own name, so nothing that
+distinguishes two links is lost. `WF`, whose prefixes are `UI` / `UI 2.1` /
+`Service`, keeps them.
+
+Type is [Spline Sans Mono](https://fonts.google.com/specimen/Spline+Sans+Mono),
+loaded from Google Fonts in `templates/startpage.html`. There is no JavaScript
+and nothing on the page moves.
+
+The canvas has computed dimensions, so a window narrower than the map pans
+rather than reflowing.
 
 ## Changing startpage template
 

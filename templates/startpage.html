@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#070605" />
+    <meta name="theme-color" content="#06070a" />
     <title>{{ startpage.name }}</title>
 
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
@@ -32,7 +32,7 @@
 
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Anonymous+Pro:wght@400;700&family=Space+Mono:wght@400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:wght@400;500;600;700&display=swap"
     />
 
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
@@ -46,48 +46,59 @@
     />
   </head>
   <body>
+    <div class="deep" aria-hidden="true"></div>
     <div class="grain" aria-hidden="true"></div>
-    <div class="glow" aria-hidden="true"></div>
 
-    <header class="topbar">
-      <h1 class="brand">
-        <span class="brand-tick" aria-hidden="true"></span>{{ startpage.name }}
-      </h1>
-      <nav class="tabs" aria-label="Startpages">
-        {%- for nav in navigation %}
-        {%- if nav.name == startpage.name %}
-        <a class="tab is-current" href="{{ nav.path | safe }}" aria-current="page">{{ nav.name }}</a>
-        {%- else %}
-        <a class="tab" href="{{ nav.path | safe }}">{{ nav.name }}</a>
-        {%- endif %}
-        {%- endfor %}
-      </nav>
-    </header>
-
-    <main class="page" style="--columns: {{ startpage.columns | length }}">
-      {%- for column in startpage.columns %}
-      <div class="column">
-        {%- for category in column.categories %}
-        <section class="category">
-          <h2 class="category-title">{{ category.name }}</h2>
-          <ul class="rows">
-            {%- for row in category.rows %}
-            {%- if row == "Separator" %}
-            <li class="separator" role="separator"></li>
-            {%- else %}
-            <li>
-              <a class="row" href="{{ row.Link.url | safe }}">
-                <span class="ico" aria-hidden="true">{{ row.Link.ico | safe }}</span
-                ><span class="lbl">{{ row.Link.lbl }}</span>
-              </a>
-            </li>
-            {%- endif %}
+    <div class="viewport">
+      <div class="map" style="width: {{ map.width }}px; height: {{ map.height }}px">
+        <svg
+          class="wiring"
+          viewBox="0 0 {{ map.width }} {{ map.height }}"
+          width="{{ map.width }}"
+          height="{{ map.height }}"
+          aria-hidden="true"
+        >
+          <circle class="heart" cx="{{ map.heart_x }}" cy="{{ map.heart_y }}" r="4" />
+          {%- for trunk in map.trunks %}
+          <path class="trunk" d="{{ trunk.d | safe }}" style="--tone: var(--tone-{{ trunk.tone }})" />
+          {%- endfor %}
+          {%- for spine in map.spines %}
+          <path class="spine" d="{{ spine | safe }}" />
+          {%- endfor %}
+          {%- for branch in map.branches %}
+          <g style="--tone: var(--tone-{{ branch.tone }})">
+            <path class="stem" d="{{ branch.stem | safe }}" />
+            {%- for leaf in branch.leaves %}
+            <path class="vein" d="{{ leaf.vein | safe }}" />
             {%- endfor %}
-          </ul>
-        </section>
+            <circle class="node" cx="{{ branch.dot_x }}" cy="{{ branch.dot_y }}" r="3.4" />
+          </g>
+          {%- endfor %}
+        </svg>
+
+        <h1 class="root" style="left: {{ map.root_x }}px; top: {{ map.root_y }}px">
+          {{ startpage.name }}
+        </h1>
+
+        {%- for other in map.others %}
+        <a class="other" style="left: {{ other.x }}px; top: {{ other.y }}px" href="{{ other.path | safe }}">{{ other.name }}</a>
+        {%- endfor %}
+
+        {%- for branch in map.branches %}
+        <h2
+          class="branch"
+          style="left: {{ branch.x }}px; top: {{ branch.y }}px; --tone: var(--tone-{{ branch.tone }})"
+        >{{ branch.name }}</h2>
+        {%- for leaf in branch.leaves %}
+        <a
+          class="leaf"
+          style="left: {{ leaf.x }}px; top: {{ leaf.y }}px; --tone: var(--tone-{{ branch.tone }})"
+          href="{{ leaf.url | safe }}"
+        ><span class="ico" aria-hidden="true">{{ leaf.ico | safe }}</span
+          ><span class="lbl">{{ leaf.lbl }}</span></a>
+        {%- endfor %}
         {%- endfor %}
       </div>
-      {%- endfor %}
-    </main>
+    </div>
   </body>
 </html>
