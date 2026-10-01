@@ -854,6 +854,10 @@
               ico: <i class="fa-solid fa-plane"></i>
               lbl: Solutions | Staging
               url: https://di-solutions-finapi-general-staging.finapi.io
+            - !Link
+              ico: <i class="fa-solid fa-plane"></i>
+              lbl: Solutions Admin | Staging
+              url: https://admin-di-solutions.finapi-general-staging.finapi.net/
 
     - categories:
         - name: FJSL
