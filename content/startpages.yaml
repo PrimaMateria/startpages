@@ -710,6 +710,11 @@
               ico: <i class="fa-brands fa-jenkins"></i>
               lbl: Deploy job
               url: https://jenkins.itops.finapi.net/job/deploy_staging/build?delay=0sec
+            - !Link
+              ico: <i class="fa-solid fa-unlock"></i>
+              lbl: IAM Middleware
+              url: https://di-iammiddleware-ui-finapi-general-staging.itops.finapi.net/
+
 - name: Projects
   columns:
     - categories:
@@ -840,6 +845,16 @@
               ico: <i class="fa-solid fa-plane"></i>
               lbl: FWL | Staging
               url: https://widget-library.finapi-general-staging.finapi.net/docs/index.html?path=/story/girocheck-examples--interactive&globals=clientId:f0907acc-2987-48a1-9e1b-fb0a4e538e37;clientSecret:d9366968-3610-4f78-a162-0f8eccff9b6e
+            - !Separator
+            - !Link
+              ico: <i class="fa-solid fa-plane"></i>
+              lbl: Processctl | Staging
+              url: https://di-processctl.finapi-general-staging.finapi.net/api-docs/index.html
+            - !Link
+              ico: <i class="fa-solid fa-plane"></i>
+              lbl: Solutions | Staging
+              url: https://di-solutions-finapi-general-staging.finapi.io
+
     - categories:
         - name: FJSL
           rows:
@@ -880,6 +895,7 @@
               ico: <i class="fa-brands fa-jenkins"></i>
               lbl: FHP | Jenkins
               url: https://jenkins.dev.finapi.net/job/finapi-hostpages/
+            - !Separator
             - !Link
               ico: <i class="fa-solid fa-plane"></i>
               lbl: FHP | Finde Staging
@@ -892,6 +908,7 @@
               ico: <i class="fa-solid fa-plane"></i>
               lbl: FHP | Staging VRH
               url: https://di-processctl-finapi-general-staging.finapi.io/api/v1/processes/bb8e675d-ee9d-4704-9241-d4826c20573c/link
+            - !Separator
             - !Link
               ico: <i class="fa-solid fa-rocket"></i>
               lbl: FHP | Release Staging
@@ -900,6 +917,7 @@
               ico: <i class="fa-solid fa-rocket"></i>
               lbl: FHP | Release Staging VRH
               url: https://di-processctl-finapi-general-release-staging.finapi.io/api/v1/processes/bb8e675d-ee9d-4704-9241-d4826c20573c/link
+            - !Separator
             - !Link
               ico: <i class="fa-solid fa-satellite"></i>
               lbl: FHP | Sandbox
@@ -908,20 +926,6 @@
               ico: <i class="fa-solid fa-star"></i>
               lbl: FHP | Live
               url: https://di-processctl-finapi-general-live.finapi.io/api/v1/processes/0ee84947-cc5d-11ea-88bf-06bdc5a6b3da/link
-        - name: Processctl
-          rows:
-            - !Link
-              ico: <i class="fa-brands fa-bitbucket"></i>
-              lbl: Processctl | Bitbucket
-              url: https://bitbucket.org/teaminvest/finapi-process-ctrl/pull-requests/
-            - !Link
-              ico: <i class="fa-brands fa-jenkins"></i>
-              lbl: Processctl | Jenkins
-              url: https://jenkins.dev.finapi.net/job/finapi-process-ctrl/
-            - !Link
-              ico: <i class="fa-solid fa-plane"></i>
-              lbl: Processctl | Staging
-              url: https://di-processctl.finapi-general-staging.finapi.net/api-docs/index.html
 - name: Webdev
   columns:
     - categories:
