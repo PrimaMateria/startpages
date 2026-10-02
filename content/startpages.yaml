@@ -5,10 +5,6 @@
           rows:
             - !Link
               ico: <i class="fa-solid fa-robot"></i>
-              lbl: Deepseek
-              url: https://chat.deepseek.com/
-            - !Link
-              ico: <i class="fa-solid fa-robot"></i>
               lbl: ChatGPT
               url: https://chat.openai.com/
 
@@ -163,20 +159,8 @@
 
             - !Link
               ico: <i class="fa-solid fa-grin-squint-tears"></i>
-              lbl: zomri
-              url: https://www.zomri.online/
-            - !Link
-              ico: <i class="fa-solid fa-grin-squint-tears"></i>
               lbl: Coding Love
               url: https://thecodinglove.com/
-            - !Link
-              ico: <i class="fa-solid fa-play"></i>
-              lbl: Spravy RTVS
-              url: https://www.rtvs.sk/televizia/archiv/13982
-            - !Link
-              ico: <i class="fa-solid fa-play"></i>
-              lbl: :24 live
-              url: https://www.rtvs.sk/televizia/live-24
             - !Link
               ico: <i class="fa-solid fa-poop"></i>
               lbl: Lotto
@@ -669,6 +653,10 @@
               ico: <i class="fa-solid fa-table"></i>
               lbl: DI Releases
               url: https://teaminvest1.sharepoint.com/:x:/s/produkte/EYxsAT4pXzFCg6mtlCm609MB0Ko9N3EFnEJNQEjW8lLM_g?e=x17SED&nav=MTVfezJFM0E4NjdFLTdFMjUtNEYyNy1CQjM2LUZFQUVDMzcwMDVEQX0              
+            - !Link
+              ico: <i class="fa-solid fa-table"></i>
+              lbl: WF Releases
+              url: https://finapi.jira.com/wiki/spaces/FWF/pages/3849029135/Web+Form+2.0+Release+Tickets              
     - categories:
         - name: People
           rows:
@@ -734,6 +722,10 @@
               ico: <i class="fa-brands fa-confluence"></i>
               lbl: Confluence
               url: https://teaminvest.jira.com/wiki/spaces/FWF/overview?homepageId=1487503628
+            - !Link
+              ico: <i class="fa-solid fa-flask"></i>
+              lbl: Test bench
+              url: https://dev-web-form-test-bench.pages.finapi.ghe.com/
             - !Separator
             - !Link
               ico: <i class="fa-brands fa-bitbucket"></i>
@@ -930,6 +922,26 @@
               ico: <i class="fa-solid fa-star"></i>
               lbl: FHP | Live
               url: https://di-processctl-finapi-general-live.finapi.io/api/v1/processes/0ee84947-cc5d-11ea-88bf-06bdc5a6b3da/link
+        - name: OP
+          rows:
+            - !Link
+              ico: <i class="fa-brands fa-bitbucket"></i>
+              lbl: Bitbucket
+              url: https://bitbucket.org/teaminvest/finapi-orderprocess-ui/pull-requests/
+            - !Link
+              ico: <i class="fa-brands fa-jenkins"></i>
+              lbl: Jenkins
+              url: https://jenkins.dev.finapi.net/job/finapi-orderprocess-ui/
+            - !Separator
+            - !Link
+              ico: <i class="fa-solid fa-plane"></i>
+              lbl: Staging
+              url: https://orderprocess-ui-finapi-general-staging.itops.finapi.net/
+            - !Separator
+            - !Link
+              ico: <i class="fa-solid fa-plane"></i>
+              lbl: Service | Staging
+              url: https://orderprocess.finapi-general-staging.finapi.net/api-docs/index.html#post-/orders
 - name: Webdev
   columns:
     - categories:
