@@ -477,12 +477,12 @@ a {
     }
   }
 
-  .ico {
+  .leaf .ico {
     width: 22px !important;
     font-size: 15px !important;
   }
 
-  .lbl {
+  .leaf .lbl {
     font-size: 16px;
   }
 }
@@ -494,11 +494,6 @@ a {
 // answer is remembered.
 @media (max-width: 900px) {
   @include column-layout;
-
-  // Nothing to switch to down here - it is already columns.
-  :root.js .mode {
-    display: none;
-  }
 }
 
 :root.as-columns {
@@ -527,36 +522,292 @@ a {
   }
 }
 
-// The switch itself. Hidden until the script that works it has run, so a page
-// without scripting never offers a control that would do nothing.
-.mode {
-  display: none;
-  position: fixed;
-  top: 22px;
-  right: 26px;
-  z-index: 3;
-  padding: 5px 7px;
-  border: 0;
-  border-radius: 4px;
-  background: none;
-  color: var(--ink-dim);
-  font: inherit;
-  font-size: $other-size;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  cursor: pointer;
+// --- Classic --------------------------------------------------------------
+// The page as it was before the map: the columns exactly as the configuration
+// writes them, in one of the base16 schemes from sass/colorschemes. The scheme
+// is not compiled in any more - every one is written to css/themes.css as
+// `--base00`..`--base0F` under its own `data-theme`, so it can be switched
+// without a rebuild. Picked at any width, since its grid reflows on its own.
 
-  &:hover {
-    color: var(--ink);
+.classic {
+  display: none;
+}
+
+:root.as-classic {
+  color-scheme: var(--classic-scheme, dark);
+  scrollbar-color: var(--base02) transparent;
+
+  body {
+    background: var(--base00);
+    color: var(--base04);
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
   }
 
-  &:focus-visible {
-    color: var(--ink);
-    outline: 1px solid var(--ink-dim);
-    outline-offset: 3px;
+  ::-webkit-scrollbar-thumb {
+    background: var(--base02);
+    border-color: var(--base00);
+  }
+
+  ::selection {
+    background: var(--base02);
+  }
+
+  .deep,
+  .grain,
+  .viewport {
+    display: none;
+  }
+
+  .classic {
+    display: block;
+    padding-top: 5vh;
   }
 }
 
-:root.js .mode {
+.classic {
+  a {
+    color: var(--base04);
+
+    &:hover {
+      color: var(--base06);
+    }
+  }
+
+  h2 {
+    color: var(--base0A);
+  }
+
+  .page {
+    max-width: 1600px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+    margin: 0 auto;
+    padding: 0 40px 72px;
+  }
+
+  .rows {
+    display: grid;
+    grid-row-gap: 4px;
+    grid-template-columns: 30px auto;
+  }
+
+  .separator {
+    border-top: 1px solid var(--base02);
+    margin: 8px 0;
+    grid-column: 1 / span 2;
+    max-width: 150px;
+  }
+
+  .navigation {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 32px;
+    justify-content: center;
+    background: var(--base00);
+
+    .is-here {
+      color: var(--base0A);
+    }
+  }
+}
+
+// --- Settings -------------------------------------------------------------
+// One small button and one small dialog. Both take their colours from whichever
+// layout is showing, so the dialog looks like part of the page it was opened on.
+
+.gear,
+.settings {
+  --panel: #0d1016;
+  --panel-ink: var(--ink);
+  --panel-dim: var(--ink-dim);
+  --panel-line: #{"rgb(var(--bark) / 0.3)"};
+  --panel-accent: #{"rgb(var(--tone-3))"};
+}
+
+:root.as-classic {
+  .gear,
+  .settings {
+    --panel: var(--base01);
+    --panel-ink: var(--base05);
+    --panel-dim: var(--base04);
+    --panel-line: var(--base02);
+    --panel-accent: var(--base0D);
+  }
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+// Hidden until the script that works it has run, so a page without scripting
+// never offers a control that would do nothing.
+.gear {
+  display: none;
+  position: fixed;
+  top: 18px;
+  right: 22px;
+  z-index: 3;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--panel-dim);
+  font-size: 15px;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--panel-ink);
+  }
+
+  &:focus-visible {
+    color: var(--panel-ink);
+    outline: 1px solid var(--panel-dim);
+    outline-offset: 2px;
+  }
+}
+
+:root.js .gear {
   display: block;
+}
+
+.settings {
+  width: min(340px, calc(100vw - 32px));
+  padding: 22px 22px 18px;
+  border: 1px solid var(--panel-line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--panel-ink);
+  font: inherit;
+  font-size: 14px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.45);
+  }
+
+  h2 {
+    margin: 0 0 18px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  fieldset {
+    margin: 0 0 18px;
+    padding: 0;
+    border: 0;
+  }
+
+  legend,
+  .field > span {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--panel-dim);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  // Three options side by side, as one segmented control.
+  .choices {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--panel-line);
+    border-radius: 6px;
+    overflow: hidden;
+
+    label {
+      position: relative;
+      padding: 8px 4px;
+      text-align: center;
+      cursor: pointer;
+
+      & + label {
+        border-left: 1px solid var(--panel-line);
+      }
+
+      &:has(:checked) {
+        background: var(--panel-accent);
+        color: var(--panel);
+        font-weight: 600;
+      }
+
+      &:has(:focus-visible) {
+        outline: 2px solid var(--panel-accent);
+        outline-offset: -4px;
+      }
+    }
+
+    input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  .field {
+    display: block;
+  }
+
+  select {
+    width: 100%;
+    padding: 7px 8px;
+    border: 1px solid var(--panel-line);
+    border-radius: 6px;
+    background: var(--panel);
+    color: var(--panel-ink);
+    font: inherit;
+
+    &:disabled {
+      opacity: 0.5;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--panel-accent);
+      outline-offset: 1px;
+    }
+  }
+
+  .hint {
+    display: block;
+    margin-top: 6px;
+    color: var(--panel-dim);
+    font-size: 12px;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+
+    button {
+      padding: 6px 14px;
+      border: 1px solid var(--panel-line);
+      border-radius: 6px;
+      background: none;
+      color: var(--panel-ink);
+      font: inherit;
+      cursor: pointer;
+
+      &:hover,
+      &:focus-visible {
+        border-color: var(--panel-accent);
+        outline: none;
+      }
+    }
+  }
 }

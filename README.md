@@ -305,6 +305,26 @@ column, so it is wrapped in a `nav` that is `display: contents` everywhere else
 - generating no box, it leaves the links inside it positioned against the map
 exactly as before.
 
+## Settings
+
+The gear in the top-right corner opens a small settings dialog. Both choices
+are remembered per browser (`localStorage`), so every startpage on the same
+site follows them.
+
+**Layout** is one of three:
+
+- **Map** - the drawing described above.
+- **Columns** - the same content and colours, flowed into as many columns as
+  the window holds. Below 900px wide the map always falls back to this.
+- **Classic** - the page as it was before the map: the `columns` exactly as
+  `content/startpages.yaml` arranges them, in a base16 colour scheme.
+
+**Theme** picks the classic layout's colour scheme. Every file in
+`sass/colorschemes/` is offered; the generator writes them all to
+`css/themes.css` as `--base00`..`--base0F` under a `data-theme` attribute, so
+switching is instant and needs no rebuild. To add one, drop another base16
+`.scss` file in that directory. The default is Gruvbox dark, hard.
+
 ## Changing startpage template
 
 Startpage template is in `templates/startpage.html`, and it will be processed by

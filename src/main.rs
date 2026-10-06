@@ -48,6 +48,18 @@ type Navigation = Vec<NavItem>;
 
 static OUT_DIR: &str = "_site";
 static CONFIGURATION: &str = "content/startpages.yaml";
+static COLORSCHEMES: &str = "sass/colorschemes";
+/// The classic layout's theme until one is picked in the settings.
+static DEFAULT_THEME: &str = "gruvbox-dark-hard";
+
+/// A base16 colour scheme, offered as a theme for the classic layout.
+#[derive(Debug, Serialize)]
+struct Theme {
+    id: String,
+    name: String,
+    #[serde(skip)]
+    colours: Vec<(String, String)>,
+}
 
 // ---------------------------------------------------------------------------
 // Geometry
@@ -1527,11 +1539,15 @@ fn prepare_out_dir() -> Result<(), Box<dyn std::error::Error>> {
 fn generate_startpages(
     startpages: &Vec<Startpage>,
     navigation: &Navigation,
+    themes: &[Theme],
 ) -> Result<(), Box<dyn std::error::Error>> {
     for startpage in startpages {
         let mut context = tera::Context::new();
         context.insert("startpage", &startpage);
         context.insert("map", &plot(startpage, navigation));
+        context.insert("navigation", navigation);
+        context.insert("themes", themes);
+        context.insert("default_theme", DEFAULT_THEME);
 
         let html_code = TEMPLATES.render("startpage.html", &context)?;
 
@@ -1569,6 +1585,94 @@ fn compile_sass() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
+/// Reads every base16 scheme in sass/colorschemes, sorted by name.
+///
+/// They used to be picked by uncommenting an `@import`, which fixed the theme at
+/// build time. Read here instead, they can all ship and be switched in the page.
+fn get_themes() -> Result<Vec<Theme>, Box<dyn std::error::Error>> {
+    let mut themes = Vec::new();
+
+    for entry in fs::read_dir(COLORSCHEMES)? {
+        let path = entry?.path();
+        if path.extension().and_then(|ext| ext.to_str()) != Some("scss") {
+            continue;
+        }
+
+        let stem = path.file_stem().and_then(|stem| stem.to_str()).unwrap_or("");
+        let id = stem.strip_prefix("base16-").unwrap_or(stem).to_owned();
+        let source = fs::read_to_string(&path)?;
+
+        // The header reads "/* Gruvbox dark, hard by Dawid Kurek ... */".
+        let name = source
+            .lines()
+            .next()
+            .and_then(|line| line.trim().strip_prefix("/*"))
+            .and_then(|line| line.split(" by ").next())
+            .map(|name| name.trim().to_owned())
+            .filter(|name| !name.is_empty())
+            .unwrap_or_else(|| id.clone());
+
+        let colours = source
+            .lines()
+            .filter_map(|line| {
+                let (key, value) = line.trim().strip_prefix('$')?.split_once(':')?;
+                Some((key.trim().to_owned(), value.trim().trim_end_matches(';').to_owned()))
+            })
+            .collect();
+
+        themes.push(Theme { id, name, colours });
+    }
+
+    themes.sort_by_key(|theme| theme.name.to_lowercase());
+    Ok(themes)
+}
+
+/// Relative luminance of a `#rrggbb` colour, enough to tell a light scheme from
+/// a dark one so the browser's own scrollbars and controls can follow it.
+fn luminance(hex: &str) -> f32 {
+    let channel = |at: usize| {
+        let value = u8::from_str_radix(hex.get(at..at + 2).unwrap_or("00"), 16).unwrap_or(0);
+        let c = value as f32 / 255.0;
+        if c <= 0.03928 {
+            c / 12.92
+        } else {
+            ((c + 0.055) / 1.055).powf(2.4)
+        }
+    };
+    0.2126 * channel(1) + 0.7152 * channel(3) + 0.0722 * channel(5)
+}
+
+/// Writes every theme as custom properties keyed by `data-theme` on the root,
+/// to _site/css/themes.css. The default theme also answers to a bare `:root`,
+/// so a page with no stored choice still has colours.
+fn write_themes(themes: &[Theme]) -> Result<(), Box<dyn std::error::Error>> {
+    let mut css = String::new();
+
+    for theme in themes {
+        let base00 = theme
+            .colours
+            .iter()
+            .find(|(key, _)| key == "base00")
+            .map(|(_, value)| value.as_str())
+            .unwrap_or("#000000");
+        let scheme = if luminance(base00) > 0.5 { "light" } else { "dark" };
+
+        if theme.id == DEFAULT_THEME {
+            css.push_str(":root,\n");
+        }
+        css.push_str(&format!(":root[data-theme=\"{}\"] {{\n", theme.id));
+        for (key, value) in &theme.colours {
+            css.push_str(&format!("  --{}: {};\n", key, value));
+        }
+        css.push_str(&format!("  --classic-scheme: {};\n}}\n", scheme));
+    }
+
+    let mut file = File::create(format!("{}/css/themes.css", OUT_DIR))?;
+    file.write_all(css.as_bytes())?;
+
+    Ok(())
+}
+
 /// Copies public dir to _site/public
 fn copy_public_dir() -> Result<(), Box<dyn std::error::Error>> {
     let options = CopyOptions::new();
@@ -1584,14 +1688,21 @@ fn main() {
     let navigation = get_navigation(&startpages);
     println!("Navigation extracted from the content");
 
+    let themes = get_themes().expect("Failed to read colour schemes");
+    println!("{} classic themes read", themes.len());
+
     prepare_out_dir().expect("Failed to prepare output directory");
     println!("Output directory prepared");
 
-    generate_startpages(&startpages, &navigation).expect("Failed to generate startpages");
+    generate_startpages(&startpages, &navigation, &themes)
+        .expect("Failed to generate startpages");
     println!("Maps plotted and startpages generated");
 
     compile_sass().expect("Failed to compile Sass");
     println!("Sass styles compiled");
+
+    write_themes(&themes).expect("Failed to write themes");
+    println!("Themes written");
 
     copy_public_dir().expect("Failed to copy public directory");
     println!("Public directory copied");
