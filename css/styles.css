@@ -171,10 +171,6 @@ a {
   stroke-width: 1.5;
 }
 
-.strip, .limb {
-  display: contents;
-}
-
 .root, .other, .branch, .leaf {
   position: absolute;
   transform: translateY(-50%);
@@ -258,164 +254,478 @@ a {
   outline-offset: 2px;
 }
 
+.classic, .triptych, .navigation {
+  display: none;
+}
+
+:root.as-classic {
+  color-scheme: var(--classic-scheme, dark);
+  scrollbar-color: var(--base02) transparent;
+}
+:root.as-classic body {
+  background: var(--base00);
+  color: var(--base04);
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+:root.as-classic ::-webkit-scrollbar-thumb {
+  background: var(--base02);
+  border-color: var(--base00);
+}
+:root.as-classic ::selection {
+  background: var(--base02);
+}
+:root.as-classic .deep, :root.as-classic .grain, :root.as-classic .viewport {
+  display: none;
+}
+:root.as-classic .navigation {
+  display: flex;
+}
+:root.as-classic .gear {
+  top: 11px;
+}
+:root.as-classic .gear, :root.as-classic .settings {
+  --panel: var(--base01);
+  --panel-ink: var(--base05);
+  --panel-dim: var(--base04);
+  --panel-line: var(--base02);
+  --panel-accent: var(--base0D);
+}
+:root.as-classic .classic {
+  display: block;
+  padding-top: calc(56px + 5vh);
+}
+
+:root.as-triptych {
+  color-scheme: var(--classic-scheme, dark);
+  scrollbar-color: var(--base02) transparent;
+}
+:root.as-triptych body {
+  background: var(--base00);
+  color: var(--base04);
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+:root.as-triptych ::-webkit-scrollbar-thumb {
+  background: var(--base02);
+  border-color: var(--base00);
+}
+:root.as-triptych ::selection {
+  background: var(--base02);
+}
+:root.as-triptych .deep, :root.as-triptych .grain, :root.as-triptych .viewport {
+  display: none;
+}
+:root.as-triptych .navigation {
+  display: flex;
+}
+:root.as-triptych .gear {
+  top: 11px;
+}
+:root.as-triptych .gear, :root.as-triptych .settings {
+  --panel: var(--base01);
+  --panel-ink: var(--base05);
+  --panel-dim: var(--base04);
+  --panel-line: var(--base02);
+  --panel-accent: var(--base0D);
+}
+:root.as-triptych .triptych {
+  display: grid;
+}
+
 @media (max-width: 900px) {
-  .viewport {
-    overflow: visible;
+  :root:not(.as-triptych) {
+    color-scheme: var(--classic-scheme, dark);
+    scrollbar-color: var(--base02) transparent;
   }
-  .map {
-    display: flex;
-    flex-direction: column;
-    width: auto !important;
-    height: auto !important;
-    padding: 22px 18px 64px;
-  }
-  .wiring {
-    display: none;
-  }
-  .root, .other, .branch, .leaf {
-    position: static;
-    transform: none;
-    white-space: normal;
-  }
-  .root {
-    margin-bottom: 16px;
-    font-size: 30px;
-    text-shadow: none;
-  }
-  .strip {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 20px;
-    margin-bottom: 24px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid rgb(var(--bark) / 0.35);
-  }
-  .limb {
-    display: block;
-  }
-  .branch {
-    margin: 26px 0 8px;
-    text-shadow: none;
-  }
-  .leaf {
-    min-height: 44px;
-    padding: 8px 10px 8px 6px;
-    border-radius: 5px;
-    background-image: none;
-  }
-  .leaf:hover {
-    background-color: rgb(var(--tone) / 0.14);
-    background-image: none;
-  }
-  .ico {
-    width: 22px !important;
-    font-size: 15px !important;
-  }
-  .lbl {
+  :root:not(.as-triptych) body {
+    background: var(--base00);
+    color: var(--base04);
+    font-family: "Roboto", sans-serif;
     font-size: 16px;
+    font-weight: 400;
   }
-  :root.js .mode {
+  :root:not(.as-triptych) ::-webkit-scrollbar-thumb {
+    background: var(--base02);
+    border-color: var(--base00);
+  }
+  :root:not(.as-triptych) ::selection {
+    background: var(--base02);
+  }
+  :root:not(.as-triptych) .deep, :root:not(.as-triptych) .grain, :root:not(.as-triptych) .viewport {
     display: none;
+  }
+  :root:not(.as-triptych) .navigation {
+    display: flex;
+  }
+  :root:not(.as-triptych) .gear {
+    top: 11px;
+  }
+  :root:not(.as-triptych) .gear, :root:not(.as-triptych) .settings {
+    --panel: var(--base01);
+    --panel-ink: var(--base05);
+    --panel-dim: var(--base04);
+    --panel-line: var(--base02);
+    --panel-accent: var(--base0D);
+  }
+  :root:not(.as-triptych) .classic {
+    display: block;
+    padding-top: calc(56px + 5vh);
   }
 }
 
-:root.as-columns .viewport {
-  overflow: visible;
+.classic a, .triptych a {
+  color: var(--base04);
 }
-:root.as-columns .map {
-  display: flex;
-  flex-direction: column;
-  width: auto !important;
-  height: auto !important;
-  padding: 22px 18px 64px;
+.classic a:hover, .triptych a:hover {
+  color: var(--base06);
 }
-:root.as-columns .wiring {
+.classic h2, .triptych h2 {
+  color: var(--base0A);
+}
+.classic .rows, .triptych .rows {
+  display: grid;
+  grid-row-gap: 4px;
+  grid-template-columns: 30px auto;
+}
+.classic .separator, .triptych .separator {
+  border-top: 1px solid var(--base02);
+  margin: 8px 0;
+  grid-column: 1/span 2;
+  max-width: 150px;
+}
+
+.classic .page {
+  max-width: 1600px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 40px;
+  margin: 0 auto;
+  padding: 0 40px 40px;
+}
+
+.navigation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  width: 100%;
+  height: 56px;
+  padding: 0 68px 0 16px;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 28px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--base02);
+  background: var(--base00);
+  font-size: 15px;
+}
+.navigation::-webkit-scrollbar {
   display: none;
 }
-:root.as-columns .root, :root.as-columns .other, :root.as-columns .branch, :root.as-columns .leaf {
-  position: static;
-  transform: none;
-  white-space: normal;
+.navigation a {
+  color: var(--base04);
 }
-:root.as-columns .root {
-  margin-bottom: 16px;
-  font-size: 30px;
-  text-shadow: none;
+.navigation a:hover {
+  color: var(--base06);
 }
-:root.as-columns .strip {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 20px;
-  margin-bottom: 24px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid rgb(var(--bark) / 0.35);
+.navigation .is-here {
+  color: var(--base0A);
 }
-:root.as-columns .limb {
-  display: block;
+
+.triptych {
+  grid-template-columns: 12% 18% 40% 18% 12%;
+  height: 100vh;
+  height: 100dvh;
+  padding-top: 56px;
 }
-:root.as-columns .branch {
-  margin: 26px 0 8px;
-  text-shadow: none;
+.triptych .side, .triptych .center {
+  min-width: 0;
+  overflow-y: auto;
+  padding-bottom: 40px;
+  scrollbar-width: none;
 }
-:root.as-columns .leaf {
-  min-height: 44px;
-  padding: 8px 10px 8px 6px;
-  border-radius: 5px;
-  background-image: none;
+.triptych .side::-webkit-scrollbar, .triptych .center::-webkit-scrollbar {
+  display: none;
 }
-:root.as-columns .leaf:hover {
-  background-color: rgb(var(--tone) / 0.14);
-  background-image: none;
+.triptych > * + * {
+  border-left: 1px solid var(--base02);
 }
-:root.as-columns .ico {
-  width: 22px !important;
-  font-size: 15px !important;
+.triptych .side, .triptych .center {
+  position: relative;
 }
-:root.as-columns .lbl {
+.triptych .center {
+  z-index: 2;
+  padding: 5vh 40px 40px;
+  box-shadow: 0 0 32px 4px rgba(0, 0, 0, 0.45);
+  font-size: 17px;
+}
+.triptych .center h1 {
+  color: var(--base05);
+  font-size: 28px;
+  font-weight: 500;
+}
+.triptych .center h2 {
+  margin: 0 0 10px;
+}
+.triptych .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(210px, 100%), 1fr));
+  gap: 16px;
+}
+.triptych .grid > .category {
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--base02);
+  border-radius: 4px;
+}
+.triptych .side {
+  z-index: 1;
+  padding: 5vh 28px 40px;
+  box-shadow: 0 0 24px 2px rgba(0, 0, 0, 0.35);
+  background: color-mix(in srgb, var(--base00) 80%, black);
+  font-size: 14px;
+}
+.triptych .side h2 {
+  margin: 0 0 6px;
+  font-size: 15px;
+}
+.triptych .side .grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(165px, 100%), 1fr));
+  gap: 12px;
+}
+.triptych .side .grid > .category {
+  padding: 10px 12px;
+}
+.triptych .side .rows {
+  grid-row-gap: 2px;
+  grid-template-columns: 22px auto;
+}
+.triptych .side .separator {
+  margin: 4px 0;
+}
+.triptych .edge {
+  z-index: 0;
+  padding-inline: 18px;
+  background: color-mix(in srgb, var(--base00) 60%, black);
+  font-size: 12.5px;
+}
+.triptych .edge h2 {
+  margin: 0 0 4px;
+  font-size: 13.5px;
+}
+.triptych .edge .grid {
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+.triptych .edge .grid > .category {
+  padding: 8px 10px;
+}
+.triptych .edge .rows {
+  grid-row-gap: 1px;
+  grid-template-columns: 18px auto;
+}
+.triptych .edge .side-title {
   font-size: 16px;
 }
+.triptych .side-title {
+  color: var(--base05);
+  font-size: 19px;
+  font-weight: 500;
+}
+.triptych .side-title:hover {
+  color: var(--base0D);
+}
+.triptych .center h1, .triptych .side-title {
+  display: flex;
+  align-items: flex-end;
+  height: 44px;
+  margin: 0 0 20px;
+  padding-bottom: calc(6px - 0.16em);
+  overflow: hidden;
+  line-height: 1;
+  white-space: nowrap;
+}
 
-@media (min-width: 901px) {
-  :root.as-columns .map {
-    display: block;
-    columns: 300px;
-    column-gap: 44px;
-    padding: 26px 32px 72px;
+@media (max-width: 1400px) {
+  .triptych {
+    grid-template-columns: 25% 50% 25%;
   }
-  :root.as-columns .root, :root.as-columns .strip {
-    column-span: all;
+  .triptych .edge {
+    display: none;
   }
-  :root.as-columns .limb {
-    break-inside: avoid;
+  .triptych .prev {
+    border-left: 0;
   }
 }
 
-.mode {
+@media (max-width: 900px) {
+  .triptych {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .triptych .side {
+    display: none;
+  }
+  .triptych .center {
+    overflow: visible;
+    padding: 22px 18px 40px;
+    border: 0;
+  }
+}
+
+.gear, .settings {
+  --panel: #0d1016;
+  --panel-ink: var(--ink);
+  --panel-dim: var(--ink-dim);
+  --panel-line: rgb(var(--bark) / 0.3);
+  --panel-accent: rgb(var(--tone-3));
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.gear {
   display: none;
   position: fixed;
-  top: 22px;
-  right: 26px;
+  top: 18px;
+  right: 22px;
   z-index: 3;
-  padding: 5px 7px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
   border: 0;
-  border-radius: 4px;
+  border-radius: 50%;
   background: none;
-  color: var(--ink-dim);
-  font: inherit;
-  font-size: 13px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  color: var(--panel-dim);
+  font-size: 15px;
   cursor: pointer;
 }
-.mode:hover {
-  color: var(--ink);
+.gear:hover {
+  color: var(--panel-ink);
 }
-.mode:focus-visible {
-  color: var(--ink);
-  outline: 1px solid var(--ink-dim);
-  outline-offset: 3px;
+.gear:focus-visible {
+  color: var(--panel-ink);
+  outline: 1px solid var(--panel-dim);
+  outline-offset: 2px;
 }
 
-:root.js .mode {
+:root.js .gear {
   display: block;
+}
+
+.settings {
+  width: min(400px, calc(100vw - 32px));
+  padding: 22px 22px 18px;
+  border: 1px solid var(--panel-line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--panel-ink);
+  font: inherit;
+  font-size: 14px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+}
+.settings::backdrop {
+  background: rgba(0, 0, 0, 0.45);
+}
+.settings h2 {
+  margin: 0 0 18px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.settings fieldset {
+  margin: 0 0 18px;
+  padding: 0;
+  border: 0;
+}
+.settings legend, .settings .field > span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--panel-dim);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.settings .choices {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--panel-line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.settings .choices label {
+  position: relative;
+  padding: 8px 4px;
+  text-align: center;
+  cursor: pointer;
+}
+.settings .choices label + label {
+  border-left: 1px solid var(--panel-line);
+}
+.settings .choices label:has(:checked) {
+  background: var(--panel-accent);
+  color: var(--panel);
+  font-weight: 600;
+}
+.settings .choices label:has(:focus-visible) {
+  outline: 2px solid var(--panel-accent);
+  outline-offset: -4px;
+}
+.settings .choices input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.settings .field {
+  display: block;
+}
+.settings select {
+  width: 100%;
+  padding: 7px 8px;
+  border: 1px solid var(--panel-line);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--panel-ink);
+  font: inherit;
+}
+.settings select:disabled {
+  opacity: 0.5;
+}
+.settings select:focus-visible {
+  outline: 2px solid var(--panel-accent);
+  outline-offset: 1px;
+}
+.settings .hint {
+  display: block;
+  margin-top: 6px;
+  color: var(--panel-dim);
+  font-size: 12px;
+}
+.settings .actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+.settings .actions button {
+  padding: 6px 14px;
+  border: 1px solid var(--panel-line);
+  border-radius: 6px;
+  background: none;
+  color: var(--panel-ink);
+  font: inherit;
+  cursor: pointer;
+}
+.settings .actions button:hover, .settings .actions button:focus-visible {
+  border-color: var(--panel-accent);
+  outline: none;
 }

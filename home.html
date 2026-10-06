@@ -6,18 +6,26 @@
     <meta name="color-scheme" content="dark" />
 
     <script>
-      // The only script on the page, and it runs before the first paint on
-      // purpose: the layout is a stored preference, and a preference applied
-      // after the page is drawn is a flash of the wrong one. `js` is what
-      // reveals the switch, so without scripting there is no control offered
-      // that could not work.
-      try {
-        var seen = localStorage.getItem("startpages-view");
-        document.documentElement.className =
-          "js" + (seen === "columns" ? " as-columns" : "");
-      } catch (e) {
-        document.documentElement.className = "js";
-      }
+      // Runs before the first paint on purpose: the layout and the theme are
+      // stored preferences, and a preference applied after the page is drawn is
+      // a flash of the wrong one. `js` is what reveals the settings, so without
+      // scripting there is no control offered that could not work.
+      (function () {
+        var root = document.documentElement,
+          view = null,
+          theme = null;
+        try {
+          view = localStorage.getItem("startpages-view");
+          theme = localStorage.getItem("startpages-theme");
+        } catch (e) {}
+        // Columns was a layout once; whoever picked it gets classic now.
+        if (view === "columns") view = "classic";
+        root.className =
+          "js" +
+          (view === "classic" ? " as-classic" : "") +
+          (view === "triptych" ? " as-triptych" : "");
+        if (theme) root.setAttribute("data-theme", theme);
+      })();
     </script>
     <meta name="theme-color" content="#06070a" />
     <title>Home</title>
@@ -47,9 +55,10 @@
 
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Spline+Sans+Mono:wght@400;500;600;700&display=swap"
     />
 
+    <link rel="stylesheet" type="text/css" href="css/themes.css" />
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
 
     <link
@@ -275,7 +284,6 @@
           <a class="other" style="left: 313px; top: 32px" href="projects.html">Projects</a>
           <a class="other" style="left: 416px; top: 32px" href="webdev.html">Webdev</a>
         </nav>
-        <div class="limb">
         <h2
           class="branch"
           style="left: 574px; top: 137px; --tone: var(--tone-0)"
@@ -358,8 +366,6 @@
           href="https://pollencount.eu/munich-de"
         ><span class="ico" aria-hidden="true"><i class="fa-solid fa-plant-wilt"></i></span
           ><span class="lbl">Pollen Count</span></a>
-        </div>
-        <div class="limb">
         <h2
           class="branch"
           style="left: 1093px; top: 165px; --tone: var(--tone-4)"
@@ -472,8 +478,6 @@
           href="https://www.immobilienscout24.de/savedsearch/myscout/manage/"
         ><span class="ico" aria-hidden="true"><i class="fa-solid fa-house"></i></span
           ><span class="lbl">Immo</span></a>
-        </div>
-        <div class="limb">
         <h2
           class="branch"
           style="left: 346px; top: 748px; --tone: var(--tone-8)"
@@ -532,8 +536,6 @@
           href="https://stellaris.paradoxwikis.com/Stellaris_Wiki"
         ><span class="ico" aria-hidden="true"><i class="fa-regular fa-hand-spock"></i></span
           ><span class="lbl">Stellaris wiki</span></a>
-        </div>
-        <div class="limb">
         <h2
           class="branch"
           style="left: 883px; top: 779px; --tone: var(--tone-3)"
@@ -598,8 +600,6 @@
           href="https://hanzicraft.com/"
         ><span class="ico" aria-hidden="true"><b>学</b></span
           ><span class="lbl">Hanzicraft</span></a>
-        </div>
-        <div class="limb">
         <h2
           class="branch"
           style="left: 1457px; top: 747px; --tone: var(--tone-7)"
@@ -670,34 +670,1652 @@
           href="https://term.primamateria.ddns.net/"
         ><span class="ico" aria-hidden="true"><i class="fa-solid fa-terminal"></i></span
           ><span class="lbl">Term</span></a>
+      </div>
+    </div>
+
+    <!--
+      The layout the startpages had before the map: the columns exactly as they
+      are written in the configuration, in a base16 theme. Hidden unless picked.
+    -->
+    <div class="classic">
+      <div class="page">
+        <div class="column">
+          
+<div class="category">
+  <h2>Tools</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-robot"></i></div>
+    <div class="lbl">
+      <a href="https://chat.openai.com/">ChatGPT</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-envelope"></i></div>
+    <div class="lbl">
+      <a href="https://mail.google.com/mail/u/0/#inbox">Gmail</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-envelope"></i></div>
+    <div class="lbl">
+      <a href="https://mail.protonmail.com/inbox/">ProtonMail</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-calendar-days"></i></div>
+    <div class="lbl">
+      <a href="https://calendar.google.com/calendar/r/week">Calendar</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-google-drive"></i></div>
+    <div class="lbl">
+      <a href="https://drive.google.com/drive/u/0/my-drive">Drive</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-whatsapp"></i></div>
+    <div class="lbl">
+      <a href="https://web.whatsapp.com/">WhatsApp</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-brands fa-wikipedia-w"></i></div>
+    <div class="lbl">
+      <a href="https://www.wikipedia.org/">Wikipedia</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-spell-check"></i></div>
+    <div class="lbl">
+      <a href="https://www.wortbedeutung.info/">Wortbedeutung</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-language"></i></div>
+    <div class="lbl">
+      <a href="https://translate.google.com/">Translate</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-mountain"></i></div>
+    <div class="lbl">
+      <a href="https://www.outdooractive.com/de/">Outdoor Active</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-map-marker"></i></div>
+    <div class="lbl">
+      <a href="https://www.google.com/maps">Maps</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-cloud"></i></div>
+    <div class="lbl">
+      <a href="https://www.yr.no/en/forecast/daily-table/2-2867714/Germany/Bavaria/Upper%20Bavaria/Munich">Weather</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-plant-wilt"></i></div>
+    <div class="lbl">
+      <a href="https://pollencount.eu/munich-de">Pollen Count</a>
+    </div>
+  </div>
+</div>
+
+        </div>
+        <div class="column">
+          
+<div class="category">
+  <h2>Administration</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-piggy-bank"></i></div>
+    <div class="lbl">
+      <a href="https://www.sskm.de/de/home.html">Stadtsparkasse</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-paypal"></i></div>
+    <div class="lbl">
+      <a href="https://www.paypal.com/signin?country.x=DE&locale.x=de_DE">Paypal</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-coins"></i></div>
+    <div class="lbl">
+      <a href="https://www.elster.de/">Elster</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-bolt"></i></div>
+    <div class="lbl">
+      <a href="https://meine.swm.de/iss/ui/#/acc/login">SWM</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-bolt"></i></div>
+    <div class="lbl">
+      <a href="https://www.bayernwerk-netz.de">Bayernwerk Netz</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-network-wired"></i></div>
+    <div class="lbl">
+      <a href="http://192.168.2.1/">Speedport</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-chart-bar"></i></div>
+    <div class="lbl">
+      <a href="https://analytics.google.com/analytics/web/?authuser=0#/p381336193/reports/intelligenthome">Blog Analytics</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-mobile-screen-button"></i></div>
+    <div class="lbl">
+      <a href="https://www.simplytel.de/">Simplytel</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-medkit"></i></div>
+    <div class="lbl">
+      <a href="https://www.tk.de/techniker/meine-tk-2000008">Technische Krankenkasse</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-donate"></i></div>
+    <div class="lbl">
+      <a href="https://www.generali.sk/kz/login.jsp">Generali.sk</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-chess-rook"></i></div>
+    <div class="lbl">
+      <a href="https://www.mzv.sk/web/gkmnichov">Generalny konzulat</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-film"></i></div>
+    <div class="lbl">
+      <a href="https://www.cinema-muenchen.com/">Cinema Munich</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-masks-theater"></i></div>
+    <div class="lbl">
+      <a href="https://www.schauburg.net/de/spielplan">Schauburg</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-tint"></i></div>
+    <div class="lbl">
+      <a href="https://www.benzinpreis-aktuell.de/#here">Benzinpreis</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-subway"></i></div>
+    <div class="lbl">
+      <a href="https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Netzplaene/2018_MVVnetz_Final_S_U_R_T_screen.pdf">MVV Schnellbahnnetz</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-subway"></i></div>
+    <div class="lbl">
+      <a href="https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Tarifplaene/TARIFPLAN_Innenraum_2018.PDF">MVV Tarifplan Innenraum</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-subway"></i></div>
+    <div class="lbl">
+      <a href="https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Tarifplaene/TARIFPLAN_Gesamtnetz_2018.PDF">MVV Tarifplan Gesamtnetz</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-house"></i></div>
+    <div class="lbl">
+      <a href="https://www.immobilienscout24.de/savedsearch/myscout/manage/">Immo</a>
+    </div>
+  </div>
+</div>
+
+        </div>
+        <div class="column">
+          
+<div class="category">
+  <h2>Digest</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-brands fa-octopus-deploy"></i></div>
+    <div class="lbl">
+      <a href="https://primamateria.github.io/blog/">PrimaMateria</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-grin-squint-tears"></i></div>
+    <div class="lbl">
+      <a href="https://thecodinglove.com/">Coding Love</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-poop"></i></div>
+    <div class="lbl">
+      <a href="https://www.lotto.de/login">Lotto</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="http://xtrance.info/new/?">SK Ebooks</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-image"></i></div>
+    <div class="lbl">
+      <a href="https://wallhaven.cc/search?categories=100&purity=100&atleast=2560x1440&topRange=1M&sorting=toplist&order=desc&page=2">wallhaven</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-female"></i></div>
+    <div class="lbl">
+      <a href="http://fitgirl-repacks.site/">FitG</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-steam"></i></div>
+    <div class="lbl">
+      <a href="https://www.protondb.com/explore">ProtonDB</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-fort-awesome"></i></div>
+    <div class="lbl">
+      <a href="https://www.humblebundle.com/">Humble Bundle</a>
+    </div>
+    <div class="ico"><i class="fa-regular fa-hand-spock"></i></div>
+    <div class="lbl">
+      <a href="https://stellaris.paradoxwikis.com/Stellaris_Wiki">Stellaris wiki</a>
+    </div>
+  </div>
+</div>
+
+        </div>
+        <div class="column">
+          
+<div class="category">
+  <h2>Digest</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-brands fa-youtube"></i></div>
+    <div class="lbl">
+      <a href="http://youtube.com">YouTube</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-youtube"></i></div>
+    <div class="lbl">
+      <a href="https://music.youtube.com">YouTube Music</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-youtube"></i></div>
+    <div class="lbl">
+      <a href="https://www.youtube.com/playlist?list=PLjDqZb1FVlst1XPXongf5UD02yU9Md-ot">YouTube Ambients</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-reddit"></i></div>
+    <div class="lbl">
+      <a href="http://reddit.com">Reddit</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-mixcloud"></i></div>
+    <div class="lbl">
+      <a href="https://www.mixcloud.com/">Mixcloud</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-goodreads-g"></i></div>
+    <div class="lbl">
+      <a href="https://www.goodreads.com/review/list/50681851">Goodreads</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-dice-d20"></i></div>
+    <div class="lbl">
+      <a href="https://www.igdb.com/users/prima-materia/lists/primamaterias-completed-titles?page=1&per_page=100">IGDB completed</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-linkedin-in"></i></div>
+    <div class="lbl">
+      <a href="https://www.linkedin.com/feed/">Linkedin</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-graduation-cap"></i></div>
+    <div class="lbl">
+      <a href="https://www.duolingo.com/learn">Duolingo</a>
+    </div>
+    <div class="ico"><b>学</b></div>
+    <div class="lbl">
+      <a href="https://hanzicraft.com/">Hanzicraft</a>
+    </div>
+  </div>
+</div>
+
+        </div>
+        <div class="column">
+          
+<div class="category">
+  <h2>Homeserver</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-gauge-high"></i></div>
+    <div class="lbl">
+      <a href="http://192.168.2.67:8080/dashboard/#/">Traefik</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-rss"></i></div>
+    <div class="lbl">
+      <a href="https://freshrss.primamateria.ddns.net">FreshRSS</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-comments"></i></div>
+    <div class="lbl">
+      <a href="https://element.primamateria.ddns.net/">Element</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-apple-whole"></i></div>
+    <div class="lbl">
+      <a href="https://apps.primamateria.ddns.net/">Apps</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-box"></i></div>
+    <div class="lbl">
+      <a href="https://dhlpdfcleaner.primamateria.ddns.net/">DHL PDF cleaner</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-user-group"></i></div>
+    <div class="lbl">
+      <a href="https://monica.primamateria.ddns.net/dashboard">Monica</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-bookmark"></i></div>
+    <div class="lbl">
+      <a href="https://karakeep.primamateria.ddns.net">karakeep</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-meteor"></i></div>
+    <div class="lbl">
+      <a href="https://suwayomi.primamateria.ddns.net/">Suwayomi</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://books.primamateria.ddns.net/">Bookorbit</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-tablet"></i></div>
+    <div class="lbl">
+      <a href="https://calibre.primamateria.ddns.net/">Calibre</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-terminal"></i></div>
+    <div class="lbl">
+      <a href="https://term.primamateria.ddns.net/">Term</a>
+    </div>
+  </div>
+</div>
+
         </div>
       </div>
     </div>
 
-    <button class="mode" type="button" aria-pressed="false">Columns</button>
+    <!--
+      Classic again, but five columns wide: the two pages before this one, this
+      page, and the two pages after it. Each of them flows its categories left to
+      right into as many tracks as its width holds. The pages form a ring, so the first page's
+      previous is the last and the last page's next is the first.
+    -->
+    <div class="triptych">
+      
+<aside class="side edge">
+  <a class="side-title" href="projects.html">Projects</a>
+  <div class="grid">
+    
+<div class="category">
+  <h2>Access</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-plane"></i></div>
+    <div class="lbl">
+      <a href="https://access-stable.finapi-general-staging.finapi.net/#overview">Access | Staging Stable</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-rocket"></i></div>
+    <div class="lbl">
+      <a href="https://release-staging.finapi.io/#overview">Access | Release Staging</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>WF</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-brands fa-confluence"></i></div>
+    <div class="lbl">
+      <a href="https://teaminvest.jira.com/wiki/spaces/FWF/overview?homepageId=1487503628">Confluence</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-flask"></i></div>
+    <div class="lbl">
+      <a href="https://dev-web-form-test-bench.pages.finapi.ghe.com/">Test bench</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-brands fa-bitbucket"></i></div>
+    <div class="lbl">
+      <a href="https://bitbucket.org/teaminvest/web-form-ui/pull-requests/">UI | Bitbucket</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-jenkins"></i></div>
+    <div class="lbl">
+      <a href="https://jenkins.dev.finapi.net/job/web-form-ui/">UI | Jenkins</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-brands fa-bitbucket"></i></div>
+    <div class="lbl">
+      <a href="https://bitbucket.org/teaminvest/web-form-ui-2_1/pull-requests/">UI 2.1 | Bitbucket</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-jenkins"></i></div>
+    <div class="lbl">
+      <a href="https://jenkins.dev.finapi.net/job/web-form-ui-2_1/">UI 2.1 | Jenkins</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-regular fa-paper-plane"></i></div>
+    <div class="lbl">
+      <a href="https://webform-staging.finapi.io/f2406563-6c0d-4b84-90e4-be43304d6e42">Service | Customer Demo</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-plane"></i></div>
+    <div class="lbl">
+      <a href="https://webform-staging.finapi.io/">Service | Staging</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-rocket"></i></div>
+    <div class="lbl">
+      <a href="https://webform-release-staging.finapi.io/">Service | Release Staging</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>WFL</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-brands fa-bitbucket"></i></div>
+    <div class="lbl">
+      <a href="https://bitbucket.org/teaminvest/web-form-loader/pull-requests/">WFL | Bitbucket</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-jenkins"></i></div>
+    <div class="lbl">
+      <a href="https://jenkins.dev.finapi.net/job/WebForm2_Loader/">WFL | Jenkins</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://webform-dist.finapi.io/latest/docs/index.html">WFL | Typedocs</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>CD</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-brands fa-confluence"></i></div>
+    <div class="lbl">
+      <a href="https://finapi.jira.com/wiki/spaces/CD/overview?homepageId=3750265570">Confluence</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-brands fa-bitbucket"></i></div>
+    <div class="lbl">
+      <a href="https://bitbucket.org/teaminvest/finapi-customer-dashboard-ui/pull-requests/">UI | Bitbucket</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-jenkins"></i></div>
+    <div class="lbl">
+      <a href="https://jenkins.dev.finapi.net/job/finapi-customerdashboard-ui/">UI | Jenkins</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-jenkins"></i></div>
+    <div class="lbl">
+      <a href="https://jenkins.dev.finapi.net/job/finapi-customerdashboard-ui-update-screenshots/">UI | Jenkins Screenshots</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-plane"></i></div>
+    <div class="lbl">
+      <a href="https://customerdashboard-ui-finapi-general-staging.finapi.io/">UI | Staging</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-rocket"></i></div>
+    <div class="lbl">
+      <a href="https://customerdashboard-ui-finapi-general-release-staging.finapi.io/">UI | Release Staging</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-brands fa-bitbucket"></i></div>
+    <div class="lbl">
+      <a href="https://bitbucket.org/teaminvest/finapi-customer-dashboard-service/src/main/">Service | Bitbucket</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-plane"></i></div>
+    <div class="lbl">
+      <a href="https://customerdashboard-finapi-general-staging.finapi.io/">Service | Staging</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>FDS</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-brands fa-bitbucket"></i></div>
+    <div class="lbl">
+      <a href="https://bitbucket.org/teaminvest/finapi-design-system/pull-requests/">FDS | Bitbucket</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-jenkins"></i></div>
+    <div class="lbl">
+      <a href="https://jenkins.dev.finapi.net/job/finapi-design-system/">FDS | Jenkins</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-rocket"></i></div>
+    <div class="lbl">
+      <a href="https://design-system-finapi-general-release-staging.finapi.io/">FDS | Release Staging</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>FWL</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-brands fa-bitbucket"></i></div>
+    <div class="lbl">
+      <a href="https://bitbucket.org/teaminvest/finapi-widget-library/pull-requests/">FWL | Bitbucket</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-jenkins"></i></div>
+    <div class="lbl">
+      <a href="https://jenkins.dev.finapi.net/job/finapi-widget-library/">FWL | Jenkins</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-plane"></i></div>
+    <div class="lbl">
+      <a href="https://widget-library.finapi-general-staging.finapi.net/docs/index.html?path=/story/girocheck-examples--interactive&globals=clientId:f0907acc-2987-48a1-9e1b-fb0a4e538e37;clientSecret:d9366968-3610-4f78-a162-0f8eccff9b6e">FWL | Staging</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-plane"></i></div>
+    <div class="lbl">
+      <a href="https://di-processctl.finapi-general-staging.finapi.net/api-docs/index.html">Processctl | Staging</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-plane"></i></div>
+    <div class="lbl">
+      <a href="https://di-solutions-finapi-general-staging.finapi.io">Solutions | Staging</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-plane"></i></div>
+    <div class="lbl">
+      <a href="https://admin-di-solutions.finapi-general-staging.finapi.net/">Solutions Admin | Staging</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>FJSL</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-brands fa-bitbucket"></i></div>
+    <div class="lbl">
+      <a href="https://bitbucket.org/teaminvest/finapi-js-loader/pull-requests/">FJSL | Bitbucket</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-jenkins"></i></div>
+    <div class="lbl">
+      <a href="https://jenkins.dev.finapi.net/job/finapi-js-loader/">FJSL | Jenkins</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://js-loader-finapi-general-staging.finapi.io/docs/">FJSL | Typedocs</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>FJSSR</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-brands fa-bitbucket"></i></div>
+    <div class="lbl">
+      <a href="https://bitbucket.org/teaminvest/finapi-js-static-resources/pull-requests/">FJSSR | Bitbucket</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-jenkins"></i></div>
+    <div class="lbl">
+      <a href="https://jenkins.dev.finapi.net/job/finapi-js-static-resources/">FJSSR | Jenkins</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-plane"></i></div>
+    <div class="lbl">
+      <a href="https://js-static-resources-finapi-general-staging.finapi.io/">FJSSR | Staging</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>FHP</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-brands fa-bitbucket"></i></div>
+    <div class="lbl">
+      <a href="https://bitbucket.org/teaminvest/finapi-hostpages/pull-requests/">FHP | Bitbucket</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-jenkins"></i></div>
+    <div class="lbl">
+      <a href="https://jenkins.dev.finapi.net/job/finapi-hostpages/">FHP | Jenkins</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-plane"></i></div>
+    <div class="lbl">
+      <a href="https://di-processctl.finapi-general-staging.finapi.net/api/v1/processes/6c14ee79-b936-40f7-a70e-82aadd1bca55/link">FHP | Finde Staging</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-plane"></i></div>
+    <div class="lbl">
+      <a href="https://di-processctl-finapi-general-staging.finapi.io/api/v1/processes/3155a272-695e-4464-8f6f-51f1a653b4ee/link">FHP | Staging</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-plane"></i></div>
+    <div class="lbl">
+      <a href="https://di-processctl-finapi-general-staging.finapi.io/api/v1/processes/bb8e675d-ee9d-4704-9241-d4826c20573c/link">FHP | Staging VRH</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-rocket"></i></div>
+    <div class="lbl">
+      <a href="https://di-processctl-finapi-general-release-staging.finapi.io/api/v1/processes/3155a272-695e-4464-8f6f-51f1a653b4ee/link">FHP | Release Staging</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-rocket"></i></div>
+    <div class="lbl">
+      <a href="https://di-processctl-finapi-general-release-staging.finapi.io/api/v1/processes/bb8e675d-ee9d-4704-9241-d4826c20573c/link">FHP | Release Staging VRH</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-satellite"></i></div>
+    <div class="lbl">
+      <a href="https://di-processctl-finapi-general-sandbox.finapi.io/api/v1/processes/441cdae9-deb3-44a2-8e64-01a0ecd8f902/link">FHP | Sandbox</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-star"></i></div>
+    <div class="lbl">
+      <a href="https://di-processctl-finapi-general-live.finapi.io/api/v1/processes/0ee84947-cc5d-11ea-88bf-06bdc5a6b3da/link">FHP | Live</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>OP</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-brands fa-bitbucket"></i></div>
+    <div class="lbl">
+      <a href="https://bitbucket.org/teaminvest/finapi-orderprocess-ui/pull-requests/">Bitbucket</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-jenkins"></i></div>
+    <div class="lbl">
+      <a href="https://jenkins.dev.finapi.net/job/finapi-orderprocess-ui/">Jenkins</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-plane"></i></div>
+    <div class="lbl">
+      <a href="https://orderprocess-ui-finapi-general-staging.itops.finapi.net/">Staging</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-plane"></i></div>
+    <div class="lbl">
+      <a href="https://orderprocess.finapi-general-staging.finapi.net/api-docs/index.html#post-/orders">Service | Staging</a>
+    </div>
+  </div>
+</div>
+
+  </div>
+</aside>
+
+      
+<aside class="side prev">
+  <a class="side-title" href="webdev.html">Webdev</a>
+  <div class="grid">
+    
+<div class="category">
+  <h2>Design</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-brands fa-pagelines"></i></div>
+    <div class="lbl">
+      <a href="https://dribbble.com/shots/popular/web-design">Dribble</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-pencil"></i></div>
+    <div class="lbl">
+      <a href="https://design.penpot.app">Penpot</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-icons"></i></div>
+    <div class="lbl">
+      <a href="https://fonts.google.com/icons">Material Design Icons</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-font"></i></div>
+    <div class="lbl">
+      <a href="https://fonts.google.com/">Google Fonts</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-laptop"></i></div>
+    <div class="lbl">
+      <a href="https://deviceshots.com/app">Device shots</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-water"></i></div>
+    <div class="lbl">
+      <a href="https://getwaves.io/">Get Waves</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-pen"></i></div>
+    <div class="lbl">
+      <a href="https://excalidraw.com">Excalidraw</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>Management</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-user-tie"></i></div>
+    <div class="lbl">
+      <a href="https://www.fiverr.com/users/prima_materia/seller_dashboard">Fiverr</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-list-check"></i></div>
+    <div class="lbl">
+      <a href="https://app.worklenz.com/worklenz/home">Worklenz</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>Code</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-cube"></i></div>
+    <div class="lbl">
+      <a href="https://ui.shadcn.com/">Shadcn</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-cube"></i></div>
+    <div class="lbl">
+      <a href="https://vite.dev/guide/">Vite</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-cube"></i></div>
+    <div class="lbl">
+      <a href="https://github.com/prettier/eslint-plugin-prettier">eslint plugin prettier</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-cube"></i></div>
+    <div class="lbl">
+      <a href="https://docs.medusajs.com/learn">medusajs</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-cube"></i></div>
+    <div class="lbl">
+      <a href="https://nextjs.org/docs">nextjs</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-cube"></i></div>
+    <div class="lbl">
+      <a href="https://tailwindcss.com/docs">tailwindcss</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-cube"></i></div>
+    <div class="lbl">
+      <a href="https://daisyui.com/components/">daisyui</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-cube"></i></div>
+    <div class="lbl">
+      <a href="https://docs.fontawesome.com/web/use-with/react">fontawesome reactg</a>
+    </div>
+  </div>
+</div>
+
+  </div>
+</aside>
+
+      <main class="center">
+        <h1>Home</h1>
+        <div class="grid">
+          
+<div class="category">
+  <h2>Tools</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-robot"></i></div>
+    <div class="lbl">
+      <a href="https://chat.openai.com/">ChatGPT</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-envelope"></i></div>
+    <div class="lbl">
+      <a href="https://mail.google.com/mail/u/0/#inbox">Gmail</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-envelope"></i></div>
+    <div class="lbl">
+      <a href="https://mail.protonmail.com/inbox/">ProtonMail</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-calendar-days"></i></div>
+    <div class="lbl">
+      <a href="https://calendar.google.com/calendar/r/week">Calendar</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-google-drive"></i></div>
+    <div class="lbl">
+      <a href="https://drive.google.com/drive/u/0/my-drive">Drive</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-whatsapp"></i></div>
+    <div class="lbl">
+      <a href="https://web.whatsapp.com/">WhatsApp</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-brands fa-wikipedia-w"></i></div>
+    <div class="lbl">
+      <a href="https://www.wikipedia.org/">Wikipedia</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-spell-check"></i></div>
+    <div class="lbl">
+      <a href="https://www.wortbedeutung.info/">Wortbedeutung</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-language"></i></div>
+    <div class="lbl">
+      <a href="https://translate.google.com/">Translate</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-mountain"></i></div>
+    <div class="lbl">
+      <a href="https://www.outdooractive.com/de/">Outdoor Active</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-map-marker"></i></div>
+    <div class="lbl">
+      <a href="https://www.google.com/maps">Maps</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-cloud"></i></div>
+    <div class="lbl">
+      <a href="https://www.yr.no/en/forecast/daily-table/2-2867714/Germany/Bavaria/Upper%20Bavaria/Munich">Weather</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-plant-wilt"></i></div>
+    <div class="lbl">
+      <a href="https://pollencount.eu/munich-de">Pollen Count</a>
+    </div>
+  </div>
+</div>
+
+          
+<div class="category">
+  <h2>Administration</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-piggy-bank"></i></div>
+    <div class="lbl">
+      <a href="https://www.sskm.de/de/home.html">Stadtsparkasse</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-paypal"></i></div>
+    <div class="lbl">
+      <a href="https://www.paypal.com/signin?country.x=DE&locale.x=de_DE">Paypal</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-coins"></i></div>
+    <div class="lbl">
+      <a href="https://www.elster.de/">Elster</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-bolt"></i></div>
+    <div class="lbl">
+      <a href="https://meine.swm.de/iss/ui/#/acc/login">SWM</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-bolt"></i></div>
+    <div class="lbl">
+      <a href="https://www.bayernwerk-netz.de">Bayernwerk Netz</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-network-wired"></i></div>
+    <div class="lbl">
+      <a href="http://192.168.2.1/">Speedport</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-chart-bar"></i></div>
+    <div class="lbl">
+      <a href="https://analytics.google.com/analytics/web/?authuser=0#/p381336193/reports/intelligenthome">Blog Analytics</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-mobile-screen-button"></i></div>
+    <div class="lbl">
+      <a href="https://www.simplytel.de/">Simplytel</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-medkit"></i></div>
+    <div class="lbl">
+      <a href="https://www.tk.de/techniker/meine-tk-2000008">Technische Krankenkasse</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-donate"></i></div>
+    <div class="lbl">
+      <a href="https://www.generali.sk/kz/login.jsp">Generali.sk</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-chess-rook"></i></div>
+    <div class="lbl">
+      <a href="https://www.mzv.sk/web/gkmnichov">Generalny konzulat</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-film"></i></div>
+    <div class="lbl">
+      <a href="https://www.cinema-muenchen.com/">Cinema Munich</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-masks-theater"></i></div>
+    <div class="lbl">
+      <a href="https://www.schauburg.net/de/spielplan">Schauburg</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-tint"></i></div>
+    <div class="lbl">
+      <a href="https://www.benzinpreis-aktuell.de/#here">Benzinpreis</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-subway"></i></div>
+    <div class="lbl">
+      <a href="https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Netzplaene/2018_MVVnetz_Final_S_U_R_T_screen.pdf">MVV Schnellbahnnetz</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-subway"></i></div>
+    <div class="lbl">
+      <a href="https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Tarifplaene/TARIFPLAN_Innenraum_2018.PDF">MVV Tarifplan Innenraum</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-subway"></i></div>
+    <div class="lbl">
+      <a href="https://www.mvv-muenchen.de/fileadmin/mediapool/03-Plaene_Bahnhoefe/Tarifplaene/TARIFPLAN_Gesamtnetz_2018.PDF">MVV Tarifplan Gesamtnetz</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-house"></i></div>
+    <div class="lbl">
+      <a href="https://www.immobilienscout24.de/savedsearch/myscout/manage/">Immo</a>
+    </div>
+  </div>
+</div>
+
+          
+<div class="category">
+  <h2>Digest</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-brands fa-octopus-deploy"></i></div>
+    <div class="lbl">
+      <a href="https://primamateria.github.io/blog/">PrimaMateria</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-grin-squint-tears"></i></div>
+    <div class="lbl">
+      <a href="https://thecodinglove.com/">Coding Love</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-poop"></i></div>
+    <div class="lbl">
+      <a href="https://www.lotto.de/login">Lotto</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="http://xtrance.info/new/?">SK Ebooks</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-image"></i></div>
+    <div class="lbl">
+      <a href="https://wallhaven.cc/search?categories=100&purity=100&atleast=2560x1440&topRange=1M&sorting=toplist&order=desc&page=2">wallhaven</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-female"></i></div>
+    <div class="lbl">
+      <a href="http://fitgirl-repacks.site/">FitG</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-steam"></i></div>
+    <div class="lbl">
+      <a href="https://www.protondb.com/explore">ProtonDB</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-fort-awesome"></i></div>
+    <div class="lbl">
+      <a href="https://www.humblebundle.com/">Humble Bundle</a>
+    </div>
+    <div class="ico"><i class="fa-regular fa-hand-spock"></i></div>
+    <div class="lbl">
+      <a href="https://stellaris.paradoxwikis.com/Stellaris_Wiki">Stellaris wiki</a>
+    </div>
+  </div>
+</div>
+
+          
+<div class="category">
+  <h2>Digest</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-brands fa-youtube"></i></div>
+    <div class="lbl">
+      <a href="http://youtube.com">YouTube</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-youtube"></i></div>
+    <div class="lbl">
+      <a href="https://music.youtube.com">YouTube Music</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-youtube"></i></div>
+    <div class="lbl">
+      <a href="https://www.youtube.com/playlist?list=PLjDqZb1FVlst1XPXongf5UD02yU9Md-ot">YouTube Ambients</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-reddit"></i></div>
+    <div class="lbl">
+      <a href="http://reddit.com">Reddit</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-mixcloud"></i></div>
+    <div class="lbl">
+      <a href="https://www.mixcloud.com/">Mixcloud</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-goodreads-g"></i></div>
+    <div class="lbl">
+      <a href="https://www.goodreads.com/review/list/50681851">Goodreads</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-dice-d20"></i></div>
+    <div class="lbl">
+      <a href="https://www.igdb.com/users/prima-materia/lists/primamaterias-completed-titles?page=1&per_page=100">IGDB completed</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-linkedin-in"></i></div>
+    <div class="lbl">
+      <a href="https://www.linkedin.com/feed/">Linkedin</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-graduation-cap"></i></div>
+    <div class="lbl">
+      <a href="https://www.duolingo.com/learn">Duolingo</a>
+    </div>
+    <div class="ico"><b>学</b></div>
+    <div class="lbl">
+      <a href="https://hanzicraft.com/">Hanzicraft</a>
+    </div>
+  </div>
+</div>
+
+          
+<div class="category">
+  <h2>Homeserver</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-gauge-high"></i></div>
+    <div class="lbl">
+      <a href="http://192.168.2.67:8080/dashboard/#/">Traefik</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-rss"></i></div>
+    <div class="lbl">
+      <a href="https://freshrss.primamateria.ddns.net">FreshRSS</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-comments"></i></div>
+    <div class="lbl">
+      <a href="https://element.primamateria.ddns.net/">Element</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-apple-whole"></i></div>
+    <div class="lbl">
+      <a href="https://apps.primamateria.ddns.net/">Apps</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-box"></i></div>
+    <div class="lbl">
+      <a href="https://dhlpdfcleaner.primamateria.ddns.net/">DHL PDF cleaner</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-user-group"></i></div>
+    <div class="lbl">
+      <a href="https://monica.primamateria.ddns.net/dashboard">Monica</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-bookmark"></i></div>
+    <div class="lbl">
+      <a href="https://karakeep.primamateria.ddns.net">karakeep</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-meteor"></i></div>
+    <div class="lbl">
+      <a href="https://suwayomi.primamateria.ddns.net/">Suwayomi</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://books.primamateria.ddns.net/">Bookorbit</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-tablet"></i></div>
+    <div class="lbl">
+      <a href="https://calibre.primamateria.ddns.net/">Calibre</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-terminal"></i></div>
+    <div class="lbl">
+      <a href="https://term.primamateria.ddns.net/">Term</a>
+    </div>
+  </div>
+</div>
+
+        </div>
+      </main>
+      
+<aside class="side next">
+  <a class="side-title" href="development.html">Development</a>
+  <div class="grid">
+    
+<div class="category">
+  <h2>Repos</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-brands fa-github"></i></div>
+    <div class="lbl">
+      <a href="https://github.com/PrimaMateria">Github</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-gitlab"></i></div>
+    <div class="lbl">
+      <a href="https://gitlab.com">Gitlab</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-bitbucket"></i></div>
+    <div class="lbl">
+      <a href="https://bitbucket.org/Prima_Materia/">Bitbucket</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-industry"></i></div>
+    <div class="lbl">
+      <a href="https://www.npmjs.com/">npm</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>Tools</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-apple-whole"></i></div>
+    <div class="lbl">
+      <a href="https://pomofocus.io/">Pomodoro</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-wrench"></i></div>
+    <div class="lbl">
+      <a href="https://meyerweb.com/eric/tools/dencoder/">URL Decoder&#x2F;Encoder</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-edit"></i></div>
+    <div class="lbl">
+      <a href="http://jsbeautifier.org/">JS Beautifier</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-edit"></i></div>
+    <div class="lbl">
+      <a href="http://www.webtoolkitonline.com/xml-formatter.html">XML Formatter</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-icons"></i></div>
+    <div class="lbl">
+      <a href="https://mui.com/material-ui/material-icons/">MUI icons</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-gauge"></i></div>
+    <div class="lbl">
+      <a href="https://pagespeed.web.dev/">Page Speed</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-gauge"></i></div>
+    <div class="lbl">
+      <a href="https://www.webpagetest.org/">Web Page Test</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-paragraph"></i></div>
+    <div class="lbl">
+      <a href="https://thetexttool.com/">Text tool</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>Generators</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-eyedropper"></i></div>
+    <div class="lbl">
+      <a href="https://fffuel.co/pppalette/">Color generator</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-swatchbook"></i></div>
+    <div class="lbl">
+      <a href="https://hue.tools/modify">hue.tools</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-wrench"></i></div>
+    <div class="lbl">
+      <a href="https://www.uuidgenerator.net/">UUID Generator</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-money-check-alt"></i></div>
+    <div class="lbl">
+      <a href="http://randomiban.com/?country=Germany">IBAN Generator</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-wikipedia-w"></i></div>
+    <div class="lbl">
+      <a href="https://transfonter.org">Webfont Generator</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>Editors</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-edit"></i></div>
+    <div class="lbl">
+      <a href="https://codesandbox.io/">Code Sandbox</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-wrench"></i></div>
+    <div class="lbl">
+      <a href="https://regexr.com/">Regex editor</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-edit"></i></div>
+    <div class="lbl">
+      <a href="https://editor-next.swagger.io/">Swagger Editor</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-edit"></i></div>
+    <div class="lbl">
+      <a href="https://astexplorer.net/">AST Editor</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-edit"></i></div>
+    <div class="lbl">
+      <a href="https://plantuml-editor.kkeisuke.com/">PlantUML Editor</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>Linux</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-brands fa-linux"></i></div>
+    <div class="lbl">
+      <a href="https://wiki.archlinux.org/">Arch Wiki</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-th-large"></i></div>
+    <div class="lbl">
+      <a href="https://i3wm.org/docs/userguide.html">i3 User guide</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-th-large"></i></div>
+    <div class="lbl">
+      <a href="https://vivien.github.io/i3blocks/">i3 Blocks</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-snowflake"></i></div>
+    <div class="lbl">
+      <a href="https://search.nixos.org/packages">NixOS Search</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-snowflake"></i></div>
+    <div class="lbl">
+      <a href="https://nixos.wiki/wiki/Main_Page">NixOS Wiki</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://nixos.org/manual/nix/stable/language/">Nix</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://nixos.org/manual/nixpkgs/stable/">NixpKgs</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-snowflake"></i></div>
+    <div class="lbl">
+      <a href="https://home-manager-options.extranix.com/">Home Manager</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-snowflake"></i></div>
+    <div class="lbl">
+      <a href="https://noogle.dev">Noogle</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>Frameworks</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://v4.mui.com/getting-started/installation/">Material UI 4</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://v5.mui.com/material-ui/getting-started/installation/">Material UI 5</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://mui.com/material-ui/getting-started/">Material UI 6</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://www.typescriptlang.org/docs/handbook/2/everyday-types.html">TypeScript</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://storybook.js.org/docs/react/get-started/introduction">Storybook</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://direflow.io/get-started">Direflow</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://playwright.dev/docs/test-assertions">Playwright</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://jestjs.io/docs/en/getting-started">Jest</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://vitest.dev/guide/">vitest</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://bonigarcia.github.io/selenium-jupiter/#quick-reference">Selenium Jupiter</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://vitejs.dev/guide/">Vite</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://sli.dev/">Slidev</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>React</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://reactjs.org/docs/getting-started.html">React</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://create-react-app.dev/">Create React App</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://react-hook-form.com/get-started/#Quickstart">React Hook Form</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://testing-library.com/docs/react-testing-library/cheatsheet">React Testing Library</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://react-hooks-testing-library.com/">React Hooks Testing Library</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://github.com/testing-library/user-event">React Testing Library - user-events</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://tanstack.com/query/latest/docs/framework/react/overview">Tanstack Query</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://tanstack.com/router/latest/docs/framework/react/overview">Tanstack Router</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://reactrouterdotcom.fly.dev/docs/en/v6/getting-started/overview">React Router DOM</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://react.i18next.com/">React I18next</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>Libs</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://zod.dev/">Zod</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://www.i18next.com/overview/configuration-options">I18next</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://github.com/testing-library/jest-dom">Jest-dom</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://kulshekhar.github.io/ts-jest/user/test-helpers">ts-jest</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://date-fns.org/v2.22.1/docs/Getting-Started">date-fns</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://day.js.org/docs/en/installation/installation">dayjs</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://material-ui-pickers.dev/demo/datepicker">Material UI pickers</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://github.com/pmndrs/zustand">Zustand</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://github.com/ferdikoomen/openapi-typescript-codegen">Openapi TS Codegen</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://casl.js.org/v6/en/guide/intro">CASL</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://nivo.rocks/components/">Nivo</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>Practice</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-keyboard"></i></div>
+    <div class="lbl">
+      <a href="https://www.typelit.io">TypeLit.io</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-hackerrank"></i></div>
+    <div class="lbl">
+      <a href="https://www.hackerrank.com/dashboard">Hackerrank</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>Docs</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-question"></i></div>
+    <div class="lbl">
+      <a href="https://flexboxsheet.com/">Flexbox cheatsheet</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-question"></i></div>
+    <div class="lbl">
+      <a href="https://grid.malven.co/">Grid cheatsheet</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+    <div class="lbl">
+      <a href="https://caniuse.com/">Can I use</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-code"></i></div>
+    <div class="lbl">
+      <a href="https://devdocs.io/">DevDocs</a>
+    </div>
+    <div class="separator"></div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://docs.docker.com/reference/">Docker</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://www.jenkins.io/doc/book/pipeline/syntax/">Jenkinspipeline</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-book"></i></div>
+    <div class="lbl">
+      <a href="https://plantuml.com/">PlantUML</a>
+    </div>
+  </div>
+</div>
+
+  </div>
+</aside>
+
+      
+<aside class="side edge">
+  <a class="side-title" href="work.html">Work</a>
+  <div class="grid">
+    
+<div class="category">
+  <h2>Comms</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-envelope"></i></div>
+    <div class="lbl">
+      <a href="https://outlook.office365.com/mail/inbox/id/AAQkAGNiMTNkOTYxLTViZjktNGM3OS1hOTUzLWM1YzMwZTJhYjgwZQAQANab7fsw2kl7gLf2nU%2F%2B0O4%3D">Outlook</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-slack"></i></div>
+    <div class="lbl">
+      <a href="https://app.slack.com/client/TC2CR89V0/CC2CR8PHQ">Slack</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>Boards</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-brands fa-jira"></i></div>
+    <div class="lbl">
+      <a href="https://finapi.jira.com/jira/people/5f75a51595fe8e00695bb5c3/boards/145">FE Board</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-jira"></i></div>
+    <div class="lbl">
+      <a href="https://finapi.jira.com/jira/software/c/projects/DATAINT/boards/134">DI Board</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-jira"></i></div>
+    <div class="lbl">
+      <a href="https://finapi.jira.com/secure/RapidBoard.jspa?rapidView=136">WF Board</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>Docs</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-brands fa-confluence"></i></div>
+    <div class="lbl">
+      <a href="https://finapi.jira.com/wiki/spaces/Frontend/overview?homepageId=3858399955">FE Confluence</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-table"></i></div>
+    <div class="lbl">
+      <a href="https://teaminvest1.sharepoint.com/:x:/s/produkte/EYxsAT4pXzFCg6mtlCm609MB0Ko9N3EFnEJNQEjW8lLM_g?e=x17SED&nav=MTVfezJFM0E4NjdFLTdFMjUtNEYyNy1CQjM2LUZFQUVDMzcwMDVEQX0">DI Releases</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-table"></i></div>
+    <div class="lbl">
+      <a href="https://finapi.jira.com/wiki/spaces/FWF/pages/3849029135/Web+Form+2.0+Release+Tickets">WF Releases</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>People</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-user"></i></div>
+    <div class="lbl">
+      <a href="https://finapi-gmbh.personio.de/attendance/employee/13548279">Personio</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-calendar"></i></div>
+    <div class="lbl">
+      <a href="https://finapi.jira.com/plugins/servlet/ac/io.tempo.jira/tempo-app#!/reports">Timesheet</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-person-walking-luggage"></i></div>
+    <div class="lbl">
+      <a href="https://finapi.jira.com/wiki/spaces/DI/pages/976060429/Absence+2020+2021+2022">Vacation list</a>
+    </div>
+  </div>
+</div>
+
+    
+<div class="category">
+  <h2>Infra</h2>
+  <div class="rows">
+    <div class="ico"><i class="fa-solid fa-hand-point-right"></i></div>
+    <div class="lbl">
+      <a href="https://finapi.onelogin.com/portal/">OneLogin</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-broadcast-tower"></i></div>
+    <div class="lbl">
+      <a href="https://sonarcloud.io/organizations/finapi/projects">Sonar</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-jenkins"></i></div>
+    <div class="lbl">
+      <a href="https://jenkins.dev.finapi.net/">Jenkins</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-gears"></i></div>
+    <div class="lbl">
+      <a href="https://grafana.itops.finapi.net">Grafana</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-archive"></i></div>
+    <div class="lbl">
+      <a href="https://repo.finapi.io/ui/repos/tree/General/webform-releases">Artifactory</a>
+    </div>
+    <div class="ico"><i class="fa-brands fa-jenkins"></i></div>
+    <div class="lbl">
+      <a href="https://jenkins.itops.finapi.net/job/deploy_staging/build?delay=0sec">Deploy job</a>
+    </div>
+    <div class="ico"><i class="fa-solid fa-unlock"></i></div>
+    <div class="lbl">
+      <a href="https://di-iammiddleware-ui-finapi-general-staging.itops.finapi.net/">IAM Middleware</a>
+    </div>
+  </div>
+</div>
+
+  </div>
+</aside>
+
+    </div>
+
+    <nav class="navigation">
+      <a href="home.html" class="is-here" aria-current="page">Home</a>
+      <a href="development.html">Development</a>
+      <a href="work.html">Work</a>
+      <a href="projects.html">Projects</a>
+      <a href="webdev.html">Webdev</a>
+    </nav>
+
+    <button class="gear" type="button" aria-haspopup="dialog" title="Settings">
+      <i class="fa-solid fa-gear" aria-hidden="true"></i>
+      <span class="sr">Settings</span>
+    </button>
+
+    <dialog class="settings" aria-labelledby="settings-title">
+      <form method="dialog">
+        <h2 id="settings-title">Settings</h2>
+
+        <fieldset>
+          <legend>Layout</legend>
+          <div class="choices">
+            <label><input type="radio" name="view" value="map" /> Map</label>
+            <label><input type="radio" name="view" value="classic" /> Classic</label>
+            <label><input type="radio" name="view" value="triptych" /> Triptych</label>
+          </div>
+        </fieldset>
+
+        <label class="field">
+          <span>Theme</span>
+          <select name="theme">
+            <option value="3024">3024</option>
+            <option value="apathy">Apathy</option>
+            <option value="ashes">Ashes</option>
+            <option value="atelier-cave">Atelier Cave</option>
+            <option value="atelier-dune">Atelier Dune</option>
+            <option value="atelier-estuary">Atelier Estuary</option>
+            <option value="atelier-forest">Atelier Forest</option>
+            <option value="atelier-heath">Atelier Heath</option>
+            <option value="atelier-lakeside">Atelier Lakeside</option>
+            <option value="atelier-plateau">Atelier Plateau</option>
+            <option value="atelier-savanna">Atelier Savanna</option>
+            <option value="atelier-seaside">Atelier Seaside</option>
+            <option value="atelier-sulphurpool">Atelier Sulphurpool</option>
+            <option value="bespin">Bespin</option>
+            <option value="brewer">Brewer</option>
+            <option value="bright">Bright</option>
+            <option value="chalk">Chalk</option>
+            <option value="codeschool">Codeschool</option>
+            <option value="cupcake">Cupcake</option>
+            <option value="darktooth">Darktooth</option>
+            <option value="default-dark">Default Dark</option>
+            <option value="default-light">Default Light</option>
+            <option value="dracula">Dracula</option>
+            <option value="eighties">Eighties</option>
+            <option value="embers">Embers</option>
+            <option value="flat">Flat</option>
+            <option value="github">Github</option>
+            <option value="google-dark">Google Dark</option>
+            <option value="google-light">Google Light</option>
+            <option value="grayscale-dark">Grayscale Dark</option>
+            <option value="grayscale-light">Grayscale Light</option>
+            <option value="green-screen">Green Screen</option>
+            <option value="gruvbox-dark-hard">Gruvbox dark, hard</option>
+            <option value="gruvbox-dark-medium">Gruvbox dark, medium</option>
+            <option value="gruvbox-dark-pale">Gruvbox dark, pale</option>
+            <option value="gruvbox-dark-soft">Gruvbox dark, soft</option>
+            <option value="gruvbox-light-hard">Gruvbox light, hard</option>
+            <option value="gruvbox-light-medium">Gruvbox light, medium</option>
+            <option value="gruvbox-light-soft">Gruvbox light, soft</option>
+            <option value="harmonic16-dark">Harmonic16 Dark</option>
+            <option value="harmonic16-light">Harmonic16 Light</option>
+            <option value="hopscotch">Hopscotch</option>
+            <option value="ir-black">IR Black</option>
+            <option value="isotope">Isotope</option>
+            <option value="london-tube">London Tube</option>
+            <option value="macintosh">Macintosh</option>
+            <option value="marrakesh">Marrakesh</option>
+            <option value="materia">Materia</option>
+            <option value="mexico-light">Mexico Light</option>
+            <option value="mocha">Mocha</option>
+            <option value="monokai">Monokai</option>
+            <option value="nord">Nord</option>
+            <option value="ocean">Ocean</option>
+            <option value="oceanicnext">OceanicNext</option>
+            <option value="onedark">OneDark</option>
+            <option value="paraiso">Paraiso</option>
+            <option value="phd">PhD</option>
+            <option value="pico">Pico</option>
+            <option value="pop">Pop</option>
+            <option value="railscasts">Railscasts</option>
+            <option value="rebecca">Rebecca</option>
+            <option value="seti-ui">Seti UI</option>
+            <option value="shapeshifter">Shapeshifter</option>
+            <option value="solar-flare">Solar Flare</option>
+            <option value="solarized-dark">Solarized Dark</option>
+            <option value="solarized-light">Solarized Light</option>
+            <option value="spacemacs">Spacemacs</option>
+            <option value="summerfruit-dark">Summerfruit Dark</option>
+            <option value="summerfruit-light">Summerfruit Light</option>
+            <option value="tomorrow">Tomorrow</option>
+            <option value="tomorrow-night">Tomorrow Night</option>
+            <option value="twilight">Twilight</option>
+            <option value="unikitty-dark">Unikitty Dark</option>
+            <option value="unikitty-light">Unikitty Light</option>
+            <option value="woodland">Woodland</option>
+          </select>
+          <small class="hint">Themes apply to the classic and triptych layouts.</small>
+        </label>
+
+        <div class="actions">
+          <button type="submit">Done</button>
+        </div>
+      </form>
+    </dialog>
 
     <script>
       (function () {
         var root = document.documentElement,
-          knob = document.querySelector(".mode");
+          gear = document.querySelector(".gear"),
+          dialog = document.querySelector(".settings"),
+          form = dialog.querySelector("form"),
+          theme = form.elements.theme;
 
-        function paint() {
-          var columns = root.classList.contains("as-columns");
-          knob.textContent = columns ? "Map" : "Columns";
-          knob.setAttribute("aria-pressed", columns);
+        function store(key, value) {
+          try {
+            localStorage.setItem(key, value);
+          } catch (e) {}
         }
 
-        paint();
+        function view() {
+          if (root.classList.contains("as-triptych")) return "triptych";
+          if (root.classList.contains("as-classic")) return "classic";
+          return "map";
+        }
 
-        knob.addEventListener("click", function () {
-          var columns = root.classList.toggle("as-columns");
-          try {
-            localStorage.setItem(
-              "startpages-view",
-              columns ? "columns" : "map"
-            );
-          } catch (e) {}
-          paint();
+        function sync() {
+          form.elements.view.value = view();
+          theme.value = root.getAttribute("data-theme") || "gruvbox-dark-hard";
+          // A stored theme that no longer exists matches no option.
+          if (!theme.value) theme.value = "gruvbox-dark-hard";
+          theme.disabled = view() !== "classic" && view() !== "triptych";
+        }
+
+        gear.addEventListener("click", function () {
+          sync();
+          dialog.showModal();
+        });
+
+        // Clicking the backdrop closes it, like Escape does.
+        dialog.addEventListener("click", function (event) {
+          if (event.target === dialog) dialog.close();
+        });
+
+        form.addEventListener("change", function (event) {
+          if (event.target.name === "view") {
+            var picked = event.target.value;
+            root.classList.toggle("as-classic", picked === "classic");
+            root.classList.toggle("as-triptych", picked === "triptych");
+            store("startpages-view", picked);
+          } else if (event.target === theme) {
+            root.setAttribute("data-theme", theme.value);
+            store("startpages-theme", theme.value);
+          }
+          sync();
         });
       })();
     </script>
