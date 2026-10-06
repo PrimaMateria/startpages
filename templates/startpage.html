@@ -1,3 +1,4 @@
+{% import "macros.html" as macros -%}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -21,7 +22,8 @@
         root.className =
           "js" +
           (view === "columns" ? " as-columns" : "") +
-          (view === "classic" ? " as-classic" : "");
+          (view === "classic" ? " as-classic" : "") +
+          (view === "triptych" ? " as-triptych" : "");
         if (theme) root.setAttribute("data-theme", theme);
       })();
     </script>
@@ -53,7 +55,7 @@
 
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Roboto&family=Spline+Sans+Mono:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Spline+Sans+Mono:wght@400;500;600;700&display=swap"
     />
 
     <link rel="stylesheet" type="text/css" href="css/themes.css" />
@@ -151,31 +153,41 @@
         {%- for column in startpage.columns %}
         <div class="column">
           {%- for category in column.categories %}
-          <div class="category">
-            <h2>{{ category.name }}</h2>
-            <div class="rows">
-              {%- for row in category.rows %}
-              {%- if row == "Separator" %}
-              <div class="separator"></div>
-              {%- else %}
-              <div class="ico">{{ row.Link.ico | safe }}</div>
-              <div class="lbl">
-                <a href="{{ row.Link.url | safe }}">{{ row.Link.lbl }}</a>
-              </div>
-              {%- endif %}
-              {%- endfor %}
-            </div>
-          </div>
+          {{ macros::category(category=category) }}
           {%- endfor %}
         </div>
         {%- endfor %}
       </div>
-      <nav class="navigation">
-        {%- for nav in navigation %}
-        <a href="{{ nav.path | safe }}"{% if nav.name == startpage.name %} class="is-here" aria-current="page"{% endif %}>{{ nav.name }}</a>
-        {%- endfor %}
-      </nav>
     </div>
+
+    <!--
+      Classic again, but five columns wide: the two pages before this one, this
+      page, and the two pages after it. Each of them flows its categories left to
+      right into as many tracks as its width holds. The pages form a ring, so the first page's
+      previous is the last and the last page's next is the first.
+    -->
+    <div class="triptych">
+      {{ macros::side(neighbour=prev_far, class="edge") }}
+      {{ macros::side(neighbour=prev, class="prev") }}
+      <main class="center">
+        <h1>{{ startpage.name }}</h1>
+        <div class="grid">
+          {%- for column in startpage.columns %}
+          {%- for category in column.categories %}
+          {{ macros::category(category=category) }}
+          {%- endfor %}
+          {%- endfor %}
+        </div>
+      </main>
+      {{ macros::side(neighbour=next, class="next") }}
+      {{ macros::side(neighbour=next_far, class="edge") }}
+    </div>
+
+    <nav class="navigation">
+      {%- for nav in navigation %}
+      <a href="{{ nav.path | safe }}"{% if nav.name == startpage.name %} class="is-here" aria-current="page"{% endif %}>{{ nav.name }}</a>
+      {%- endfor %}
+    </nav>
 
     <button class="gear" type="button" aria-haspopup="dialog" title="Settings">
       <i class="fa-solid fa-gear" aria-hidden="true"></i>
@@ -192,6 +204,7 @@
             <label><input type="radio" name="view" value="map" /> Map</label>
             <label><input type="radio" name="view" value="columns" /> Columns</label>
             <label><input type="radio" name="view" value="classic" /> Classic</label>
+            <label><input type="radio" name="view" value="triptych" /> Triptych</label>
           </div>
         </fieldset>
 
@@ -202,7 +215,7 @@
             <option value="{{ theme.id }}">{{ theme.name }}</option>
             {%- endfor %}
           </select>
-          <small class="hint">Themes apply to the classic layout.</small>
+          <small class="hint">Themes apply to the classic and triptych layouts.</small>
         </label>
 
         <div class="actions">
@@ -226,6 +239,7 @@
         }
 
         function view() {
+          if (root.classList.contains("as-triptych")) return "triptych";
           if (root.classList.contains("as-classic")) return "classic";
           if (root.classList.contains("as-columns")) return "columns";
           return "map";
@@ -236,7 +250,7 @@
           theme.value = root.getAttribute("data-theme") || "{{ default_theme }}";
           // A stored theme that no longer exists matches no option.
           if (!theme.value) theme.value = "{{ default_theme }}";
-          theme.disabled = view() !== "classic";
+          theme.disabled = view() !== "classic" && view() !== "triptych";
         }
 
         gear.addEventListener("click", function () {
@@ -254,6 +268,7 @@
             var picked = event.target.value;
             root.classList.toggle("as-columns", picked === "columns");
             root.classList.toggle("as-classic", picked === "classic");
+            root.classList.toggle("as-triptych", picked === "triptych");
             store("startpages-view", picked);
           } else if (event.target === theme) {
             root.setAttribute("data-theme", theme.value);

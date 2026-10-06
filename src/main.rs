@@ -46,6 +46,14 @@ struct NavItem {
 /// Startpages in the order they are defined in the configuration.
 type Navigation = Vec<NavItem>;
 
+/// A page one or two before or after the one being rendered, for the
+/// triptych's sides.
+#[derive(Debug, Serialize)]
+struct Neighbour<'a> {
+    path: &'a str,
+    page: &'a Startpage,
+}
+
 static OUT_DIR: &str = "_site";
 static CONFIGURATION: &str = "content/startpages.yaml";
 static COLORSCHEMES: &str = "sass/colorschemes";
@@ -1541,9 +1549,21 @@ fn generate_startpages(
     navigation: &Navigation,
     themes: &[Theme],
 ) -> Result<(), Box<dyn std::error::Error>> {
-    for startpage in startpages {
+    for (index, startpage) in startpages.iter().enumerate() {
+        // The pages form a ring: before the first is the last, after the last is
+        // the first. Navigation is built from the same list, so it lines up.
+        let count = startpages.len();
+        let neighbour = |at: usize| Neighbour {
+            path: &navigation[at].path,
+            page: &startpages[at],
+        };
+
         let mut context = tera::Context::new();
         context.insert("startpage", &startpage);
+        context.insert("prev", &neighbour((index + count - 1) % count));
+        context.insert("next", &neighbour((index + 1) % count));
+        context.insert("prev_far", &neighbour((index + 2 * count - 2) % count));
+        context.insert("next_far", &neighbour((index + 2) % count));
         context.insert("map", &plot(startpage, navigation));
         context.insert("navigation", navigation);
         context.insert("themes", themes);

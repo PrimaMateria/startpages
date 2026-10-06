@@ -318,8 +318,18 @@ site follows them.
   the window holds. Below 900px wide the map always falls back to this.
 - **Classic** - the page as it was before the map: the `columns` exactly as
   `content/startpages.yaml` arranges them, in a base16 colour scheme.
+- **Triptych** (experimental) - classic, in five columns of 12% 18% 40% 18%
+  12%. The middle is this page; either side of it are the previous and next
+  page in small type, and beyond those the pages two away in smaller type
+  still, each with its name as a link to it. Below 1400px wide the outer two
+  go and it is 25% 50% 25%. All of them ignore the configured `columns`:
+  categories fill a grid left to right, with as many per row as fit at a
+  minimum width (210px in the middle, 165px either side of it). The pages at
+  the edges are always a single column. The pages form a ring, so the first
+  page's previous is the last and the last page's next is the first. Below
+  900px wide only the middle is shown.
 
-**Theme** picks the classic layout's colour scheme. Every file in
+**Theme** picks the colour scheme of the classic and triptych layouts. Every file in
 `sass/colorschemes/` is offered; the generator writes them all to
 `css/themes.css` as `--base00`..`--base0F` under a `data-theme` attribute, so
 switching is instant and needs no rebuild. To add one, drop another base16

@@ -1,0 +1,34 @@
+{#- A category as the classic layouts draw it: a heading, then its links in an
+    icon column and a label column, broken by separators. -#}
+{% macro category(category) %}
+<div class="category">
+  <h2>{{ category.name }}</h2>
+  <div class="rows">
+    {%- for row in category.rows %}
+    {%- if row == "Separator" %}
+    <div class="separator"></div>
+    {%- else %}
+    <div class="ico">{{ row.Link.ico | safe }}</div>
+    <div class="lbl">
+      <a href="{{ row.Link.url | safe }}">{{ row.Link.lbl }}</a>
+    </div>
+    {%- endif %}
+    {%- endfor %}
+  </div>
+</div>
+{% endmacro category %}
+
+{#- A neighbouring page in one side column of the triptych: its name links to
+    it, and its categories flow into the column in small type. -#}
+{% macro side(neighbour, class) %}
+<aside class="side {{ class }}">
+  <a class="side-title" href="{{ neighbour.path | safe }}">{{ neighbour.page.name }}</a>
+  <div class="grid">
+    {%- for column in neighbour.page.columns %}
+    {%- for category in column.categories %}
+    {{ self::category(category=category) }}
+    {%- endfor %}
+    {%- endfor %}
+  </div>
+</aside>
+{% endmacro side %}

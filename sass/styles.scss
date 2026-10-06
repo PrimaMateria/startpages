@@ -528,12 +528,20 @@ a {
 // is not compiled in any more - every one is written to css/themes.css as
 // `--base00`..`--base0F` under its own `data-theme`, so it can be switched
 // without a rebuild. Picked at any width, since its grid reflows on its own.
+//
+// The triptych below is the same look in a different frame, so everything that
+// makes a page classic is here once, and either layout switches it on.
 
-.classic {
+.classic,
+.triptych,
+.navigation {
   display: none;
 }
 
-:root.as-classic {
+// Height of the bar of pages along the top, which both layouts start under.
+$bar: 56px;
+
+@mixin classic-ground {
   color-scheme: var(--classic-scheme, dark);
   scrollbar-color: var(--base02) transparent;
 
@@ -560,13 +568,43 @@ a {
     display: none;
   }
 
-  .classic {
-    display: block;
-    padding-top: 5vh;
+  .navigation {
+    display: flex;
+  }
+
+  .gear {
+    top: ($bar - 34px) / 2;
+  }
+
+  .gear,
+  .settings {
+    --panel: var(--base01);
+    --panel-ink: var(--base05);
+    --panel-dim: var(--base04);
+    --panel-line: var(--base02);
+    --panel-accent: var(--base0D);
   }
 }
 
-.classic {
+:root.as-classic {
+  @include classic-ground;
+
+  .classic {
+    display: block;
+    padding-top: calc(#{$bar} + 5vh);
+  }
+}
+
+:root.as-triptych {
+  @include classic-ground;
+
+  .triptych {
+    display: grid;
+  }
+}
+
+.classic,
+.triptych {
   a {
     color: var(--base04);
 
@@ -577,15 +615,6 @@ a {
 
   h2 {
     color: var(--base0A);
-  }
-
-  .page {
-    max-width: 1600px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 40px;
-    margin: 0 auto;
-    padding: 0 40px 72px;
   }
 
   .rows {
@@ -600,21 +629,277 @@ a {
     grid-column: 1 / span 2;
     max-width: 150px;
   }
+}
 
-  .navigation {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 8px;
+.classic .page {
+  max-width: 1600px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 40px;
+  margin: 0 auto;
+  padding: 0 40px 40px;
+}
+
+// A bar across the top, with the pages on the right of it beside the gear - at
+// the top, where the map keeps its own strip of pages. The content starts under
+// the bar rather than scrolling beneath it, and the gear is brought down onto
+// the bar's centre line.
+.navigation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  // Above the columns, whose shadows would otherwise fall across it.
+  z-index: 3;
+  width: 100%;
+  height: $bar;
+  // Clear of the gear: its inset, its width and a gap.
+  padding: 0 68px 0 16px;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 28px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--base02);
+  background: var(--base00);
+  font-size: 15px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  a {
+    color: var(--base04);
+
+    &:hover {
+      color: var(--base06);
+    }
+  }
+
+  .is-here {
+    color: var(--base0A);
+  }
+}
+
+// --- Triptych -------------------------------------------------------------
+// Five columns, 12% 18% 40% 18% 12%: the two pages before this one, this page,
+// and the two pages after it. Type shrinks with distance - the pages next door
+// are small, the ones beyond them smaller still - since they are there to be
+// glanced at and clicked through, not read. Each column scrolls on its own, so
+// a long neighbour never pushes the page you are on out of view.
+//
+// The name stuck from when there were three, and the layout still comes down to
+// three where five do not fit.
+//
+// The configuration's columns are not kept here. Every category is a cell in
+// one grid that fills left to right, with as many tracks per row as the column
+// is wide enough for - a fixed count left most of a wide screen empty and
+// squeezed a narrow one. The minimum is what a label needs before it wraps.
+
+.triptych {
+  grid-template-columns: 12% 18% 40% 18% 12%;
+  // Exactly one window tall, the bar included, so that only the columns
+  // scroll and the page itself never does. The room for the bar is padding,
+  // not a margin: a margin collapses through the body, whose own min-height
+  // then starts a bar further down, and the page scrolls by that much.
+  height: 100vh;
+  height: 100dvh;
+  padding-top: $bar;
+
+  .side,
+  .center {
+    min-width: 0;
+    overflow-y: auto;
+    padding-bottom: 40px;
+
+    // Each column still scrolls by wheel, touch and keyboard; it just draws no
+    // bar. Five bars side by side were four more dividers than the page needs.
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  // Every page is its own sheet: a rule between each, and the further a page
+  // is from the one you are on, the deeper its ground. Darkened by mixing in
+  // black rather than borrowing another base16 slot, since a scheme only says
+  // which way its tones run - base01 is lighter than base00 in a dark scheme
+  // and darker in a light one.
+  > * + * {
+    border-left: 1px solid var(--base02);
+  }
+
+  // The pages are stacked like sheets: the one you are on at the top, the ones
+  // next door under it, the edge ones at the bottom. Each casts a shadow, and
+  // each is lifted above the next one out, so its shadow falls across that
+  // neighbour instead of being painted over by it.
+  .side,
+  .center {
+    position: relative;
+  }
+
+  .center {
+    z-index: 2;
+    padding: 5vh 40px 40px;
+    box-shadow: 0 0 32px 4px rgba(0, 0, 0, 0.45);
+    font-size: 17px;
+
+    h1 {
+      color: var(--base05);
+      font-size: 28px;
+      font-weight: 500;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+    }
+  }
+
+  // Every category is a cell with a rule round it, in the same colour as the
+  // rules between the pages. Cells on a row stretch to the tallest, so the
+  // rules line up into rows rather than stepping down the page.
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(210px, 100%), 1fr));
+    gap: 16px;
+  }
+
+  .grid > .category {
+    min-width: 0;
+    padding: 14px 16px;
+    border: 1px solid var(--base02);
+    border-radius: 4px;
+  }
+
+  .side {
+    z-index: 1;
+    padding: 5vh 28px 40px;
+    box-shadow: 0 0 24px 2px rgba(0, 0, 0, 0.35);
+    background: color-mix(in srgb, var(--base00) 80%, black);
+    font-size: 14px;
+
+    h2 {
+      margin: 0 0 6px;
+      font-size: 15px;
+    }
+
+    .grid {
+      grid-template-columns: repeat(auto-fill, minmax(min(165px, 100%), 1fr));
+      gap: 12px;
+    }
+
+    .grid > .category {
+      padding: 10px 12px;
+    }
+
+    .rows {
+      grid-row-gap: 2px;
+      grid-template-columns: 22px auto;
+    }
+
+    .separator {
+      margin: 4px 0;
+    }
+  }
+
+  .edge {
+    z-index: 0;
+    padding-inline: 18px;
+    background: color-mix(in srgb, var(--base00) 60%, black);
+    font-size: 12.5px;
+
+    h2 {
+      margin: 0 0 4px;
+      font-size: 13.5px;
+    }
+
+    // Always a single run, whatever the width: the edge pages are only there
+    // to be glanced at, and two thin tracks of small type read as noise.
+    .grid {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .grid > .category {
+      padding: 8px 10px;
+    }
+
+    .rows {
+      grid-row-gap: 1px;
+      grid-template-columns: 18px auto;
+    }
+
+    .side-title {
+      font-size: 16px;
+    }
+  }
+
+  // Set the way the middle's own title is, only smaller: a side is another
+  // page, not a different kind of thing, so it speaks in the same type.
+  .side-title {
+    color: var(--base05);
+    font-size: 19px;
+    font-weight: 500;
+
+    &:hover {
+      color: var(--base0D);
+    }
+  }
+
+  // Every title sits on one line across the five pages, and every grid starts
+  // on one line under them. The titles are three sizes, so each is a box of the
+  // same height with its text dropped to the bottom - and since a smaller face
+  // sits higher in its line, the bottom is set from the baseline rather than
+  // from the box: the text runs about 0.16em below its baseline at this line
+  // height, and taking that off the padding in the title's own ems puts every
+  // baseline 6px off the floor whatever the size.
+  .center h1,
+  .side-title {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px 32px;
-    justify-content: center;
-    background: var(--base00);
+    align-items: flex-end;
+    height: 44px;
+    margin: 0 0 20px;
+    padding-bottom: calc(6px - 0.16em);
+    overflow: hidden;
+    line-height: 1;
+    white-space: nowrap;
+  }
+}
 
-    .is-here {
-      color: var(--base0A);
+// A tenth of a laptop screen is too thin for even the smallest type, so there
+// the far pages go and it is three columns again.
+@media (max-width: 1400px) {
+  .triptych {
+    grid-template-columns: 25% 50% 25%;
+
+    .edge {
+      display: none;
+    }
+
+    // Its neighbour on the left is still in the document, just not drawn, so
+    // the rule between them would land on the edge of the window.
+    .prev {
+      border-left: 0;
+    }
+  }
+}
+
+// A quarter of a phone is no column at all, so on a narrow screen the sides go
+// and the middle takes the width, its grid reflowing the way classic does.
+@media (max-width: 900px) {
+  .triptych {
+    grid-template-columns: 1fr;
+    height: auto;
+
+    .side {
+      display: none;
+    }
+
+    .center {
+      overflow: visible;
+      padding: 22px 18px 40px;
+      border: 0;
     }
   }
 }
@@ -630,17 +915,6 @@ a {
   --panel-dim: var(--ink-dim);
   --panel-line: #{"rgb(var(--bark) / 0.3)"};
   --panel-accent: #{"rgb(var(--tone-3))"};
-}
-
-:root.as-classic {
-  .gear,
-  .settings {
-    --panel: var(--base01);
-    --panel-ink: var(--base05);
-    --panel-dim: var(--base04);
-    --panel-line: var(--base02);
-    --panel-accent: var(--base0D);
-  }
 }
 
 .sr {
@@ -686,7 +960,7 @@ a {
 }
 
 .settings {
-  width: min(340px, calc(100vw - 32px));
+  width: min(400px, calc(100vw - 32px));
   padding: 22px 22px 18px;
   border: 1px solid var(--panel-line);
   border-radius: 8px;
@@ -722,10 +996,10 @@ a {
     text-transform: uppercase;
   }
 
-  // Three options side by side, as one segmented control.
+  // The layouts side by side, as one segmented control.
   .choices {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     border: 1px solid var(--panel-line);
     border-radius: 6px;
     overflow: hidden;
