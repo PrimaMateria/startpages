@@ -271,15 +271,6 @@ a {
 // Everything below is positioned from the computed layout; `top` is a centre
 // line, hence the translate.
 
-// Neither of these generates a box of its own, so everything inside them goes
-// on being placed against the map exactly as before. They exist for the column
-// layout: the strip is the one thing there that has to be a row, and a limb is
-// a category and its links, which a column has to be able to keep together.
-.strip,
-.limb {
-  display: contents;
-}
-
 .root,
 .other,
 .branch,
@@ -399,129 +390,6 @@ a {
   }
 }
 
-// --- Small screens --------------------------------------------------------
-// The map is a drawing at computed coordinates, so it cannot reflow: there is
-// no arrangement of a fixed-coordinate tree that reads on a phone. Below the
-// width where it fits, the whole conceit is dropped and the page falls back to
-// the plain column it would have been without any of it.
-//
-// Nothing has to be reordered to do that. Document order is already title,
-// then the strip, then each category name immediately followed by its own
-// links - so switching the positioning off leaves the content in the right
-// order, and the structure that the wiring carried is carried by sequence.
-@mixin column-layout {
-  .viewport {
-    overflow: visible;
-  }
-
-  // Width and height are inline on the element, computed per map, so they can
-  // only be overridden - there is nothing to unset.
-  .map {
-    display: flex;
-    flex-direction: column;
-    width: auto !important;
-    height: auto !important;
-    padding: 22px 18px 64px;
-  }
-
-  // The drawing, and with it every animation on the page.
-  .wiring {
-    display: none;
-  }
-
-  .root,
-  .other,
-  .branch,
-  .leaf {
-    position: static;
-    transform: none;
-    // Long labels wrap here rather than pushing the page sideways.
-    white-space: normal;
-  }
-
-  .root {
-    margin-bottom: 16px;
-    font-size: 30px;
-    text-shadow: none;
-  }
-
-  .strip {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 20px;
-    margin-bottom: 24px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid #{"rgb(var(--bark) / 0.35)"};
-  }
-
-  .limb {
-    display: block;
-  }
-
-  .branch {
-    margin: 26px 0 8px;
-    text-shadow: none;
-  }
-
-  // A finger, not a cursor: every link gets a row it can be hit in. No patch
-  // behind it either - there is no line here for it to hide.
-  .leaf {
-    min-height: 44px;
-    padding: 8px 10px 8px 6px;
-    border-radius: 5px;
-    background-image: none;
-
-    &:hover {
-      background-color: #{"rgb(var(--tone) / 0.14)"};
-      background-image: none;
-    }
-  }
-
-  .leaf .ico {
-    width: 22px !important;
-    font-size: 15px !important;
-  }
-
-  .leaf .lbl {
-    font-size: 16px;
-  }
-}
-
-// --- Falling back on purpose ------------------------------------------------
-// The map is the point, but it is not always what you want: a narrow window has
-// no room for it, and sometimes neither does the person reading it. Below the
-// width where it fits there is no choice, and above it there is a switch, whose
-// answer is remembered.
-@media (max-width: 900px) {
-  @include column-layout;
-}
-
-:root.as-columns {
-  @include column-layout;
-}
-
-// One column of 73 links is a very long scroll on a desktop, so above the
-// breakpoint the same content flows into as many columns as the window holds.
-// A limb is what does not get broken across one, which is why it is a box here
-// and nothing at all everywhere else.
-@media (min-width: 901px) {
-  :root.as-columns .map {
-    display: block;
-    columns: 300px;
-    column-gap: 44px;
-    padding: 26px 32px 72px;
-  }
-
-  :root.as-columns .root,
-  :root.as-columns .strip {
-    column-span: all;
-  }
-
-  :root.as-columns .limb {
-    break-inside: avoid;
-  }
-}
-
 // --- Classic --------------------------------------------------------------
 // The page as it was before the map: the columns exactly as the configuration
 // writes them, in one of the base16 schemes from sass/colorschemes. The scheme
@@ -600,6 +468,21 @@ $bar: 56px;
 
   .triptych {
     display: grid;
+  }
+}
+
+// The map is a drawing at computed coordinates, so it cannot reflow: there is
+// no arrangement of a fixed-coordinate tree that reads on a phone. Below the
+// width where it fits, it gives way to classic, whose grid reflows on its own.
+// Triptych keeps itself, since it has its own way of narrowing.
+@media (max-width: 900px) {
+  :root:not(.as-triptych) {
+    @include classic-ground;
+
+    .classic {
+      display: block;
+      padding-top: calc(#{$bar} + 5vh);
+    }
   }
 }
 
@@ -999,7 +882,7 @@ $bar: 56px;
   // The layouts side by side, as one segmented control.
   .choices {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     border: 1px solid var(--panel-line);
     border-radius: 6px;
     overflow: hidden;

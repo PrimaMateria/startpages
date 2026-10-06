@@ -19,9 +19,10 @@
           view = localStorage.getItem("startpages-view");
           theme = localStorage.getItem("startpages-theme");
         } catch (e) {}
+        // Columns was a layout once; whoever picked it gets classic now.
+        if (view === "columns") view = "classic";
         root.className =
           "js" +
-          (view === "columns" ? " as-columns" : "") +
           (view === "classic" ? " as-classic" : "") +
           (view === "triptych" ? " as-triptych" : "");
         if (theme) root.setAttribute("data-theme", theme);
@@ -126,7 +127,6 @@
         </nav>
 
         {%- for branch in map.branches %}
-        <div class="limb">
         <h2
           class="branch"
           style="left: {{ branch.name_x }}px; top: {{ branch.name_y }}px; --tone: var(--tone-{{ branch.tone }})"
@@ -139,7 +139,6 @@
         ><span class="ico" aria-hidden="true">{{ leaf.ico | safe }}</span
           ><span class="lbl">{{ leaf.lbl }}</span></a>
         {%- endfor %}
-        </div>
         {%- endfor %}
       </div>
     </div>
@@ -202,7 +201,6 @@
           <legend>Layout</legend>
           <div class="choices">
             <label><input type="radio" name="view" value="map" /> Map</label>
-            <label><input type="radio" name="view" value="columns" /> Columns</label>
             <label><input type="radio" name="view" value="classic" /> Classic</label>
             <label><input type="radio" name="view" value="triptych" /> Triptych</label>
           </div>
@@ -241,7 +239,6 @@
         function view() {
           if (root.classList.contains("as-triptych")) return "triptych";
           if (root.classList.contains("as-classic")) return "classic";
-          if (root.classList.contains("as-columns")) return "columns";
           return "map";
         }
 
@@ -266,7 +263,6 @@
         form.addEventListener("change", function (event) {
           if (event.target.name === "view") {
             var picked = event.target.value;
-            root.classList.toggle("as-columns", picked === "columns");
             root.classList.toggle("as-classic", picked === "classic");
             root.classList.toggle("as-triptych", picked === "triptych");
             store("startpages-view", picked);

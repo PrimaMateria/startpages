@@ -290,20 +290,8 @@ rather than reflowing - down to 900px, below which it stops being a map at all.
 ### On a phone
 
 There is no arrangement of a fixed-coordinate drawing that reads on a phone, so
-below 900px the whole conceit is dropped and the page falls back to the plain
-column it would have been without any of it: the wiring is hidden, the absolute
-positioning is switched off, and the links become 44px rows.
-
-Nothing has to be reordered to do that, because document order already is the
-column - the title, then the strip of maps, then each category name immediately
-followed by its own links. The structure the wiring carried is carried by
-sequence instead, and the one thing that is kept is the colour per category,
-which is what the tree was using to say where you are anyway.
-
-The strip of maps is the only part that has to become a row rather than a
-column, so it is wrapped in a `nav` that is `display: contents` everywhere else
-- generating no box, it leaves the links inside it positioned against the map
-exactly as before.
+below 900px the map gives way to the classic layout, whose grid reflows on its
+own.
 
 ## Settings
 
@@ -313,9 +301,7 @@ site follows them.
 
 **Layout** is one of three:
 
-- **Map** - the drawing described above.
-- **Columns** - the same content and colours, flowed into as many columns as
-  the window holds. Below 900px wide the map always falls back to this.
+- **Map** - the drawing described above. Below 900px wide it shows as classic.
 - **Classic** - the page as it was before the map: the `columns` exactly as
   `content/startpages.yaml` arranges them, in a base16 colour scheme.
 - **Triptych** (experimental) - classic, in five columns of 12% 18% 40% 18%
