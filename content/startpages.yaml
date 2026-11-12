@@ -260,10 +260,6 @@
               lbl: DHL PDF cleaner
               url: https://dhlpdfcleaner.primamateria.ddns.net/
             - !Link
-              ico: <i class="fa-solid fa-user-group"></i>
-              lbl: Monica
-              url: https://monica.primamateria.ddns.net/dashboard
-            - !Link
               ico: <i class="fa-solid fa-bookmark"></i>
               lbl: karakeep
               url: https://karakeep.primamateria.ddns.net
@@ -280,9 +276,17 @@
               lbl: Calibre
               url: https://calibre.primamateria.ddns.net/
             - !Link
-              ico: <i class="fa-solid fa-terminal"></i>
-              lbl: Term
-              url: https://term.primamateria.ddns.net/
+              ico: <i class="fa-solid fa-rss"></i>
+              lbl: frirss
+              url: https://frirss.primamateria.ddns.net/
+            - !Link
+              ico: <i class="fa-solid fa-user-shield"></i>
+              lbl: Synapse Admin
+              url: https://synapse-admin.primamateria.ddns.net/
+            - !Link
+              ico: <i class="fa-solid fa-robot"></i>
+              lbl: maubot
+              url: https://maubot.primamateria.ddns.net/_matrix/maubot/
 
 
 - name: Development
