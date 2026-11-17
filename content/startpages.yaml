@@ -944,7 +944,7 @@
             - !Link
               ico: <i class="fa-solid fa-plane"></i>
               lbl: Staging
-              url: https://orderprocess-ui-finapi-general-staging.itops.finapi.net/
+              url: https://orderprocess-ui-finapi-general-staging.finapi.io/
             - !Separator
             - !Link
               ico: <i class="fa-solid fa-plane"></i>
