@@ -706,7 +706,10 @@
               ico: <i class="fa-solid fa-unlock"></i>
               lbl: IAM Middleware
               url: https://di-iammiddleware-ui.finapi-general-staging.finapi.net/
-
+            - !Link
+              ico: <i class="fa-solid fa-fish"></i>
+              lbl: Test Mandator Createor
+              url: https://dev-test-mandator-creator.pages.finapi.ghe.com/
 - name: Projects
   columns:
     - categories:
