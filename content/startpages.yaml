@@ -705,7 +705,7 @@
             - !Link
               ico: <i class="fa-solid fa-unlock"></i>
               lbl: IAM Middleware
-              url: https://di-iammiddleware-ui-finapi-general-staging.itops.finapi.net/
+              url: https://di-iammiddleware-ui.finapi-general-staging.finapi.net/
 
 - name: Projects
   columns:
